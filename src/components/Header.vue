@@ -11,10 +11,38 @@
                     <img :src="mainLogo" alt="Logo" class="h-12" />
                 </a>
 
-                <!-- Desktop Search (hidden on mobile) -->
-                <div class="hidden md:flex flex-1 justify-center px-4">
-                    <input type="text" placeholder="Search medicines..."
+                <!-- Desktop Search -->
+                <div class="hidden md:flex flex-1 justify-center px-4 relative">
+                    <input type="text" v-model="searchQuery" placeholder="Search medicines..."
                         class="w-full max-w-md border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-700" />
+
+                    <!-- Live Search Results -->
+                    <div v-if="searchQuery && filteredProducts.length"
+                        class="absolute top-full mt-1 w-full max-w-md bg-white border border-gray-200 rounded shadow-lg z-50">
+                        <ul>
+                            <li v-for="product in filteredProducts" :key="product.id"
+                                class="px-4 py-3 hover:bg-gray-50 flex justify-between items-center gap-3">
+                                <div class="flex-1">
+                                    <p class="font-medium text-gray-800">{{ product . name }}</p>
+                                    <p class="text-sm text-gray-600">
+                                        Brand: {{ product . brand }} | Category:
+                                        {{ getCategoryName(product . categoryId) }}
+                                    </p>
+                                    <p class="text-sm font-semibold text-green-600 mt-1">
+                                        ${{ product . price . toFixed(2) }}
+                                    </p>
+                                </div>
+
+                                <button @click="addToCart(product)"
+                                    class="relative inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white font-semibold text-sm rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out hover:bg-green-700 hover:shadow-lg">
+                                    Add to Cart
+                                    <span
+                                        class="absolute inset-0 bg-white opacity-10 rounded-lg scale-0 hover:scale-100 transition-transform duration-300"></span>
+                                </button>
+
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
                 <!-- Desktop Buttons -->
@@ -43,10 +71,36 @@
 
             </div>
 
-            <!-- Mobile Search Bar (visible on mobile only) -->
-            <div class="w-full mt-2 md:hidden">
-                <input type="text" placeholder="Search medicines..."
+            <!-- Mobile Search -->
+            <div class="w-full mt-2 md:hidden relative">
+                <input type="text" v-model="searchQuery" placeholder="Search medicines..."
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-700" />
+
+                <div v-if="searchQuery && filteredProducts.length"
+                    class="absolute top-full mt-1 w-full bg-white border border-gray-200 rounded shadow-lg z-50">
+                    <ul>
+                        <li v-for="product in filteredProducts" :key="product.id"
+                            class="px-4 py-3 hover:bg-gray-50 flex justify-between items-center gap-3">
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-800">{{ product . name }}</p>
+                                <p class="text-sm text-gray-600">
+                                    Brand: {{ product . brand }} | Category: {{ getCategoryName(product . categoryId) }}
+                                </p>
+                                <p class="text-sm font-semibold text-green-600 mt-1">
+                                    ${{ product . price . toFixed(2) }}
+                                </p>
+                            </div>
+
+                            <button @click="addToCart(product)"
+                                class="relative inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white font-semibold text-sm rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out hover:bg-green-700 hover:shadow-lg">
+                                Add to Cart
+                                <span
+                                    class="absolute inset-0 bg-white opacity-10 rounded-lg scale-0 hover:scale-100 transition-transform duration-300"></span>
+                            </button>
+
+                        </li>
+                    </ul>
+                </div>
             </div>
 
         </div>
@@ -174,12 +228,19 @@
         ref,
         onMounted,
         onUnmounted,
+        computed,
         reactive
     } from 'vue'
     import mainLogo from '../assets/20250308105923.png'
     import {
+        products
+    } from "@/data/products.js";
+    import {
         categories
-    } from '../data/categories'
+    } from "@/data/categories.js";
+    import {
+        useCartStore
+    } from "@/stores/cart";
     import {
         useRoute
     } from 'vue-router'
@@ -193,6 +254,7 @@
 
     const isMenuOpen = ref(false)
     const isSticky = ref(false)
+    const cartStore = useCartStore();
 
     function toggleMenu() {
         isMenuOpen.value = !isMenuOpen.value
@@ -205,6 +267,33 @@
     function handleScroll() {
         isSticky.value = window.scrollY > 50
     }
+
+    const searchQuery = ref("");
+
+    // Filter products based on search query
+    const filteredProducts = computed(() => {
+        if (!searchQuery.value) return [];
+        const query = searchQuery.value.toLowerCase();
+        return products.filter(
+            (p) =>
+            p.name.toLowerCase().includes(query) ||
+            (p.brand && p.brand.toLowerCase().includes(query))
+        );
+    });
+
+    // Get category name by ID
+    const getCategoryName = (categoryId) => {
+        const category = categories.find((c) => c.id === categoryId);
+        return category ? category.name : "Unknown";
+    };
+
+    // Add product to cart
+    const addToCart = (product) => {
+        cartStore.addToCart({
+            ...product,
+            quantity: 1
+        });
+    };
 
     onMounted(() => window.addEventListener('scroll', handleScroll))
     onUnmounted(() => window.removeEventListener('scroll', handleScroll))
