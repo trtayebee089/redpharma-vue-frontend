@@ -60,7 +60,6 @@
                     </SwiperSlide>
                 </Swiper>
             </div>
-``````
         </section>
 
         <!-- Products Slider -->
