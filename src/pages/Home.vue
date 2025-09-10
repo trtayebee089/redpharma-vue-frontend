@@ -4,36 +4,53 @@
         <section class="my-10 relative leading-relaxed">
             <div class=" rounded-xl overflow-hidden">
                 <Swiper :modules="[Pagination, Navigation, Autoplay]" :slides-per-view="1" :loop="true"
-                    :autoplay="{ delay: 4000, disableOnInteraction: false }" :pagination="{ clickable: true }"
-                    class="w-full h-[60vh] md:h-[50vh] lg:h-[60vh] relative rounded-xl overflow-hidden shadow-lg">
+                    :autoplay="{ delay: 4500, disableOnInteraction: false }" :pagination="{ clickable: true }"
+                    class="w-full h-[60vh] md:h-[50vh] lg:h-[60vh] relative rounded-xl overflow-hidden shadow-xl">
                     <SwiperSlide v-for="(slide, index) in slides" :key="index" class="relative w-full h-full">
-                        <div class="absolute inset-0 bg-cover bg-center rounded-xl"
+
+                        <!-- Background Image -->
+                        <div class="absolute inset-0 bg-cover bg-center rounded-xl filter brightness-75"
                             :style="{ backgroundImage: `url(${slide.bg})` }"></div>
-                        <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 rounded-xl">
+
+                        <!-- Stronger Gradient Overlay -->
+                        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80 rounded-xl">
                         </div>
 
+                        <!-- Slide Content -->
                         <div
                             class="relative z-10 flex flex-col items-center justify-center h-full text-center px-4 sm:px-6 md:px-12">
+
+                            <!-- Title -->
                             <h1
-                                class="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-extrabold text-white drop-shadow-lg mb-4 animate-fade-in-down leading-snug">
+                                class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white drop-shadow-2xl mb-4 leading-tight animate-fade-in-down">
                                 {{ slide . title }}
                             </h1>
-                            <p
-                                class="text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 mb-6 max-w-xs sm:max-w-md md:max-w-2xl animate-fade-in-up">
+
+                            <!-- Subtitle -->
+                            <h4
+                                class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium text-gray-100 mb-4 max-w-xs sm:max-w-md md:max-w-2xl animate-fade-in-up">
                                 {{ slide . subtitle }}
+                            </h4>
+
+                            <!-- Optional Description -->
+                            <p v-if="slide.description"
+                                class="text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 mb-6 max-w-md sm:max-w-lg md:max-w-2xl animate-fade-in-up delay-150">
+                                {{ slide . description }}
                             </p>
-                            <div class="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-6">
-                                <a href="tel:+1234567890"
-                                    class="px-5 sm:px-6 py-2 sm:py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-full shadow-md transition-all transform hover:scale-105 text-sm sm:text-base flex items-center justify-center">
+
+                            <!-- CTA Buttons -->
+                            <div
+                                class="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-6 animate-fade-in-up delay-300">
+                                <a href="tel:+880123456789"
+                                    class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-full shadow-lg transition transform hover:scale-105 flex items-center justify-center text-base sm:text-lg">
                                     <i class="pi pi-phone mr-2"></i> Call Now
                                 </a>
-                                <a href="https://wa.me/1234567890" target="_blank"
-                                    class="px-5 sm:px-6 py-2 sm:py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-full shadow-md transition-all transform hover:scale-105 text-sm sm:text-base flex items-center justify-center">
+
+                                <a href="https://wa.me/880123456789" target="_blank"
+                                    class="px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-full shadow-lg transition transform hover:scale-105 flex items-center justify-center text-base sm:text-lg">
                                     <i class="pi pi-whatsapp mr-2"></i> WhatsApp
                                 </a>
                             </div>
-
-
                         </div>
                     </SwiperSlide>
                 </Swiper>
@@ -76,7 +93,8 @@
 
                 <!-- Upload Prescription CTA -->
                 <router-link to="/upload-prescription" class="block">
-                    <div class="bg-gradient-to-r border border-green-600 from-green-50 via-green-00 to-green-50 rounded-xl p-6 flex items-start gap-4 hover:shadow-lg transition transform hover:scale-101 cursor-pointer relative overflow-hidden">
+                    <div
+                        class="bg-gradient-to-r border border-green-600 from-green-50 via-green-00 to-green-50 rounded-xl p-6 flex items-start gap-4 hover:shadow-lg transition transform hover:scale-101 cursor-pointer relative overflow-hidden">
                         <div class="absolute inset-0 opacity-10 pointer-events-none">
                             <svg class="w-full h-full" preserveAspectRatio="none">
                                 <defs>
@@ -152,7 +170,8 @@
         </section>
 
         <!-- Quick Action Buttons CTA -->
-        <section class="bg-white leading-relaxed relative flex flex-col md:flex-row items-center justify-center gap-8 ransition my-10">
+        <section
+            class="bg-white leading-relaxed relative flex flex-col md:flex-row items-center justify-center gap-8 ransition my-10">
 
             <!-- Book Appointment -->
             <a href="/book-appointment"
@@ -341,21 +360,26 @@
     } from '../data/products'
 
     const slides = [{
-            title: 'Welcome to Medicine Store',
-            subtitle: 'Order medicines online with fast delivery',
-            bg: 'https://img.freepik.com/free-photo/pharmacist-day-celebration-with-male-pharmacist_23-2151734672.jpg'
+            title: 'RedPharma BD',
+            subtitle: 'Your Trusted Online Pharmacy in Bangladesh',
+            description: 'Get genuine medicines delivered fast & safely across Bangladesh. Explore a wide range of medicines, healthcare products, and wellness solutions.',
+            bg: 'https://img.freepik.com/free-photo/abstract-blur-shopping-mall_1203-8821.jpg'
         },
         {
-            title: 'Trusted Pharmacy',
-            subtitle: 'Safe & genuine medicines delivered to your home',
-            bg: 'https://img.freepik.com/premium-photo/store-with-shelves-full-products-including-sign-that-says-enter_1065421-40118.jpg?w=2000'
+            title: 'Expert Healthcare Services',
+            subtitle: 'Consult Certified Doctors & Access Lab Tests from Home',
+            description: 'Connect with qualified healthcare professionals and order lab tests online without leaving your home. Fast, safe, and reliable.',
+            bg: 'https://img.freepik.com/free-photo/abstract-blur-defocused-pharmacy-drug-store_1203-9459.jpg'
         },
         {
-            title: '24/7 Support',
-            subtitle: 'Call us anytime for assistance',
-            bg: 'https://img.freepik.com/premium-photo/shelves-medical-pharmacy-with-pills-medicine_877191-1005.jpg'
+            title: '24/7 Customer Care & Support',
+            subtitle: 'We’re Always Here to Assist You',
+            description: 'Our dedicated support team ensures smooth order placement, timely delivery, and professional advice for all your healthcare needs.',
+            bg: 'https://img.freepik.com/free-photo/abstract-blur-shopping-mall_74190-5812.jpg'
         }
-    ]
+    ];
+
+
 
     const articles = [{
             title: "5 Tips for a Healthy Lifestyle",
