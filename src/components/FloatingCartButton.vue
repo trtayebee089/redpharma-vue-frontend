@@ -1,7 +1,7 @@
-<template>
+<template >
     <!-- Floating Cart Button -->
     <button @click="isCartOpen = true"
-        class="fixed bottom-6 right-6 z-50 w-14 h-14 bg-green-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-green-600">
+        class="z-101 fixed bottom-6 right-6 w-14 h-14 bg-green-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-green-600">
         <i class="pi pi-shopping-cart text-2xl"></i>
         <span v-if="cartItems.length"
             class="absolute top-0 right-0 w-5 h-5 bg-red-600 rounded-full text-xs text-white flex items-center justify-center">{{ totalQty }}</span>

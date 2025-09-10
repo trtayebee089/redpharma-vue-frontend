@@ -10,7 +10,9 @@ export const products = reactive([
     image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
     price: 2.5,
     strength: '500mg',
-    packSize: '10 tablets'
+    packSize: '10 tablets',
+    brand: 'Acacia',
+    offers: '10% off'
   },
   {
     id: 2,
@@ -21,7 +23,9 @@ export const products = reactive([
     image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
     price: 3.0,
     strength: '1000mg',
-    packSize: '30 tablets'
+    packSize: '30 tablets',
+    brand: 'HealthPlus',
+    offers: null
   },
   {
     id: 3,
@@ -32,7 +36,9 @@ export const products = reactive([
     image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
     price: 4.5,
     strength: '100ml',
-    packSize: '1 bottle'
+    packSize: '1 bottle',
+    brand: 'CureMed',
+    offers: '5% off'
   },
   {
     id: 4,
@@ -43,7 +49,9 @@ export const products = reactive([
     image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
     price: 25.0,
     strength: '10ml',
-    packSize: '1 vial'
+    packSize: '1 vial',
+    brand: 'Novo',
+    offers: null
   },
   {
     id: 5,
@@ -54,7 +62,9 @@ export const products = reactive([
     image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
     price: 5.0,
     strength: '250mg',
-    packSize: '14 tablets'
+    packSize: '14 tablets',
+    brand: 'MedLife',
+    offers: '15% off'
   },
   {
     id: 6,
@@ -65,7 +75,9 @@ export const products = reactive([
     image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
     price: 3.5,
     strength: '400mg',
-    packSize: '10 tablets'
+    packSize: '10 tablets',
+    brand: 'Acacia',
+    offers: null
   },
   {
     id: 7,
@@ -76,7 +88,9 @@ export const products = reactive([
     image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
     price: 4.0,
     strength: '2000 IU',
-    packSize: '30 tablets'
+    packSize: '30 tablets',
+    brand: 'HealthPlus',
+    offers: '10% off'
   },
   {
     id: 8,
@@ -87,7 +101,9 @@ export const products = reactive([
     image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
     price: 3.5,
     strength: '60ml',
-    packSize: '1 bottle'
+    packSize: '1 bottle',
+    brand: 'CureMed',
+    offers: null
   },
   {
     id: 9,
@@ -98,7 +114,9 @@ export const products = reactive([
     image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
     price: 30.0,
     strength: '10ml',
-    packSize: '1 vial'
+    packSize: '1 vial',
+    brand: 'Novo',
+    offers: null
   },
   {
     id: 10,
@@ -109,7 +127,9 @@ export const products = reactive([
     image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
     price: 6.0,
     strength: '15g',
-    packSize: '1 tube'
+    packSize: '1 tube',
+    brand: 'MedLife',
+    offers: '5% off'
   },
   {
     id: 11,
@@ -120,7 +140,9 @@ export const products = reactive([
     image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
     price: 12.0,
     strength: '100mcg',
-    packSize: '1 inhaler'
+    packSize: '1 inhaler',
+    brand: 'Respira',
+    offers: '10% off'
   },
   {
     id: 12,
@@ -131,7 +153,9 @@ export const products = reactive([
     image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
     price: 5.0,
     strength: '10ml',
-    packSize: '1 bottle'
+    packSize: '1 bottle',
+    brand: 'ClearVision',
+    offers: null
   },
   {
     id: 13,
@@ -142,7 +166,9 @@ export const products = reactive([
     image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
     price: 4.5,
     strength: '1 tablet',
-    packSize: '30 tablets'
+    packSize: '30 tablets',
+    brand: 'HealthPlus',
+    offers: null
   },
   {
     id: 14,
@@ -153,7 +179,9 @@ export const products = reactive([
     image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
     price: 2.0,
     strength: '-',
-    packSize: '1 roll'
+    packSize: '1 roll',
+    brand: 'SafeCare',
+    offers: null
   },
   {
     id: 15,
@@ -164,6 +192,8 @@ export const products = reactive([
     image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
     price: 7.0,
     strength: '20g',
-    packSize: '1 tube'
+    packSize: '1 tube',
+    brand: 'MedLife',
+    offers: '15% off'
   }
 ]);

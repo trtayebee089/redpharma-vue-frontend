@@ -1,14 +1,17 @@
 <script setup>
 const year = new Date().getFullYear()
+import mainLogo from '../assets/20250308105923.png'
 </script>
 
 <template>
-    <footer class="bg-gray-900 text-gray-300">
+    <footer class="bg-gray-900 text-gray-300 z-100">
         <div class="container mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-4 gap-8">
 
             <!-- Column 1 -->
             <div>
-                <h3 class="text-lg font-semibold mb-4 text-white">RedPharma BD</h3>
+                <a href="/" class="flex items-center flex-shrink-0 mb-4">
+                    <img :src="mainLogo" alt="Logo" class="h-12" />
+                </a>
                 <p class="text-sm">
                     Your trusted online pharmacy. Fast delivery, genuine medicines, and top healthcare products.
                 </p>

@@ -1,5 +1,5 @@
 <template>
-    <nav :class="['fixed top-0 left-0 w-full z-50 bg-white transition-shadow', { 'shadow-md': isSticky }]">
+    <nav :class="['fixed top-0 left-0 w-full z-50 bg-red-50 transition-shadow', { 'shadow-md': isSticky }]">
         <div
             class="container mx-auto px-4 md:px-6 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-0">
 
@@ -106,39 +106,11 @@
         </div>
 
         <!-- Desktop Menu -->
-        <div class="hidden md:block border-0 border-gray-200 bg-red-700">
+        <!-- <div class="hidden md:block border-0 border-gray-200 bg-red-700">
             <div class="container mx-auto px-4 md:px-6">
                 <div class="flex items-center justify-between font-medium">
 
-                    <!-- Left side -->
                     <ul class="flex items-center space-x-6">
-
-                        <!-- Categories Dropdown -->
-                        <li class="relative group">
-                            <button
-                                class="flex items-center justify-between bg-red-600 text-white px-4 py-3 w-64 font-semibold hover:bg-red-500 transition-colors">
-                                <span>CATEGORIES</span>
-                                <i class="pi pi-chevron-down"></i>
-                            </button>
-
-                            <!-- Dropdown Menu -->
-                            <ul
-                                class="absolute left-0 mt-0 w-64 bg-white border border-gray-200 rounded-b shadow-lg opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-200 z-50">
-                                <li v-for="category in categories" :key="category.id"
-                                    class="border-b last:border-b-0">
-                                    <router-link :to="`/category/${category.slug}`"
-                                        :class="['flex items-center px-4 py-3 text-gray-700 hover:bg-red-100 transition-colors',
-                                            isActive(`/category/${category.slug}`) ?
-                                            'bg-red-100 font-semibold text-red-700' : ''
-                                        ]">
-                                        <img :src="category.image" alt="" class="w-6 h-6 mr-3" />
-                                        <span>{{ category . name }}</span>
-                                    </router-link>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <!-- Other Menus -->
                         <li>
                             <router-link to="/"
                                 :class="['text-white px-3 py-2 rounded hover:bg-red-600 hover:text-white transition-colors',
@@ -182,7 +154,6 @@
 
                     </ul>
 
-                    <!-- Right side -->
                     <ul class="flex items-center space-x-6">
                         <li>
                             <router-link to="/cart"
@@ -196,7 +167,7 @@
 
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- Mobile Menu -->
         <transition name="slide-fade">
