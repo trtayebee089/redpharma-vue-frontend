@@ -1,7 +1,7 @@
 <template>
     <!-- sidebar is part of the page flow; hidden on small screens -->
-    <aside class="w-70 shadow-md overflow-y-auto self-start pt-4 bg-gray-100"
-        style="position: sticky; top: 64px; height: calc(100vh - 64px);">
+    <aside class="w-70 overflow-y-auto self-start pt-4 bg-gray-100"
+        style="position: sticky; top: 64px; height: calc(100vh - 64px); box-shadow: rgba(0, 0, 0, 0.3) -1px 0px 12px 0px;">
         <ul>
             <li v-for="category in categories" :key="category.id" class="last:border-b-0">
                 <router-link :to="`/category/${category.slug}`"

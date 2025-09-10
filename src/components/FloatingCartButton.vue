@@ -4,7 +4,7 @@
         class="z-101 fixed bottom-6 right-6 w-14 h-14 bg-green-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-green-600">
         <i class="pi pi-shopping-cart text-2xl"></i>
         <span v-if="cartItems.length"
-            class="absolute top-0 right-0 w-5 h-5 bg-red-600 rounded-full text-xs text-white flex items-center justify-center">{{ totalQty }}</span>
+            class="absolute top-0 right-0 w-5 h-5 bg-green-600 rounded-full text-xs text-white flex items-center justify-center">{{ totalQty }}</span>
     </button>
 
     <!-- Offcanvas -->
@@ -41,7 +41,7 @@
                         <button @click="decreaseQty(item)" :disabled="item.quantity <= 1"
                             class="w-6 h-6 flex items-center justify-center border rounded-sm
                     disabled:bg-gray-200 disabled:cursor-not-allowed disabled:border-gray-400 disabled:text-gray-700
-                    text-red-700 bg-red-200 hover:bg-red-400 hover:text-white border-red-400">
+                    text-green-700 bg-green-200 hover:bg-green-400 hover:text-white border-green-400">
                             <i class="pi pi-minus"></i>
                         </button>
 
@@ -59,7 +59,7 @@
                     </div>
 
                     <!-- Remove Button -->
-                    <button @click="removeItem(item)" class="ml-4 text-red-500 hover:text-red-700 font-semibold">
+                    <button @click="removeItem(item)" class="ml-4 text-green-500 hover:text-green-700 font-semibold">
                         ✕
                     </button>
                 </div>
@@ -76,7 +76,7 @@
             </router-link>
 
             <button
-                class="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 :disabled="cartItems.length === 0" @click="clearCart">
                 Clear Cart
             </button>

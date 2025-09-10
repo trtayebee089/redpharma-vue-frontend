@@ -2,7 +2,7 @@
     <section class="bg-gray-50 text-gray-800 px-6 py-12 md:px-12 lg:px-24 space-y-12">
         
         <!-- Hero Section -->
-        <div class="max-w-5xl mx-auto space-y-4 text-center leading-relaxed bg-red-50 rounded-lg p-6 relative overflow-hidden">
+        <div class="max-w-5xl mx-auto space-y-4 text-center leading-relaxed bg-green-50 rounded-lg p-6 relative overflow-hidden">
             <div class="absolute inset-0 opacity-10 pointer-events-none">
                 <svg class="w-full h-full" preserveAspectRatio="none">
                     <defs>
@@ -13,7 +13,7 @@
                     <rect width="100%" height="100%" fill="url(#grid)"></rect>
                 </svg>
             </div>
-            <h1 class="text-3xl md:text-4xl font-bold text-red-600 leading-relaxed">Best Online Pharmacy and Healthcare Platform in
+            <h1 class="text-3xl md:text-4xl font-bold text-green-600 leading-relaxed">Best Online Pharmacy and Healthcare Platform in
                 Bangladesh</h1>
             <p class="text-gray-700 text-lg md:text-xl leading-relaxed">
                 RedPharma is Bangladesh’s most trusted online pharmacy and healthcare platform. Access medicines, doctor
@@ -58,32 +58,32 @@
             <h2 class="text-2xl font-semibold text-gray-800 text-center">Services Offered by RedPharma</h2>
             <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
                 <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
-                    <h3 class="font-semibold text-red-600">Medicine Delivery</h3>
+                    <h3 class="font-semibold text-green-600">Medicine Delivery</h3>
                     <p class="text-gray-700 text-sm mt-1">Fast and reliable delivery to your doorstep.</p>
                 </div>
                 <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
-                    <h3 class="font-semibold text-red-600">Doctor Consultation</h3>
+                    <h3 class="font-semibold text-green-600">Doctor Consultation</h3>
                     <p class="text-gray-700 text-sm mt-1">Access qualified medical professionals online.</p>
                 </div>
                 <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
-                    <h3 class="font-semibold text-red-600">Lab Tests</h3>
+                    <h3 class="font-semibold text-green-600">Lab Tests</h3>
                     <p class="text-gray-700 text-sm mt-1">Order lab tests online and receive results quickly.</p>
                 </div>
                 <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
-                    <h3 class="font-semibold text-red-600">Health Records</h3>
+                    <h3 class="font-semibold text-green-600">Health Records</h3>
                     <p class="text-gray-700 text-sm mt-1">Manage medical history, lab results, and prescriptions
                         securely.</p>
                 </div>
                 <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
-                    <h3 class="font-semibold text-red-600">Medical Advice & Support</h3>
+                    <h3 class="font-semibold text-green-600">Medical Advice & Support</h3>
                     <p class="text-gray-700 text-sm mt-1">Get expert guidance from healthcare professionals.</p>
                 </div>
                 <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
-                    <h3 class="font-semibold text-red-600">Healthcare Provider Database</h3>
+                    <h3 class="font-semibold text-green-600">Healthcare Provider Database</h3>
                     <p class="text-gray-700 text-sm mt-1">Find and compare doctors and clinics in your area.</p>
                 </div>
                 <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
-                    <h3 class="font-semibold text-red-600">Discounts & Deals</h3>
+                    <h3 class="font-semibold text-green-600">Discounts & Deals</h3>
                     <p class="text-gray-700 text-sm mt-1">Save on medicine delivery, consultations, and lab tests.</p>
                 </div>
             </div>

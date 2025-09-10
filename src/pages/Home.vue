@@ -24,11 +24,11 @@
                             </p>
                             <div class="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-6">
                                 <a href="tel:+1234567890"
-                                    class="px-5 sm:px-6 py-2 sm:py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-full shadow-md transition-all transform hover:scale-105 text-sm sm:text-base flex items-center justify-center">
+                                    class="px-5 sm:px-6 py-2 sm:py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-full shadow-md transition-all transform hover:scale-105 text-sm sm:text-base flex items-center justify-center">
                                     <i class="pi pi-phone mr-2"></i> Call Now
                                 </a>
                                 <a href="https://wa.me/1234567890" target="_blank"
-                                    class="px-5 sm:px-6 py-2 sm:py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full shadow-md transition-all transform hover:scale-105 text-sm sm:text-base flex items-center justify-center">
+                                    class="px-5 sm:px-6 py-2 sm:py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-full shadow-md transition-all transform hover:scale-105 text-sm sm:text-base flex items-center justify-center">
                                     <i class="pi pi-whatsapp mr-2"></i> WhatsApp
                                 </a>
                             </div>
@@ -45,7 +45,7 @@
             <div class="category-slider">
                 <h2 class="text-2xl md:text-3xl font-bold mb-5 text-gray-800 relative inline-block">
                     Product Categories
-                    <span class="absolute left-0 bottom-0 w-16 h-1 bg-red-500 rounded-full"></span>
+                    <span class="absolute left-0 bottom-0 w-16 h-1 bg-green-500 rounded-full"></span>
                 </h2>
 
                 <!-- Custom Navigation Buttons -->
@@ -76,7 +76,7 @@
 
                 <!-- Upload Prescription CTA -->
                 <router-link to="/upload-prescription" class="block">
-                    <div class="bg-gradient-to-r from-red-50 via-red-00 to-red-50 rounded-xl p-6 flex items-start gap-4 hover:shadow-lg transition transform hover:scale-101 cursor-pointer relative overflow-hidden">
+                    <div class="bg-gradient-to-r border border-green-600 from-green-50 via-green-00 to-green-50 rounded-xl p-6 flex items-start gap-4 hover:shadow-lg transition transform hover:scale-101 cursor-pointer relative overflow-hidden">
                         <div class="absolute inset-0 opacity-10 pointer-events-none">
                             <svg class="w-full h-full" preserveAspectRatio="none">
                                 <defs>
@@ -87,7 +87,7 @@
                                 <rect width="100%" height="100%" fill="url(#grid)"></rect>
                             </svg>
                         </div>
-                        <div class="text-red-600 text-6xl flex-shrink-0 mt-1 z-10">
+                        <div class="text-green-600 text-6xl flex-shrink-0 mt-1 z-10">
                             <i class="pi pi-upload"></i>
                         </div>
                         <div class="flex-1 text-left z-10">
@@ -97,7 +97,7 @@
                                 clicks.
                             </p>
                             <span
-                                class="px-6 py-3 bg-red-600 text-white font-semibold rounded-full shadow inline-block">
+                                class="px-6 py-3 bg-green-600 text-white font-semibold rounded-full shadow inline-block">
                                 Upload Now
                             </span>
                         </div>
@@ -106,7 +106,7 @@
 
                 <!-- How Does Upload Work CTA -->
                 <div
-                    class="bg-white rounded-xl shadow-sm p-6 flex items-start gap-4 transition relative border-l-8 border-red-600 overflow-hidden">
+                    class="bg-white rounded-xl shadow-sm border p-6 flex items-start gap-4 transition relative border-l-8 border-green-600 overflow-hidden">
 
                     <!-- Decorative pattern (optional subtle diagonal lines) -->
                     <div class="absolute inset-0 opacity-5 pointer-events-none">
@@ -126,22 +126,22 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-600">
                             <p class="flex items-start gap-2">
                                 <span
-                                    class="bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">1</span>
+                                    class="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">1</span>
                                 Capture a clear photo of your prescription.
                             </p>
                             <p class="flex items-start gap-2">
                                 <span
-                                    class="bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">2</span>
+                                    class="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">2</span>
                                 Login to upload the photo.
                             </p>
                             <p class="flex items-start gap-2">
                                 <span
-                                    class="bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">3</span>
+                                    class="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">3</span>
                                 Our expert pharmacists will verify your prescription.
                             </p>
                             <p class="flex items-start gap-2">
                                 <span
-                                    class="bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">4</span>
+                                    class="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">4</span>
                                 Our customer agent will call you to confirm the order.
                             </p>
                         </div>
@@ -161,25 +161,24 @@
                 Book Appointment
             </a>
 
-            <!-- Doctor Consultation -->
-            <a href="/doctor-consultation"
-                class="flex-1 px-6 py-4 bg-red-600 text-white font-semibold rounded-full shadow-lg text-center hover:bg-red-700 transform hover:scale-105 transition">
-                <i class="pi pi-users"></i>
-                Doctor Consultation
-            </a>
-
             <!-- Call To Order -->
             <a href="tel:+1234567890"
-                class="flex-1 px-6 py-4 bg-red-600 text-white font-semibold rounded-full shadow-lg text-center hover:bg-red-700 transform hover:scale-105 transition">
+                class="flex-1 px-6 py-4 bg-green-600 text-white font-semibold rounded-full shadow-lg text-center hover:bg-green-700 transform hover:scale-105 transition">
                 <i class="pi pi-phone"></i>
                 Call To Order
             </a>
 
+            <!-- Doctor Consultation -->
+            <a href="/doctor-consultation"
+                class="flex-1 px-6 py-4 bg-green-100 text-zinc-800 font-semibold rounded-full shadow-lg text-center hover:text-zinc-50 hover:bg-green-700 transform hover:scale-105 transition">
+                <i class="pi pi-users"></i>
+                Doctor Consultation
+            </a>
         </section>
 
         <!-- How to Order Medicines Section -->
         <section class="my-10 leading-relaxed relative overflow-hidden rounded-xl">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center shadow-lg bg-red-100 p-6 rounded-xl">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center shadow-lg bg-green-100 p-6 rounded-xl">
 
                 <!-- Left Column: Steps -->
                 <div class="md:col-span-8 flex flex-col justify-center">
@@ -187,27 +186,27 @@
                     <div class="space-y-4 text-gray-700">
                         <p class="flex items-start gap-3">
                             <span
-                                class="bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">1</span>
+                                class="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">1</span>
                             Browse our medicines catalog and select the products you need.
                         </p>
                         <p class="flex items-start gap-3">
                             <span
-                                class="bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">2</span>
+                                class="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">2</span>
                             Upload your prescription securely through our platform.
                         </p>
                         <p class="flex items-start gap-3">
                             <span
-                                class="bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">3</span>
+                                class="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">3</span>
                             Review your order and provide your delivery details.
                         </p>
                         <p class="flex items-start gap-3">
                             <span
-                                class="bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">4</span>
+                                class="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">4</span>
                             Our pharmacists verify your prescription and confirm your order.
                         </p>
                         <p class="flex items-start gap-3">
                             <span
-                                class="bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">5</span>
+                                class="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">5</span>
                             Receive your medicines at your doorstep quickly and safely.
                         </p>
                     </div>
@@ -265,7 +264,7 @@
             </div>
         </section>
 
-        <section class="bg-red-50 py-12 md:py-16 rounded-lg my-10">
+        <section class="bg-green-50 py-12 md:py-16 rounded-lg my-10">
             <div class="container mx-auto px-6 md:px-12">
                 <!-- Heading -->
                 <div class="text-center mb-12">
@@ -463,7 +462,7 @@
         transform: translateY(-50%);
         width: 40px;
         height: 40px;
-        background-color: #e02424;
+        background-color: #1cb94b;
         color: white;
         border-radius: 50%;
         display: flex;
@@ -477,7 +476,7 @@
 
     .swiper-button-prev:hover,
     .swiper-button-next:hover {
-        background-color: #b91c1c;
+        background-color: #1cb94b;
     }
 
     .swiper-button-prev {

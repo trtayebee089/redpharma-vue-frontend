@@ -14,22 +14,22 @@
                     <div>
                         <label class="block mb-1 text-gray-600">Mobile Number</label>
                         <input type="text" v-model="mobile" placeholder="Enter your mobile number"
-                            class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-500" />
+                            class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-500" />
                     </div>
 
                     <div>
                         <label class="block mb-1 text-gray-600">Password</label>
                         <input type="password" v-model="password" placeholder="Enter your password"
-                            class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-500" />
+                            class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-500" />
                     </div>
 
                     <button type="submit"
-                        class="bg-red-500 hover:bg-red-600 text-white py-2 rounded font-semibold transition">Login</button>
+                        class="bg-green-500 hover:bg-green-600 text-white py-2 rounded font-semibold transition">Login</button>
                 </form>
 
                 <p class="mt-4 text-sm text-gray-600">
                     Don't have an account?
-                    <router-link @click.native="$emit('close')" to="/register" class="text-red-500 hover:underline">
+                    <router-link @click.native="$emit('close')" to="/register" class="text-green-500 hover:underline">
                         Register
                     </router-link>
                 </p>

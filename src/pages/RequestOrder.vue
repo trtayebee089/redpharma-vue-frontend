@@ -33,7 +33,7 @@
                         </td>
                         <td class="px-4 py-2 text-center">
                             <button @click="removeMedicine(index)"
-                                class="text-red-500 hover:text-red-700 font-semibold px-3 py-1 rounded border border-red-300 transition">
+                                class="text-green-500 hover:text-green-700 font-semibold px-3 py-1 rounded border border-green-300 transition">
                                 Remove
                             </button>
                         </td>

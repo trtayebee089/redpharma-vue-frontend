@@ -104,7 +104,7 @@
                                         class="inline-flex items-center space-x-2 bg-gray-50 px-3 py-1 rounded-md border border-gray-200">
                                         <!-- Decrease Quantity -->
                                         <button @click="decreaseQty(item)" :disabled="item.quantity <= 1"
-                                            class="w-6 h-6 flex items-center justify-center text-gray-700 bg-gray-200 hover:bg-red-400 hover:text-white rounded border border-gray-300 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition">
+                                            class="w-6 h-6 flex items-center justify-center text-gray-700 bg-gray-200 hover:bg-green-400 hover:text-white rounded border border-gray-300 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition">
                                             -
                                         </button>
 
@@ -130,7 +130,7 @@
                                 <!-- Action -->
                                 <td class="px-4 py-3 text-center">
                                     <button @click="removeItem(item)"
-                                        class="text-red-500 hover:text-red-700 font-semibold bg-red-50 px-2 py-1 rounded border border-red-200 hover:bg-red-100 transition">
+                                        class="text-green-500 hover:text-green-700 font-semibold bg-green-50 px-2 py-1 rounded border border-green-200 hover:bg-green-100 transition">
                                         ✕
                                     </button>
                                 </td>

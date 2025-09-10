@@ -1,9 +1,46 @@
 <template>
-    <div class="container mx-auto px-4 md:px-6 mt-8 pt-30">
-        <!-- Page Title -->
-        <h1 class="text-2xl md:text-3xl font-bold mb-6 text-gray-800">
-            Category: {{ category?.name || "Category" }}
-        </h1>
+    <div class="my-10 relative leading-relaxed">
+        <!-- Category Header Section -->
+        <section class="bg-gray-50 py-6 md:px-8 rounded-lg shadow-sm mb-8 border border-gray-200">
+            <div class="mx-auto">
+                <!-- Breadcrumb -->
+                <nav class="text-sm text-gray-500 mb-2" aria-label="Breadcrumb">
+                    <ol class="list-reset flex space-x-2">
+                        <li>
+                            <router-link to="/" class="hover:text-green-600">Home</router-link>
+                            <span class="mx-2">/</span>
+                        </li>
+                        <li>
+                            <router-link to="/shop" class="hover:text-green-600">Shop</router-link>
+                            <span class="mx-2">/</span>
+                        </li>
+                        <li>
+                            <router-link to="/shop" class="hover:text-green-600">Category</router-link>
+                            <span class="mx-2">/</span>
+                        </li>
+                        <li class="text-gray-800 font-semibold">{{ category?.name || "Category" }}</li>
+                    </ol>
+                </nav>
+
+                <!-- Title and Description -->
+                <div class="flex flex-col md:flex-row md:justify-between md:items-center">
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2 md:mb-0">
+                        {{ category?.name || "Category" }}
+                    </h1>
+                    
+                    <!-- Optional: Product count or category tagline -->
+                    <p class="text-gray-600 text-sm md:text-base">
+                        Showing {{ filteredProducts.length }} products in "{{ category?.name || 'this category' }}"
+                    </p>
+                </div>
+
+                <!-- Optional: Category description -->
+                <p v-if="category?.description" class="mt-3 text-gray-700 text-sm md:text-base max-w-3xl">
+                    {{ category.description }}
+                </p>
+            </div>
+        </section>
+
 
         <div class="flex flex-col md:flex-row gap-6">
             <!-- Sidebar -->
@@ -48,7 +85,7 @@
 
                 <!-- Reset Filters -->
                 <button @click="resetFilters"
-                    class="mt-2 w-full px-4 py-2 bg-red-700 text-white rounded hover:bg-red-800 transition">
+                    class="mt-2 w-full px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 transition">
                     Reset Filters
                 </button>
             </aside>
@@ -82,61 +119,79 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { products } from "../data/products.js";
 import { categories } from "../data/categories.js";
 import ProductGridItem from "../components/ProductGridItem.vue";
 
 const route = useRoute();
-const slug = route.params.slug;
 
-// Find the category
-const category = categories.find(cat => cat.slug === slug);
+// Reactive states
+const slug = ref(route.params.slug);
+const category = ref(categories.find(cat => cat.slug === slug.value));
 
-// Filter and sort
+// Filters
 const maxPrice = ref(null);
 const selectedBrand = ref("");
 const inStockOnly = ref(false);
 const minRating = ref(null);
+const sortOption = ref("default");
 
-// Example brand list (you can generate from products dynamically)
+// Brand list
 const brands = ["Pfizer", "GSK", "Novartis", "Roche", "Sanofi"];
 
-// Reset filters function
+// Reset filters
 function resetFilters() {
   maxPrice.value = null;
   selectedBrand.value = "";
   inStockOnly.value = false;
   minRating.value = null;
 }
-const sortOption = ref("default");
 
+// Watch route changes
+watch(
+  () => route.params.slug,
+  (newSlug) => {
+    slug.value = newSlug;
+    category.value = categories.find(cat => cat.slug === newSlug);
+
+    // Optional: reset filters when switching categories
+    resetFilters();
+  }
+);
+
+// Filtered products
 const filteredProducts = computed(() => {
-    let filtered = products.filter(p => p.categoryId === category?.id);
+  let filtered = products.filter(p => p.categoryId === category.value?.id);
 
-    // Apply max price filter
-    if (maxPrice.value != null && maxPrice.value > 0) {
-        filtered = filtered.filter(p => p.price <= maxPrice.value);
-    }
+  if (maxPrice.value != null && maxPrice.value > 0) {
+    filtered = filtered.filter(p => p.price <= maxPrice.value);
+  }
 
-    // Apply sorting
-    if (sortOption.value === "priceAsc") {
-        filtered.sort((a, b) => a.price - b.price);
-    } else if (sortOption.value === "priceDesc") {
-        filtered.sort((a, b) => b.price - a.price);
-    } else if (sortOption.value === "nameAsc") {
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sortOption.value === "nameDesc") {
-        filtered.sort((a, b) => b.name.localeCompare(a.name));
-    }
+  // Add brand filter
+  if (selectedBrand.value) {
+    filtered = filtered.filter(p => p.brand === selectedBrand.value);
+  }
 
-    return filtered;
+  // In stock filter
+  if (inStockOnly.value) {
+    filtered = filtered.filter(p => p.inStock === true);
+  }
+
+  // Min rating filter
+  if (minRating.value != null) {
+    filtered = filtered.filter(p => p.rating >= minRating.value);
+  }
+
+  // Sorting
+  if (sortOption.value === "priceAsc") filtered.sort((a, b) => a.price - b.price);
+  else if (sortOption.value === "priceDesc") filtered.sort((a, b) => b.price - a.price);
+  else if (sortOption.value === "nameAsc") filtered.sort((a, b) => a.name.localeCompare(b.name));
+  else if (sortOption.value === "nameDesc") filtered.sort((a, b) => b.name.localeCompare(a.name));
+
+  return filtered;
 });
-
-console.log("slug:", slug);
-console.log("category:", category);
-console.log("filtered products:", filteredProducts.value);
 </script>
 
 <style scoped>

@@ -9,8 +9,8 @@
           <li v-for="category in categories" :key="category.id" class="border-b last:border-b-0">
             <router-link
               :to="`/category/${category.slug}`"
-              class="flex items-center px-4 py-3 text-gray-700 hover:bg-red-100 transition-colors"
-              :class="route.params.slug === category.slug ? 'bg-red-100 font-semibold text-red-700' : ''"
+              class="flex items-center px-4 py-3 text-gray-700 hover:bg-green-100 transition-colors"
+              :class="route.params.slug === category.slug ? 'bg-green-100 font-semibold text-green-700' : ''"
             >
               <img :src="category.image" alt="" class="w-6 h-6 mr-3" />
               <span>{{ category.name }}</span>

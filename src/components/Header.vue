@@ -1,5 +1,5 @@
 <template>
-    <nav :class="['fixed top-0 left-0 w-full z-50 bg-red-50 transition-shadow', { 'shadow-md': isSticky }]">
+    <nav :class="['fixed top-0 left-0 w-full z-50 bg-green-50 transition-shadow', { 'shadow-md': isSticky }]">
         <div
             class="container mx-auto px-4 md:px-6 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-0">
 
@@ -14,7 +14,7 @@
                 <!-- Desktop Search -->
                 <div class="hidden md:flex flex-1 justify-center px-4 relative">
                     <input type="text" v-model="searchQuery" placeholder="Search medicines..."
-                        class="w-full max-w-md border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-700" />
+                        class="w-full max-w-2xl border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-700" />
 
                     <!-- Live Search Results -->
                     <div v-if="searchQuery && filteredProducts.length"
@@ -48,11 +48,11 @@
                 <!-- Desktop Buttons -->
                 <div class="hidden md:flex space-x-4">
                     <button @click="showLoginModal = true"
-                        class="btn-navbar bg-red-500 hover:bg-red-600 text-white p-2">
+                        class="btn-navbar bg-green-500 hover:bg-green-600 text-white p-2">
                         Login
                     </button>
                     <router-link to="/register"
-                        class="btn-navbar border border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
+                        class="btn-navbar border border-green-500 text-green-600 hover:bg-green-50 hover:text-green-700">
                         Register
                     </router-link>
                 </div>
@@ -106,47 +106,47 @@
         </div>
 
         <!-- Desktop Menu -->
-        <!-- <div class="hidden md:block border-0 border-gray-200 bg-red-700">
+        <!-- <div class="hidden md:block border-0 border-gray-200 bg-green-700">
             <div class="container mx-auto px-4 md:px-6">
                 <div class="flex items-center justify-between font-medium">
 
                     <ul class="flex items-center space-x-6">
                         <li>
                             <router-link to="/"
-                                :class="['text-white px-3 py-2 rounded hover:bg-red-600 hover:text-white transition-colors',
-                                    isActive('/') ? 'bg-red-600 font-semibold' : ''
+                                :class="['text-white px-3 py-2 rounded hover:bg-green-600 hover:text-white transition-colors',
+                                    isActive('/') ? 'bg-green-600 font-semibold' : ''
                                 ]">
                                 Home
                             </router-link>
                         </li>
                         <li>
                             <router-link to="/request-order"
-                                :class="['text-white px-3 py-2 rounded hover:bg-red-600 hover:text-white transition-colors',
-                                    isActive('/request-order') ? 'bg-red-600 font-semibold' : ''
+                                :class="['text-white px-3 py-2 rounded hover:bg-green-600 hover:text-white transition-colors',
+                                    isActive('/request-order') ? 'bg-green-600 font-semibold' : ''
                                 ]">
                                 Request Order
                             </router-link>
                         </li>
                         <li>
                             <router-link to="/offers"
-                                :class="['text-white px-3 py-2 rounded hover:bg-red-600 hover:text-white transition-colors',
-                                    isActive('/offers') ? 'bg-red-600 font-semibold' : ''
+                                :class="['text-white px-3 py-2 rounded hover:bg-green-600 hover:text-white transition-colors',
+                                    isActive('/offers') ? 'bg-green-600 font-semibold' : ''
                                 ]">
                                 Offers
                             </router-link>
                         </li>
                         <li>
                             <router-link to="/about"
-                                :class="['text-white px-3 py-2 rounded hover:bg-red-600 hover:text-white transition-colors',
-                                    isActive('/about') ? 'bg-red-600 font-semibold' : ''
+                                :class="['text-white px-3 py-2 rounded hover:bg-green-600 hover:text-white transition-colors',
+                                    isActive('/about') ? 'bg-green-600 font-semibold' : ''
                                 ]">
                                 About Us
                             </router-link>
                         </li>
                         <li>
                             <router-link to="/contact"
-                                :class="['text-white px-3 py-2 rounded hover:bg-red-600 hover:text-white transition-colors',
-                                    isActive('/contact') ? 'bg-red-600 font-semibold' : ''
+                                :class="['text-white px-3 py-2 rounded hover:bg-green-600 hover:text-white transition-colors',
+                                    isActive('/contact') ? 'bg-green-600 font-semibold' : ''
                                 ]">
                                 Contact Us
                             </router-link>
@@ -157,8 +157,8 @@
                     <ul class="flex items-center space-x-6">
                         <li>
                             <router-link to="/cart"
-                                :class="['text-white px-3 py-2 rounded hover:bg-red-600 transition-colors',
-                                    isActive('/cart') ? 'bg-red-600 font-semibold' : ''
+                                :class="['text-white px-3 py-2 rounded hover:bg-green-600 transition-colors',
+                                    isActive('/cart') ? 'bg-green-600 font-semibold' : ''
                                 ]">
                                 <i class="pi pi-shopping-cart pr-2"></i>Cart
                             </router-link>
@@ -177,7 +177,7 @@
                     <li><router-link @click.native="closeMenu" to="/shop">Shop</router-link></li>
                     <li><router-link @click.native="closeMenu" to="/about">About Us</router-link></li>
                     <li><router-link @click.native="closeMenu" to="/cart">Cart</router-link></li>
-                    <li><router-link @click.native="closeMenu" to="/checkout">Checkout</router-link></li>
+                    <!-- <li><router-link @click.native="closeMenu" to="/checkout">Checkout</router-link></li> -->
                     <li class="flex space-x-2 mt-2">
                         <button @click="showLoginModal = true"
                             class="flex-1 bg-green-500 text-white py-2 rounded text-center">

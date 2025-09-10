@@ -45,7 +45,7 @@
         position: relative;
         overflow: hidden;
         transition: all 0.3s ease;
-        background-color: #ef4444;
+        background-color: #1cb94b;
         /* Tailwind red-500 */
         color: white;
         display: inline-flex;
@@ -54,7 +54,7 @@
     }
 
     .btn-read-more:hover {
-        background-color: #dc2626;
+        background-color: #169c3e;
         /* Tailwind red-600 */
         transform: translateY(-2px);
         box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);

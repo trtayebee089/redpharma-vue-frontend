@@ -2,7 +2,7 @@
     <div class="bg-white rounded-lg hover:shadow-lg transition flex flex-col h-full relative border border-gray-300">
         <!-- Offer Badge (if available) -->
         <div v-if="product.offers"
-            class="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full font-semibold z-10">
+            class="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full font-semibold z-10">
             {{ product . offers }}
         </div>
 
