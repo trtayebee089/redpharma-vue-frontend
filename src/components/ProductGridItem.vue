@@ -1,5 +1,6 @@
 <template>
     <div class="bg-white rounded-lg hover:shadow-lg transition flex flex-col h-full relative border border-gray-300">
+
         <!-- Offer Badge (if available) -->
         <div v-if="product.offers"
             class="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full font-semibold z-10">
@@ -12,6 +13,7 @@
 
         <!-- Content Below Image -->
         <div class="p-3 flex flex-col flex-1">
+
             <!-- Product Name -->
             <h3 class="font-medium text-gray-800 text-sm sm:text-base md:text-lg truncate">
                 {{ product . name }}
@@ -27,13 +29,27 @@
                 {{ product . strength }} | Pack: {{ product . packSize }}
             </p>
 
+            <!-- Price Section -->
+            <div class="mt-2">
+                <span v-if="product.offerPrice" class="text-red-600 font-semibold text-lg">
+                    ${{ product . offerPrice . toFixed(2) }}
+                </span>
+                <span v-if="product.offerPrice" class="text-gray-400 line-through ml-2">
+                    ${{ product . price . toFixed(2) }}
+                </span>
+                <span v-else class="text-gray-800 font-semibold text-lg">
+                    ${{ product . price . toFixed(2) }}
+                </span>
+            </div>
+
             <!-- Quantity & Add to Cart -->
-            <button @click="addToCart" class="btn-add-to-cart w-full sm:w-auto mt-6">
+            <button @click="addToCart" class="btn-add-to-cart w-full sm:w-auto mt-4">
                 Add to Cart
             </button>
         </div>
     </div>
 </template>
+
 
 <script setup>
     import {
