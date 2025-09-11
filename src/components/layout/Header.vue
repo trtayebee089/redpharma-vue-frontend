@@ -58,8 +58,15 @@
 
                 <!-- Desktop Buttons -->
                 <div class="hidden md:flex items-center space-x-4 h-full">
-                    <router-link to="/order-tracking" class="space-x-2 h-12 bg-green-100 text-green-600 flex items-center justify-center rounded-md hover:bg-green-500 hover:text-white transition border border-green-300 shadow-sm px-4">
-                        <span class="font-semibold">Order Tracking</span>
+                    <router-link to="/delivery-coverage" class="space-x-2 h-12 bg-green-100 text-green-600 flex items-center justify-center rounded-md hover:bg-green-500 hover:text-white transition border border-green-300 shadow-sm px-3">
+                        <img :src="deliveryImg" alt="flag" class="w-6 h-6 rounded-sm" />
+                        <span class="font-semibold">Coverage</span>
+                    </router-link>
+
+                    <router-link to="/order-tracking"
+                        class="space-x-2 h-12 bg-green-100 text-green-600 flex items-center justify-center rounded-md hover:bg-green-500 hover:text-white transition border border-green-300 shadow-sm px-3">
+                        <img :src="trackingImg" alt="flag" class="w-6 h-6 rounded-sm" />
+                        <span class="font-semibold">Track</span>
                     </router-link>
 
                     <button @click="toggleLanguage"
@@ -145,6 +152,8 @@
                     <li><router-link @click.native="closeMenu" to="/shop">Shop</router-link></li>
                     <li><router-link @click.native="closeMenu" to="/about">About Us</router-link></li>
                     <li><router-link @click.native="closeMenu" to="/cart">Cart</router-link></li>
+                    <li><router-link @click.native="closeMenu" to="/delivery-coverage">Delivery Coverage</router-link></li>
+                    <li><router-link @click.native="closeMenu" to="/order-tracking">Order Tracking</router-link></li>
                     <li class="flex space-x-2 mt-2">
                         <button @click="showLoginModal = true"
                             class="flex-1 bg-green-500 text-white py-2 rounded text-center">
@@ -162,7 +171,7 @@
             </div>
         </transition>
 
-        <LoginFormModal :show="showLoginModal" @close="showLoginModal = false" />
+        <LoginFormModal :show="showLoginModal" @close="() => { console.log('Header got close'); showLoginModal = false }" />
     </nav>
 </template>
 
@@ -190,6 +199,8 @@
     import LoginFormModal from '@/components/auth/LoginFormModal.vue';
     import usFlag from '@/assets/icons/us-flag.png';
     import bdFlag from '@/assets/icons/bd-flag.png';
+    import deliveryImg from '@/assets/icons/express-delivery.png';
+    import trackingImg from '@/assets/icons/order-tracking.png';
 
     const route = useRoute()
     const showLoginModal = ref(false);
@@ -211,7 +222,6 @@
     const isMenuOpen = ref(false)
     const isSticky = ref(false)
     const cartStore = useCartStore();
-    const totalQty = computed(() => cartStore.totalQty)
 
     const searchQuery = ref("");
     const placeholders = [
@@ -226,11 +236,6 @@
     let charIndex = 0; // current character index
     let isDeleting = false;
     let typingInterval;
-
-    // open cart offcanvas
-    const openCart = () => {
-        cartStore.toggleCart(true)
-    }
 
     function typeEffect() {
         const currentText = placeholders[index];
