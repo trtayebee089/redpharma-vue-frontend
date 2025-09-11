@@ -59,7 +59,7 @@
 </script>
 
 <template>
-    <div class="container mx-auto md:px-6 px-4 py-40">
+    <div class="my-10 relative leading-relaxed">
         <div class="flex flex-col lg:flex-row lg:items-start gap-8">
             <!-- Left Column: Cart Items -->
             <div class="flex-1">
@@ -69,29 +69,22 @@
                     Your cart is empty 🛒
                 </div>
 
-                <div v-else class="overflow-x-auto">
-                    <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-                        <thead class="bg-gray-100">
+                <div v-else class="overflow-x-auto shadow">
+                    <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden border-collapse ">
+                        <thead class="bg-green-200">
                             <tr>
-                                <th class="px-4 py-2 text-left text-gray-700 font-semibold bg-gray-200 border-b">Product
-                                </th>
-                                <th class="px-4 py-2 text-center text-gray-700 font-semibold bg-gray-200 border-b">Price
-                                </th>
-                                <th class="px-4 py-2 text-center text-gray-700 font-semibold bg-gray-200 border-b">Qty
-                                </th>
-                                <th class="px-4 py-2 text-center text-gray-700 font-semibold bg-gray-200 border-b">
-                                    Amount</th>
-                                <th class="px-4 py-2 text-center text-gray-700 font-semibold bg-gray-200 border-b">
-                                    Action</th>
+                                <th class="px-4 py-2 text-left text-gray-700 font-semibold bg-green-100">Product</th>
+                                <th class="px-4 py-2 text-center text-gray-700 font-semibold bg-green-100">Price</th>
+                                <th class="px-4 py-2 text-center text-gray-700 font-semibold bg-green-100">Qty</th>
+                                <th class="px-4 py-2 text-center text-gray-700 font-semibold bg-green-100">Amount</th>
+                                <th class="px-4 py-2 text-center text-gray-700 font-semibold bg-green-100">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in cartItems" :key="item.id"
-                                class="border-b last:border-b-0 hover:bg-gray-50">
+                            <tr v-for="item in cartItems" :key="item.id" class="last:border-b hover:bg-gray-50">
                                 <!-- Product -->
-                                <td class="px-4 py-3 flex items-center space-x-3 border-l">
-                                    <img :src="item.image || 'https://via.placeholder.com/60'"
-                                        class="w-12 h-12 object-contain rounded border border-gray-200" />
+                                <td class="px-4 py-3 flex items-center space-x-3">
+                                    <img :src="item.image || 'https://via.placeholder.com/60'" class="w-12 h-12 object-contain rounded border border-gray-200" />
                                     <span class="font-medium text-gray-800">{{ item . name }}</span>
                                 </td>
 
@@ -150,7 +143,7 @@
 
             <!-- Right Column: Summary & Checkout Form -->
             <div class="w-full lg:w-1/3">
-                <div class="border rounded-lg bg-gray-50 shadow-sm overflow-hidden">
+                <div class="border border-green-300 rounded-lg bg-gray-50 shadow-sm overflow-hidden">
 
                     <!-- Header -->
                     <div class="bg-green-100 px-6 py-4 border-b border-green-200">
