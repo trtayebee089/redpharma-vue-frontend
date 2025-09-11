@@ -1,11 +1,10 @@
 <template>
     <div>
         <!-- Banner Slider -->
-        <section class="my-10 relative leading-relaxed">
+        <section class="my-10 relative leading-relaxed fade-up">
             <div class=" rounded-xl overflow-hidden">
-                <Swiper :modules="[Pagination, Navigation, Autoplay]" :slides-per-view="1" :loop="true"
-                    :autoplay="{ delay: 4500, disableOnInteraction: false }" :pagination="{ clickable: true }"
-                    class="w-full h-[60vh] md:h-[50vh] lg:h-[60vh] relative rounded-xl overflow-hidden shadow-xl">
+                <Swiper :modules="[Pagination, Navigation, Autoplay]" :slides-per-view="1" :loop="true" :autoplay="{ delay: 4500, disableOnInteraction: false }"
+                    class="w-full h-[40vh] md:h-[30vh] lg:h-[40vh] relative rounded-xl overflow-hidden shadow-xl">
                     <SwiperSlide v-for="(slide, index) in slides" :key="index" class="relative w-full h-full">
 
                         <!-- Background Image -->
@@ -58,7 +57,7 @@
         </section>
 
         <!-- Categories Slider -->
-        <section class="my-10 relative leading-relaxed">
+        <section class="my-10 relative leading-relaxed fade-up">
             <div class="category-slider">
                 <h2 class="text-2xl md:text-3xl font-bold mb-5 text-gray-800 relative inline-block">
                     Product Categories
@@ -88,7 +87,7 @@
         </section>
 
         <!-- CTA SECTION -->
-        <section class="my-10 relative leading-relaxed">
+        <section class="my-10 relative leading-relaxed fade-up">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                 <!-- Upload Prescription CTA -->
@@ -171,7 +170,7 @@
 
         <!-- Quick Action Buttons CTA -->
         <section
-            class="bg-white leading-relaxed relative flex flex-col md:flex-row items-center justify-center gap-8 ransition my-10">
+            class="bg-white leading-relaxed relative flex flex-col md:flex-row items-center justify-center gap-8 ransition my-10 fade-up">
 
             <!-- Book Appointment -->
             <a href="/book-appointment"
@@ -196,7 +195,7 @@
         </section>
 
         <!-- How to Order Medicines Section -->
-        <section class="my-10 leading-relaxed relative overflow-hidden rounded-xl">
+        <section class="my-10 leading-relaxed relative overflow-hidden rounded-xl fade-up">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center shadow-lg bg-green-100 p-6 rounded-xl">
 
                 <!-- Left Column: Steps -->
@@ -241,7 +240,7 @@
         </section>
 
         <!-- Products Slider -->
-        <section class="my-10 leading-relaxed relative featured-product-slider">
+        <section class="my-10 leading-relaxed relative featured-product-slider fade-up">
             <div class="category-slider">
                 <h2 class="text-2xl font-semibold mb-4 text-gray-800">Featured Products</h2>
 
@@ -260,30 +259,28 @@
         </section>
 
         <!-- Health Articles Section -->
-        <section class="my-12  leading-relaxed">
-            <div class="container mx-auto px-4">
-                <!-- Section Title -->
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
-                    Health Articles
-                </h2>
+        <section class="my-12  leading-relaxed fade-up">
+            <!-- Section Title -->
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
+                Health Articles
+            </h2>
 
-                <!-- Swiper Slider -->
-                <Swiper :slides-per-view="1" :space-between="20"
-                    :breakpoints="{
-                        640: { slidesPerView: 1 },
-                        768: { slidesPerView: 2 },
-                        1024: { slidesPerView: 4 }
-                    }"
-                    :loop="true" :pagination="{ clickable: true }" :navigation="true" class="pb-10">
-                    <!-- Loop through your blog posts -->
-                    <SwiperSlide v-for="(article, index) in articles" :key="index">
-                        <BlogGridItem :article="article" />
-                    </SwiperSlide>
-                </Swiper>
-            </div>
+            <!-- Swiper Slider -->
+            <Swiper :slides-per-view="1" :space-between="20"
+                :breakpoints="{
+                    640: { slidesPerView: 1 },
+                    768: { slidesPerView: 2 },
+                    1024: { slidesPerView: 4 }
+                }"
+                :loop="true" :pagination="{ clickable: true }" :navigation="true" class="pb-10">
+                <!-- Loop through your blog posts -->
+                <SwiperSlide v-for="(article, index) in articles" :key="index">
+                    <BlogGridItem :article="article" />
+                </SwiperSlide>
+            </Swiper>
         </section>
 
-        <section class="bg-green-50 py-12 md:py-16 rounded-lg my-10">
+        <section class="bg-green-50 py-12 md:py-16 rounded-lg my-10 fade-up">
             <div class="container mx-auto px-6 md:px-12">
                 <!-- Heading -->
                 <div class="text-center mb-12">
@@ -345,13 +342,13 @@
     import 'swiper/css/pagination'
     import 'swiper/css/navigation'
     import orderMedicineImg from '../assets/images/order-medicine.png'
-    import BlogGridItem from "../components/BlogGridItem.vue";
+    import BlogGridItem from "../components/blog/BlogGridItem.vue";
     import {
         Pagination,
         Navigation,
         Autoplay
     } from 'swiper/modules'
-    import ProductGridItem from '../components/ProductGridItem.vue'
+    import ProductGridItem from '@/components/products/ProductGridItem.vue'
     import {
         categories
     } from '../data/categories'

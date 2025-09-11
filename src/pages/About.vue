@@ -112,7 +112,6 @@
 </script>
 
 <style scoped>
-    /* Optional: Add subtle fade-in animations for sections */
     section>div {
         opacity: 0;
         transform: translateY(20px);

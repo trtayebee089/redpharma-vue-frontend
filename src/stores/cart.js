@@ -2,7 +2,8 @@ import { defineStore } from 'pinia'
 
 export const useCartStore = defineStore('cart', {
   state: () => ({
-    items: JSON.parse(localStorage.getItem('cartItems') || '[]')  // load from localStorage
+    items: JSON.parse(localStorage.getItem('cartItems') || '[]'),
+    isCartOpen: false // <-- add this for offcanvas toggle
   }),
   actions: {
     saveCart() {
@@ -33,6 +34,14 @@ export const useCartStore = defineStore('cart', {
     clearCart() {
       this.items = []
       this.saveCart()
+    },
+
+    // Toggle offcanvas open/close
+    toggleCart(open) {
+      this.isCartOpen = open ?? !this.isCartOpen
     }
+  },
+  getters: {
+    totalQty: state => state.items.reduce((acc, i) => acc + i.quantity, 0)
   }
 })

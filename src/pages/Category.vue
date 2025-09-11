@@ -1,5 +1,5 @@
 <template>
-    <div class="my-10 relative leading-relaxed">
+    <div class="my-16 relative leading-relaxed">
         <!-- Category Header Section -->
         <section class="bg-gray-50 py-6 md:px-8 rounded-lg shadow-sm mb-8 border border-gray-200">
             <div class="mx-auto">
@@ -123,7 +123,7 @@ import { ref, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { products } from "../data/products.js";
 import { categories } from "../data/categories.js";
-import ProductGridItem from "../components/ProductGridItem.vue";
+import ProductGridItem from "../components/products/ProductGridItem.vue";
 
 const route = useRoute();
 
