@@ -1,85 +1,84 @@
 <template>
-    <div class="p-6 max-w-4xl mx-auto mb-16">
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-extrabold text-gray-800 mb-2">Track Your Consignment</h1>
-            <p class="text-gray-500 text-lg">Now you can easily track your consignment</p>
-        </div>
-
-        <!-- Input Field -->
-        <div class="flex justify-center mb-12">
-            <input type="text" v-model="trackingCodeInput" placeholder="Enter Mobile Order Number"
-                class="w-full max-w-md px-4 py-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
-            <button @click="trackOrder"
-                class="px-6 py-3 bg-green-500 text-white rounded-r-lg hover:bg-green-600 transition">
-                Track
-            </button>
-        </div>
-
-        <!-- Order Info -->
-        <div v-if="order" class="mb-8 shadow-sm bg-white">
-            <div class="space-y-6">
-                <!-- Order Info -->
-                <div class="bg-white shadow-md rounded-lg p-6 border border-green-200">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b border-green-300 pb-2">Order Info</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <p><span class="font-medium text-gray-700">Date:</span> {{ order . date }}</p>
-                        <p><span class="font-medium text-gray-700">Id:</span> {{ order . id }}</p>
-                        <p><span class="font-medium text-gray-700">Invoice:</span> {{ order . invoice }}</p>
-                        <p><span class="font-medium text-gray-700">Tracking Code:</span> {{ order . trackingCode }}</p>
-                        <p><span class="font-medium text-gray-700">Approved:</span> {{ order . approved }}</p>
-                        <p><span class="font-medium text-gray-700">Weight:</span> {{ order . weight }} KG</p>
-                        <p><span class="font-medium text-gray-700">COD:</span> ৳ {{ order . cod }}</p>
-                        <p><span class="font-medium text-gray-700">Status:</span> {{ order . status }}</p>
-                    </div>
-                </div>
-
-                <!-- Customer Info -->
-                <div class="bg-white shadow-md rounded-lg p-6 border border-green-200">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b border-green-300 pb-2">Customer Info
-                    </h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <p><span class="font-medium text-gray-700">Name:</span> {{ order . customer . name }}</p>
-                        <p><span class="font-medium text-gray-700">Phone:</span> {{ order . customer . phone }}</p>
-                        <p class="md:col-span-2"><span class="font-medium text-gray-700">Address:</span>
-                            {{ order . customer . address }}</p>
-                    </div>
-                </div>
-
-                <!-- Rider Info -->
-                <div class="bg-white shadow-md rounded-lg p-6 border border-green-200">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b border-green-300 pb-2">Rider / Assigned
-                        To</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <p><span class="font-medium text-gray-700">Name:</span> {{ order . assigned . name }}</p>
-                        <p><span class="font-medium text-gray-700">Phone:</span> {{ order . assigned . phone }}</p>
-                        <p><span class="font-medium text-gray-700">Sender:</span> {{ order . sender . name }}</p>
-                    </div>
-                </div>
-
+    <div>
+        <div class="relative fade-up max-w-4xl mx-auto">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-extrabold text-gray-800 mb-2">Track Your Consignment</h1>
+                <p class="text-gray-500 text-lg">Now you can easily track your consignment</p>
             </div>
 
-        </div>
+            <div class="flex justify-center mb-12">
+                <input type="text" v-model="trackingCodeInput" placeholder="Enter Mobile Order Number"
+                    class="w-full max-w-md px-4 py-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+                <button @click="trackOrder"
+                    class="px-6 py-3 bg-green-500 text-white rounded-r-lg hover:bg-green-600 transition">
+                    Track
+                </button>
+            </div>
 
-        <!-- Timeline -->
-        <div v-if="order && order.updates.length">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center pb-9">Tracking Updates</h2>
-            <Timeline :value="order.updates" align="alternate">
-                <template #opposite="slotProps" class="text-sm text-gray-500 m-5">
-                    <small class="text-gray-500">{{ slotProps . item . date }}<br>{{ slotProps . item . time }}</small>
-                </template>
-                <template #marker="slotProps">
-                    <span :class="['inline-flex items-center justify-center w-8 h-8 rounded-full text-white']"
-                        :style="{ backgroundColor: slotProps.item.color }">
-                        <i :class="slotProps.item.icon"></i>
-                    </span>
-                </template>
-                <template #content="slotProps">
-                    <div class="p-3 bg-gray-50 rounded shadow-sm">
-                        {{ slotProps . item . message }}
+            <div v-if="order" class="mb-8 shadow-sm bg-white">
+                <div class="space-y-6">
+                    <div class="bg-white shadow-md rounded-lg p-6 border border-green-200">
+                        <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b border-green-300 pb-2">Order Info
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <p><span class="font-medium text-gray-700">Date:</span> {{ order . date }}</p>
+                            <p><span class="font-medium text-gray-700">Id:</span> {{ order . id }}</p>
+                            <p><span class="font-medium text-gray-700">Invoice:</span> {{ order . invoice }}</p>
+                            <p><span class="font-medium text-gray-700">Tracking Code:</span> {{ order . trackingCode }}
+                            </p>
+                            <p><span class="font-medium text-gray-700">Approved:</span> {{ order . approved }}</p>
+                            <p><span class="font-medium text-gray-700">Weight:</span> {{ order . weight }} KG</p>
+                            <p><span class="font-medium text-gray-700">COD:</span> ৳ {{ order . cod }}</p>
+                            <p><span class="font-medium text-gray-700">Status:</span> {{ order . status }}</p>
+                        </div>
                     </div>
-                </template>
-            </Timeline>
+
+                    <div class="bg-white shadow-md rounded-lg p-6 border border-green-200">
+                        <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b border-green-300 pb-2">Customer
+                            Info
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <p><span class="font-medium text-gray-700">Name:</span> {{ order . customer . name }}</p>
+                            <p><span class="font-medium text-gray-700">Phone:</span> {{ order . customer . phone }}</p>
+                            <p class="md:col-span-2"><span class="font-medium text-gray-700">Address:</span>
+                                {{ order . customer . address }}</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white shadow-md rounded-lg p-6 border border-green-200">
+                        <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b border-green-300 pb-2">Rider /
+                            Assigned
+                            To</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <p><span class="font-medium text-gray-700">Name:</span> {{ order . assigned . name }}</p>
+                            <p><span class="font-medium text-gray-700">Phone:</span> {{ order . assigned . phone }}</p>
+                            <p><span class="font-medium text-gray-700">Sender:</span> {{ order . sender . name }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline -->
+            <div v-if="order && order.updates.length">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center pb-9">Tracking Updates</h2>
+                <Timeline :value="order.updates" align="alternate">
+                    <template #opposite="slotProps" class="text-sm text-gray-500 m-5">
+                        <small
+                            class="text-gray-500">{{ slotProps . item . date }}<br>{{ slotProps . item . time }}</small>
+                    </template>
+                    <template #marker="slotProps">
+                        <span :class="['inline-flex items-center justify-center w-8 h-8 rounded-full text-white']"
+                            :style="{ backgroundColor: slotProps.item.color }">
+                            <i :class="slotProps.item.icon"></i>
+                        </span>
+                    </template>
+                    <template #content="slotProps">
+                        <div class="p-3 bg-gray-50 rounded shadow-sm">
+                            {{ slotProps . item . message }}
+                        </div>
+                    </template>
+                </Timeline>
+            </div>
         </div>
     </div>
 </template>
@@ -92,6 +91,7 @@
     import 'primevue/resources/themes/saga-green/theme.css' // choose any theme
     import 'primevue/resources/primevue.min.css'
     import 'primeicons/primeicons.css'
+    import PageTemplate from "../components/layout/PageTemplate.vue";
     // import 'primeflex/primeflex.css'
 
     // Tracking number input

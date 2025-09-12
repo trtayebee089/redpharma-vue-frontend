@@ -1,5 +1,5 @@
 <template>
-    <div class="p-6">
+    <section class="relative leading-relaxed fade-up mb-16">
         <h1 class="text-3xl font-extrabold mb-3 text-gray-800 bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent tracking-wide">
             Delivery Coverage
         </h1>
@@ -97,7 +97,7 @@
 
         <!-- Google Map for Home Delivery -->
         <div v-if="showMap" id="map" class="w-full h-[500px] rounded shadow-lg"></div>
-    </div>
+    </section>
 </template>
 
 <script setup>

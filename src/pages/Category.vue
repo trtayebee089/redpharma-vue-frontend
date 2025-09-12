@@ -1,8 +1,7 @@
 <template>
-    <div class="my-16 relative leading-relaxed">
-        <!-- Category Header Section -->
-        <section class="bg-gray-50 py-6 md:px-8 rounded-lg shadow-sm mb-8 border border-gray-200">
-            <div class="mx-auto">
+    <div>
+        <section class="relative fade-up">
+            <div class=" rounded-xl overflow-hidden border border-green-100 shadow-sm p-5">
                 <!-- Breadcrumb -->
                 <nav class="text-sm text-gray-500 mb-2" aria-label="Breadcrumb">
                     <ol class="list-reset flex space-x-2">
@@ -11,11 +10,7 @@
                             <span class="mx-2">/</span>
                         </li>
                         <li>
-                            <router-link to="/shop" class="hover:text-green-600">Shop</router-link>
-                            <span class="mx-2">/</span>
-                        </li>
-                        <li>
-                            <router-link to="/shop" class="hover:text-green-600">Category</router-link>
+                            <span class="hover:text-green-600">Category</span>
                             <span class="mx-2">/</span>
                         </li>
                         <li class="text-gray-800 font-semibold">{{ category?.name || "Category" }}</li>
@@ -41,8 +36,7 @@
             </div>
         </section>
 
-
-        <div class="flex flex-col md:flex-row gap-6">
+        <section class="relative fade-up flex flex-col md:flex-row gap-6 mt-10">
             <!-- Sidebar -->
             <aside class="w-full md:w-64 p-4 bg-white rounded-lg shadow">
                 <h2 class="font-semibold mb-3 text-gray-700">Filter by</h2>
@@ -51,13 +45,13 @@
                 <div class="mb-4">
                     <label class="block mb-1 text-gray-600">Max Price</label>
                     <input type="number" v-model.number="maxPrice" placeholder="0"
-                        class="w-full border px-3 py-2 rounded" />
+                        class="w-full border border-gray-300 px-3 py-2 rounded" />
                 </div>
 
                 <!-- Brand Filter -->
                 <div class="mb-4">
                     <label class="block mb-1 text-gray-600">Brand</label>
-                    <select v-model="selectedBrand" class="w-full border px-3 py-2 rounded">
+                    <select v-model="selectedBrand" class="w-full border border-gray-300 px-3 py-2 rounded">
                         <option value="">All Brands</option>
                         <option v-for="brand in brands" :key="brand" :value="brand">{{ brand }}</option>
                     </select>
@@ -90,7 +84,6 @@
                 </button>
             </aside>
 
-
             <!-- Main Content -->
             <div class="flex-1">
                 <!-- Sort By -->
@@ -114,86 +107,96 @@
                     No products found in this category.
                 </p>
             </div>
-        </div>
+        </section>
     </div>
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
-import { useRoute } from "vue-router";
-import { products } from "../data/products.js";
-import { categories } from "../data/categories.js";
-import ProductGridItem from "../components/products/ProductGridItem.vue";
+    import {
+        ref,
+        computed,
+        watch
+    } from "vue";
+    import {
+        useRoute
+    } from "vue-router";
+    import {
+        products
+    } from "../data/products.js";
+    import {
+        categories
+    } from "../data/categories.js";
+    import ProductGridItem from "../components/products/ProductGridItem.vue";
+import PageTemplate from "../components/layout/PageTemplate.vue";
 
-const route = useRoute();
+    const route = useRoute();
 
-// Reactive states
-const slug = ref(route.params.slug);
-const category = ref(categories.find(cat => cat.slug === slug.value));
+    // Reactive states
+    const slug = ref(route.params.slug);
+    const category = ref(categories.find(cat => cat.slug === slug.value));
 
-// Filters
-const maxPrice = ref(null);
-const selectedBrand = ref("");
-const inStockOnly = ref(false);
-const minRating = ref(null);
-const sortOption = ref("default");
+    // Filters
+    const maxPrice = ref(null);
+    const selectedBrand = ref("");
+    const inStockOnly = ref(false);
+    const minRating = ref(null);
+    const sortOption = ref("default");
 
-// Brand list
-const brands = ["Pfizer", "GSK", "Novartis", "Roche", "Sanofi"];
+    // Brand list
+    const brands = ["Pfizer", "GSK", "Novartis", "Roche", "Sanofi"];
 
-// Reset filters
-function resetFilters() {
-  maxPrice.value = null;
-  selectedBrand.value = "";
-  inStockOnly.value = false;
-  minRating.value = null;
-}
+    // Reset filters
+    function resetFilters() {
+        maxPrice.value = null;
+        selectedBrand.value = "";
+        inStockOnly.value = false;
+        minRating.value = null;
+    }
 
-// Watch route changes
-watch(
-  () => route.params.slug,
-  (newSlug) => {
-    slug.value = newSlug;
-    category.value = categories.find(cat => cat.slug === newSlug);
+    // Watch route changes
+    watch(
+        () => route.params.slug,
+        (newSlug) => {
+            slug.value = newSlug;
+            category.value = categories.find(cat => cat.slug === newSlug);
 
-    // Optional: reset filters when switching categories
-    resetFilters();
-  }
-);
+            // Optional: reset filters when switching categories
+            resetFilters();
+        }
+    );
 
-// Filtered products
-const filteredProducts = computed(() => {
-  let filtered = products.filter(p => p.categoryId === category.value?.id);
+    // Filtered products
+    const filteredProducts = computed(() => {
+        let filtered = products.filter(p => p.categoryId === category.value?.id);
 
-  if (maxPrice.value != null && maxPrice.value > 0) {
-    filtered = filtered.filter(p => p.price <= maxPrice.value);
-  }
+        if (maxPrice.value != null && maxPrice.value > 0) {
+            filtered = filtered.filter(p => p.price <= maxPrice.value);
+        }
 
-  // Add brand filter
-  if (selectedBrand.value) {
-    filtered = filtered.filter(p => p.brand === selectedBrand.value);
-  }
+        // Add brand filter
+        if (selectedBrand.value) {
+            filtered = filtered.filter(p => p.brand === selectedBrand.value);
+        }
 
-  // In stock filter
-  if (inStockOnly.value) {
-    filtered = filtered.filter(p => p.inStock === true);
-  }
+        // In stock filter
+        if (inStockOnly.value) {
+            filtered = filtered.filter(p => p.inStock === true);
+        }
 
-  // Min rating filter
-  if (minRating.value != null) {
-    filtered = filtered.filter(p => p.rating >= minRating.value);
-  }
+        // Min rating filter
+        if (minRating.value != null) {
+            filtered = filtered.filter(p => p.rating >= minRating.value);
+        }
 
-  // Sorting
-  if (sortOption.value === "priceAsc") filtered.sort((a, b) => a.price - b.price);
-  else if (sortOption.value === "priceDesc") filtered.sort((a, b) => b.price - a.price);
-  else if (sortOption.value === "nameAsc") filtered.sort((a, b) => a.name.localeCompare(b.name));
-  else if (sortOption.value === "nameDesc") filtered.sort((a, b) => b.name.localeCompare(a.name));
+        // Sorting
+        if (sortOption.value === "priceAsc") filtered.sort((a, b) => a.price - b.price);
+        else if (sortOption.value === "priceDesc") filtered.sort((a, b) => b.price - a.price);
+        else if (sortOption.value === "nameAsc") filtered.sort((a, b) => a.name.localeCompare(b.name));
+        else if (sortOption.value === "nameDesc") filtered.sort((a, b) => b.name.localeCompare(a.name));
 
-  return filtered;
-});
+        return filtered;
+    });
 </script>
 
 <style scoped>
-/* Add any extra styling if needed */
 </style>

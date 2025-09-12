@@ -1,65 +1,5 @@
-<script setup>
-    import {
-        useCartStore
-    } from "@/stores/cart";
-    import {
-        computed,
-        ref
-    } from "vue";
-
-    const cartStore = useCartStore();
-
-    // cart items
-    const cartItems = computed(() => cartStore.items);
-
-    // total
-    const cartTotal = computed(() =>
-        cartStore.items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-    );
-
-    // actions
-    const increaseQty = (item) => {
-        cartStore.updateQuantity(item.id, item.quantity + 1);
-    };
-
-    const decreaseQty = (item) => {
-        if (item.quantity > 1) {
-            cartStore.updateQuantity(item.id, item.quantity - 1);
-        }
-    };
-
-    const removeItem = (item) => cartStore.removeFromCart(item.id);
-    const checkoutForm = ref({
-        fullName: "",
-        phone: "",
-        address: ""
-    })
-
-    const submitCheckout = () => {
-        if (!cartStore.items.length) {
-            alert("Your cart is empty!")
-            return
-        }
-
-        // Handle checkout submission
-        console.log("Checkout Data:", checkoutForm.value)
-        console.log("Cart Items:", cartStore.items)
-
-        // Example: clear cart after order
-        cartStore.clearCart()
-        alert("Order placed successfully!")
-
-        // Reset form
-        checkoutForm.value = {
-            fullName: "",
-            phone: "",
-            address: ""
-        }
-    }
-</script>
-
 <template>
-    <div class="my-10 relative leading-relaxed">
+    <div class="relative leading-relaxed mb-16">
         <div class="flex flex-col lg:flex-row lg:items-start gap-8">
             <!-- Left Column: Cart Items -->
             <div class="flex-1">
@@ -74,22 +14,28 @@
                         <thead class="bg-green-200">
                             <tr>
                                 <th class="px-4 py-2 text-left text-gray-700 font-semibold bg-green-100">Product</th>
-                                <th class="px-4 py-2 text-center text-gray-700 font-semibold bg-green-100">Price</th>
+                                <th class="px-4 py-2 text-center text-gray-700 font-semibold bg-green-100">Price
+                                </th>
                                 <th class="px-4 py-2 text-center text-gray-700 font-semibold bg-green-100">Qty</th>
-                                <th class="px-4 py-2 text-center text-gray-700 font-semibold bg-green-100">Amount</th>
-                                <th class="px-4 py-2 text-center text-gray-700 font-semibold bg-green-100">Action</th>
+                                <th class="px-4 py-2 text-center text-gray-700 font-semibold bg-green-100">Amount
+                                </th>
+                                <th class="px-4 py-2 text-center text-gray-700 font-semibold bg-green-100">Action
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in cartItems" :key="item.id" class="last:border-b hover:bg-gray-50">
+                            <tr v-for="item in cartItems" :key="item.id"
+                                class="last:border-b hover:bg-gray-50">
                                 <!-- Product -->
                                 <td class="px-4 py-3 flex items-center space-x-3">
-                                    <img :src="item.image || 'https://via.placeholder.com/60'" class="w-12 h-12 object-contain rounded border border-gray-200" />
+                                    <img :src="item.image || 'https://via.placeholder.com/60'"
+                                        class="w-12 h-12 object-contain rounded border border-gray-200" />
                                     <span class="font-medium text-gray-800">{{ item . name }}</span>
                                 </td>
 
                                 <!-- Price -->
-                                <td class="px-4 py-3 text-center text-gray-700">${{ item . price . toFixed(2) }}</td>
+                                <td class="px-4 py-3 text-center text-gray-700">${{ item . price . toFixed(2) }}
+                                </td>
 
                                 <!-- Quantity -->
                                 <td class="px-4 py-3 text-center">
@@ -201,8 +147,67 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
-
 </template>
+
+<script setup>
+    import {
+        useCartStore
+    } from "@/stores/cart";
+    import {
+        computed,
+        ref
+    } from "vue";
+    import PageTemplate from "../components/layout/PageTemplate.vue";
+
+    const cartStore = useCartStore();
+
+    // cart items
+    const cartItems = computed(() => cartStore.items);
+
+    // total
+    const cartTotal = computed(() =>
+        cartStore.items.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    );
+
+    // actions
+    const increaseQty = (item) => {
+        cartStore.updateQuantity(item.id, item.quantity + 1);
+    };
+
+    const decreaseQty = (item) => {
+        if (item.quantity > 1) {
+            cartStore.updateQuantity(item.id, item.quantity - 1);
+        }
+    };
+
+    const removeItem = (item) => cartStore.removeFromCart(item.id);
+    const checkoutForm = ref({
+        fullName: "",
+        phone: "",
+        address: ""
+    })
+
+    const submitCheckout = () => {
+        if (!cartStore.items.length) {
+            alert("Your cart is empty!")
+            return
+        }
+
+        // Handle checkout submission
+        console.log("Checkout Data:", checkoutForm.value)
+        console.log("Cart Items:", cartStore.items)
+
+        // Example: clear cart after order
+        cartStore.clearCart()
+        alert("Order placed successfully!")
+
+        // Reset form
+        checkoutForm.value = {
+            fullName: "",
+            phone: "",
+            address: ""
+        }
+    }
+</script>

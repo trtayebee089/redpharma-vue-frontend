@@ -1,5 +1,5 @@
 <template>
-    <section class="bg-gray-50 text-gray-800 px-6 py-12 md:px-12 lg:px-24 space-y-12">
+    <section class="bg-gray-50 text-gray-800 space-y-12">
         
         <!-- Hero Section -->
         <div class="max-w-5xl mx-auto space-y-4 text-center leading-relaxed bg-green-50 rounded-lg p-6 relative overflow-hidden">

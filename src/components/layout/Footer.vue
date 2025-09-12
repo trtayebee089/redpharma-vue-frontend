@@ -4,6 +4,8 @@
     import paymentsLogo from '@/assets/images/payment-logos.webp';
     import InputField from '@/components/common/InputField.vue';
     import { ref } from 'vue';
+
+    const email = ref('');
 </script>
 
 <template>

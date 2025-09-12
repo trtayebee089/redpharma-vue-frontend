@@ -58,7 +58,8 @@
 
                 <!-- Desktop Buttons -->
                 <div class="hidden md:flex items-center space-x-4 h-full">
-                    <router-link to="/delivery-coverage" class="space-x-2 h-12 bg-green-100 text-green-600 flex items-center justify-center rounded-md hover:bg-green-500 hover:text-white transition border border-green-300 shadow-sm px-3">
+                    <router-link to="/delivery-coverage"
+                        class="space-x-2 h-12 bg-green-100 text-green-600 flex items-center justify-center rounded-md hover:bg-green-500 hover:text-white transition border border-green-300 shadow-sm px-3">
                         <img :src="deliveryImg" alt="flag" class="w-6 h-6 rounded-sm" />
                         <span class="font-semibold">Coverage</span>
                     </router-link>
@@ -89,13 +90,16 @@
                     </div>
 
                     <!-- Login Button with User Icon -->
-                    <button @click="showLoginModal = true"
+                    <button v-if="!authStore.isAuthenticated" @click="showLoginModal = true"
                         class="flex items-center justify-center space-x-2 px-4 rounded-lg bg-green-500 hover:bg-green-600 text-white shadow-sm h-12">
                         <span class="w-8 h-8 bg-white text-green-600 flex items-center justify-center rounded-full">
                             <i class="pi pi-user text-lg"></i>
                         </span>
                         <span class="font-semibold">Login</span>
                     </button>
+
+                    <!-- If logged in -->
+                    <UserDropdown v-else />
                 </div>
 
                 <!-- Mobile Hamburger -->
@@ -149,7 +153,6 @@
             <div v-if="isMenuOpen" class="md:hidden bg-white shadow-md">
                 <ul class="flex flex-col px-4 py-4 space-y-2 text-gray-700 font-medium">
                     <li><router-link @click.native="closeMenu" to="/">Home</router-link></li>
-                    <li><router-link @click.native="closeMenu" to="/shop">Shop</router-link></li>
                     <li><router-link @click.native="closeMenu" to="/about">About Us</router-link></li>
                     <li><router-link @click.native="closeMenu" to="/cart">Cart</router-link></li>
                     <li><router-link @click.native="closeMenu" to="/delivery-coverage">Delivery Coverage</router-link></li>
@@ -171,7 +174,8 @@
             </div>
         </transition>
 
-        <LoginFormModal :show="showLoginModal" @close="() => { console.log('Header got close'); showLoginModal = false }" />
+        <LoginFormModal :show="showLoginModal"
+            @close="() => { console.log('Header got close'); showLoginModal = false }" />
     </nav>
 </template>
 
@@ -184,39 +188,32 @@
         reactive
     } from 'vue'
     import mainLogo from '@/assets/logo.png';
-    import {
-        products
-    } from "@/data/products.js";
-    import {
-        categories
-    } from "@/data/categories.js";
-    import {
-        useRoute
-    } from 'vue-router'
-    import {
-        useCartStore
-    } from "@/stores/cart"
+    import { products } from "@/data/products.js";
+    import { categories } from "@/data/categories.js";
+    import { useRoute } from 'vue-router'
+    import { useCartStore } from "@/stores/cart"
     import LoginFormModal from '@/components/auth/LoginFormModal.vue';
+    import { useAuthStore } from "@/stores/auth";
+    import UserDropdown from "@/components/auth/UserDropdown.vue";
+    import { useLanguageStore } from "@/stores/language";
     import usFlag from '@/assets/icons/us-flag.png';
     import bdFlag from '@/assets/icons/bd-flag.png';
     import deliveryImg from '@/assets/icons/express-delivery.png';
     import trackingImg from '@/assets/icons/order-tracking.png';
 
-    const route = useRoute()
-    const showLoginModal = ref(false);
-
-    const currentLanguage = ref('EN');
-
-    const toggleLanguage = () => {
-        currentLanguage.value = currentLanguage.value === 'EN' ? 'BN' : 'EN';
+    const flags = {
+        en: usFlag,
+        bn: bdFlag
     };
 
-    const currentFlag = computed(() => {
-        return currentLanguage.value === 'EN' ? usFlag : bdFlag;
-    });
+    const route = useRoute()
+    const showLoginModal = ref(false);
+    const authStore = useAuthStore();
+    const langStore = useLanguageStore();
 
+    const currentLanguage = computed(() => langStore.lang.toUpperCase());
+    const currentFlag = computed(() => flags[langStore.lang]);
 
-    // Function to check if link is active
     const isActive = (path) => route.path === path
 
     const isMenuOpen = ref(false)
@@ -225,10 +222,10 @@
 
     const searchQuery = ref("");
     const placeholders = [
-        "Search medicines...",
-        "Search by brand...",
-        "Search by category...",
-        "Find your prescription..."
+        "Search medicines... (Ex: Paracetamol)",
+        "Search by brand... (Ex: Acme Pharma)",
+        "Search by category... (Ex: Pain Relief)",
+        "Find your prescription... (Ex: Antibiotics)"
     ];
 
     const placeholderText = ref("");
@@ -276,6 +273,13 @@
     function handleScroll() {
         isSticky.value = window.scrollY > 50
     }
+
+    const toggleLanguage = () => {
+        const langs = ["en", "bn"];
+        const currentIndex = langs.indexOf(langStore.lang);
+        const nextLang = langs[(currentIndex + 1) % langs.length];
+        langStore.setLanguage(nextLang);
+    };
 
     // Filter products based on search query
     const filteredProducts = computed(() => {
