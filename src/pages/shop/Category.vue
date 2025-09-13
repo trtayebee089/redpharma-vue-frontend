@@ -122,12 +122,11 @@
     } from "vue-router";
     import {
         products
-    } from "../data/products.js";
+    } from "@/data/products.js";
     import {
         categories
-    } from "../data/categories.js";
-    import ProductGridItem from "../components/products/ProductGridItem.vue";
-import PageTemplate from "../components/layout/PageTemplate.vue";
+    } from "@/data/categories.js";
+    import ProductGridItem from "@/components/products/ProductGridItem.vue";
 
     const route = useRoute();
 
@@ -165,37 +164,57 @@ import PageTemplate from "../components/layout/PageTemplate.vue";
         }
     );
 
+    console.log("Category:", category.value);
+    console.log("Products in category:", products);
     // Filtered products
     const filteredProducts = computed(() => {
-        let filtered = products.filter(p => p.categoryId === category.value?.id);
+        let filtered = products.value.filter(
+            (p) => p.categoryId === category.value?.id
+        );
 
         if (maxPrice.value != null && maxPrice.value > 0) {
-            filtered = filtered.filter(p => p.price <= maxPrice.value);
+            filtered = filtered.filter(
+                (p) => (p.offerPrice ?? p.regularPrice) <= maxPrice.value
+            );
         }
 
-        // Add brand filter
+        // Brand filter
         if (selectedBrand.value) {
-            filtered = filtered.filter(p => p.brand === selectedBrand.value);
+            filtered = filtered.filter((p) => p.brand === selectedBrand.value);
         }
 
         // In stock filter
         if (inStockOnly.value) {
-            filtered = filtered.filter(p => p.inStock === true);
+            filtered = filtered.filter((p) => p.inStock === true);
         }
 
         // Min rating filter
         if (minRating.value != null) {
-            filtered = filtered.filter(p => p.rating >= minRating.value);
+            filtered = filtered.filter((p) => (p.rating ?? 0) >= minRating.value);
         }
 
         // Sorting
-        if (sortOption.value === "priceAsc") filtered.sort((a, b) => a.price - b.price);
-        else if (sortOption.value === "priceDesc") filtered.sort((a, b) => b.price - a.price);
-        else if (sortOption.value === "nameAsc") filtered.sort((a, b) => a.name.localeCompare(b.name));
-        else if (sortOption.value === "nameDesc") filtered.sort((a, b) => b.name.localeCompare(a.name));
+        if (sortOption.value === "priceAsc") {
+            filtered.sort(
+                (a, b) =>
+                    (a.offerPrice ?? a.regularPrice) -
+                    (b.offerPrice ?? b.regularPrice)
+            );
+        } else if (sortOption.value === "priceDesc") {
+            filtered.sort(
+                (a, b) =>
+                    (b.offerPrice ?? b.regularPrice) -
+                    (a.offerPrice ?? a.regularPrice)
+            );
+        } else if (sortOption.value === "nameAsc") {
+            filtered.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (sortOption.value === "nameDesc") {
+            filtered.sort((a, b) => b.name.localeCompare(a.name));
+        }
 
         return filtered;
     });
+
 </script>
 
 <style scoped>

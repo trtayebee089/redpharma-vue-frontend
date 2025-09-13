@@ -5,22 +5,33 @@
     import 'primeicons/primeicons.css'
     import CartOffCanvas from './components/cart/CartOffCanvas.vue'
     import PrimeVue from 'primevue/config'
-    import { useLanguageStore } from "@/stores/language";
+    import { useI18n } from "vue-i18n";
     import {
-        ref,
-        computed,
-        onMounted,
-        onBeforeUnmount
+        useLanguageStore
+    } from "@/stores/language";
+    import {
+        watch
     } from "vue";
-    
+import FloatingCartButton from './components/cart/FloatingCartButton.vue'
+import MobileFooter from './components/layout/MobileFooter.vue'
+
     const langStore = useLanguageStore();
-    const langClass = computed(() =>
-        langStore.lang === "bn" ? "font-bn" : "font-sans"
+    const {
+        locale
+    } = useI18n();
+
+    watch(
+        () => langStore.lang,
+        (newLang) => {
+            locale.value = newLang;
+        }, {
+            immediate: true
+        }
     );
 </script>
 
 <template>
-    <div class="min-h-screen flex flex-col bg-white" :class="langClass">
+    <div class="min-h-screen flex flex-col bg-white">
         <Header />
 
         <div class="flex flex-1 relative">
@@ -34,6 +45,8 @@
         <Footer />
 
         <CartOffCanvas />
+        <!-- <FloatingCartButton /> -->
+        <MobileFooter />
     </div>
 </template>
 
@@ -54,5 +67,6 @@
     .main-content {
         padding-top: 70px;
         min-height: calc(100vh - 70px);
+        width: calc(100% - 16rem);
     }
 </style>

@@ -1,17 +1,16 @@
 import { defineStore } from "pinia";
-import { useI18n } from "vue-i18n";
 
 export const useLanguageStore = defineStore("language", {
     state: () => ({
         lang: localStorage.getItem("language") || "en",
     }),
+    getters: {
+        langClass: (state) => (state.lang === "bn" ? "noto-serif-bengali" : "font-sans"),
+    },
     actions: {
         setLanguage(newLang) {
             this.lang = newLang;
             localStorage.setItem("language", newLang);
-
-            const { locale } = useI18n();
-            locale.value = newLang;
         },
     },
 });

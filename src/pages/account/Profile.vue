@@ -96,7 +96,7 @@
         ...authStore.user
     }); // editable copy
 
-    const defaultAvatar = "https://via.placeholder.com/150";
+    const defaultAvatar = "https://placehold.co/150";
     const preview = ref(null);
 
     // image preview

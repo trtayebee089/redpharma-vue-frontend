@@ -1,8 +1,9 @@
 <template>
     <section class="bg-gray-50 text-gray-800 space-y-12">
-        
+
         <!-- Hero Section -->
-        <div class="max-w-5xl mx-auto space-y-4 text-center leading-relaxed bg-green-50 rounded-lg p-6 relative overflow-hidden">
+        <div
+            class="max-w-5xl mx-auto space-y-4 text-center leading-relaxed bg-green-50 rounded-lg p-6 relative overflow-hidden">
             <div class="absolute inset-0 opacity-10 pointer-events-none">
                 <svg class="w-full h-full" preserveAspectRatio="none">
                     <defs>
@@ -13,85 +14,63 @@
                     <rect width="100%" height="100%" fill="url(#grid)"></rect>
                 </svg>
             </div>
-            <h1 class="text-3xl md:text-4xl font-bold text-green-600 leading-relaxed">Best Online Pharmacy and Healthcare Platform in
-                Bangladesh</h1>
-            <p class="text-gray-700 text-lg md:text-xl leading-relaxed">
-                RedPharma is Bangladesh’s most trusted online pharmacy and healthcare platform. Access medicines, doctor
-                consultations, lab tests, and more, all from the comfort of your home.
-            </p>
+            <h1 class="text-3xl md:text-4xl font-bold text-green-600 leading-relaxed font-wb"
+                :class="[langStore.langClass]">{{ $t('about.title') }}</h1>
+            <p class="text-gray-700 text-lg md:text-xl leading-relaxed font-ws" :class="[langStore.langClass]">
+                {{ $t('about.shortDescription') }}</p>
         </div>
 
         <!-- Benefits Section -->
         <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 leading-relaxed">
-            <div class="space-y-4">
-                <h2 class="text-2xl font-semibold text-gray-800">Benefits of Using RedPharma</h2>
-                <ul class="list-decimal list-inside space-y-2 text-gray-700">
-                    <li>Convenient access to medicines and healthcare services from home.</li>
-                    <li>Comprehensive database of healthcare providers across Bangladesh.</li>
-                    <li>24/7 customer support for all your needs.</li>
-                    <li>Secure and easy-to-use platform.</li>
-                    <li>Regular discounts and special deals to save money.</li>
-                    <li>Access to health records, prescriptions, and medical advice.</li>
-                    <li>Fast and reliable delivery of medicines.</li>
-                    <li>Services delivered by professional and experienced healthcare providers.</li>
-                    <li>Accurate and reliable information on health and wellness.</li>
+
+            <!-- Loop through why_us -->
+            <div v-for="(section, index) in tm('about.why_us')" :key="index" class="space-y-4">
+
+                <!-- Section Heading -->
+                <h2 class="text-2xl font-semibold text-gray-800 font-wb" :class="[langStore.langClass]">
+                    {{ section . heading }}</h2>
+
+                <!-- List Type -->
+                <ul v-if="section.type === 'list'" class="list-decimal list-inside space-y-2 text-gray-700">
+                    <li v-for="(item, i) in section.items" :key="i"
+                        :class="[langStore.langClass, 'font-ws']">{{ item }}</li>
                 </ul>
+
+                <!-- Paragraphs Type -->
+                <div v-else-if="section.type === 'paragraphs'" class="space-y-4 text-gray-700">
+                    <p v-for="(item, i) in section.items" :key="i"
+                        :class="[langStore.langClass, 'font-ws']">{{ item }}</p>
+                </div>
+
             </div>
 
-            <div class="space-y-4">
-                <h2 class="text-2xl font-semibold text-gray-800">Convenience & Affordability</h2>
-                <p class="text-gray-700">
-                    Order medicines online and get them delivered to your doorstep. RedPharma’s mobile app lets you
-                    manage orders and prescriptions easily. Save on both generic and branded medicines with transparent
-                    pricing and regular discounts.
-                </p>
-                <p class="text-gray-700">
-                    All medicines meet strict quality standards. Refill prescriptions quickly through the website or app
-                    with auto-refill reminders. RedPharma offers a wide range of medicines, OTC products, herbal
-                    remedies, and personal care items.
-                </p>
-            </div>
         </div>
+
 
         <!-- Services Section -->
         <div class="max-w-6xl mx-auto space-y-6 leading-relaxed">
-            <h2 class="text-2xl font-semibold text-gray-800 text-center">Services Offered by RedPharma</h2>
-            <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
-                    <h3 class="font-semibold text-green-600">Medicine Delivery</h3>
-                    <p class="text-gray-700 text-sm mt-1">Fast and reliable delivery to your doorstep.</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
-                    <h3 class="font-semibold text-green-600">Doctor Consultation</h3>
-                    <p class="text-gray-700 text-sm mt-1">Access qualified medical professionals online.</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
-                    <h3 class="font-semibold text-green-600">Lab Tests</h3>
-                    <p class="text-gray-700 text-sm mt-1">Order lab tests online and receive results quickly.</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
-                    <h3 class="font-semibold text-green-600">Health Records</h3>
-                    <p class="text-gray-700 text-sm mt-1">Manage medical history, lab results, and prescriptions
-                        securely.</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
-                    <h3 class="font-semibold text-green-600">Medical Advice & Support</h3>
-                    <p class="text-gray-700 text-sm mt-1">Get expert guidance from healthcare professionals.</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
-                    <h3 class="font-semibold text-green-600">Healthcare Provider Database</h3>
-                    <p class="text-gray-700 text-sm mt-1">Find and compare doctors and clinics in your area.</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
-                    <h3 class="font-semibold text-green-600">Discounts & Deals</h3>
-                    <p class="text-gray-700 text-sm mt-1">Save on medicine delivery, consultations, and lab tests.</p>
+            <h2 class="text-2xl font-semibold text-gray-800 text-center font-wb" :class="[langStore.langClass]">
+                {{ $t('about.services.title') }}</h2>
+            <!-- Services Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-4">
+                <div v-for="(service, index) in tm('about.services.items')" :key="index"
+                    class="bg-white p-4 sm:p-5 md:p-6 rounded-lg shadow hover:shadow-lg transition border border-green-200 flex flex-col justify-between">
+                    <h3 class="text-green-600 font-semibold text-lg sm:text-xl md:text-lg font-wb mb-2"
+                        :class="[langStore.langClass]">
+                        {{ service . title }}
+                    </h3>
+                    <p class="text-gray-700 text-sm sm:text-base md:text-sm mt-1 font-ws"
+                        :class="[langStore.langClass]">
+                        {{ service . description }}
+                    </p>
                 </div>
             </div>
         </div>
 
         <!-- Best Selling Medicines Section -->
         <div class="max-w-6xl mx-auto leading-relaxed">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Best Selling Medicines</h2>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center font-wb" :class="[langStore.langClass]">
+                {{ $t('about.heading3') }}</h2>
             <p class="text-gray-700 text-sm text-center">
                 Sergel 20 mg Capsule | Napa 500 mg Tablet | Ceevit 250 mg Chewable Tablet | Monas 10 10 mg Tablet |
                 Pantonix 20 mg Tablet | Ecosprin 75 mg Tablet | SkinO Hydration Boost Gel 70ml | SkinO Daily Gel
@@ -108,7 +87,17 @@
 </template>
 
 <script setup>
-    // No dynamic logic needed yet
+    import {
+        useI18n
+    } from "vue-i18n";
+    import {
+        useLanguageStore
+    } from "@/stores/language";
+    const {
+        t,
+        tm
+    } = useI18n();
+    const langStore = useLanguageStore();
 </script>
 
 <style scoped>

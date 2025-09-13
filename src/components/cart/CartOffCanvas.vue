@@ -54,15 +54,16 @@
 
                     <!-- Right: Price -->
                     <div class="text-right flex flex-col items-end justify-between">
-                        <!-- Show regular price only if offerPrice exists -->
                         <p v-if="item.offerPrice" class="text-gray-400 text-sm line-through">
-                            ${{ item . price * item . quantity . toFixed(2) }}
+                            ${{ item . regularPrice * item . quantity . toFixed(2) }}
                         </p>
 
-                        <!-- Display final price (offer or regular) -->
                         <p class="text-green-700 font-semibold text-lg">
-                            ${{ (item . offerPrice || item . price) * item . quantity . toFixed(2) }}
+                            <!-- ${{ (Number(item . offerPrice ?? item . regularPrice) || 0) * (Number(item . quantity) || 1) . toFixed(2) }} -->
+                            {{  item . regularPrice }} |
+                            {{  item . offerPrice }}
                         </p>
+
 
                         <!-- Remove Button -->
                         <button @click="cartStore.removeFromCart(item.id)"
@@ -97,11 +98,7 @@
         </div>
     </div>
 
-    <!-- Overlay -->
-    <!-- Overlay -->
-    <div 
-        v-if="cartStore.isCartOpen" 
-        @click="cartStore.toggleCart(false)"
+    <div v-if="cartStore.isCartOpen" @click="cartStore.toggleCart(false)"
         class="fixed inset-0 bg-black/60 z-50 transition-opacity">
     </div>
 
@@ -127,12 +124,15 @@
     }
 
     const totalMRP = computed(() =>
-        cartStore.items.reduce((acc, i) => acc + i.price * i.quantity, 0)
+        cartStore.items.reduce((acc, i) => acc + i.regularPrice * i.quantity, 0)
     )
+
     const totalPayment = computed(() =>
-        cartStore.items.reduce((acc, i) => acc + (i.offerPrice || i.price) * i.quantity, 0)
+        cartStore.items.reduce((acc, i) => acc + (i.offerPrice || i.regularPrice) * i.quantity, 0)
     )
+
     const totalDiscount = computed(() => totalMRP.value - totalPayment.value)
+
 
     const goToCart = () => {
         if (!cartStore.items.length) return

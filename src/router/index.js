@@ -6,7 +6,7 @@ import About from '../pages/About.vue'
 import Cart from '../pages/Cart.vue'
 import RequestOrder from '../pages/RequestOrder.vue'
 import Contact from '../pages/Contact.vue'
-import Category from '../pages/Category.vue'
+import Category from '../pages/shop/Category.vue'
 import PrivacyPolicy from '../pages/PrivacyPolicy.vue'
 import DeliveryCoverage from '../pages/DeliveryCoverage.vue'
 import OrderTracking from '../pages/OrderTracking.vue'
@@ -16,6 +16,7 @@ import Membership from '../pages/account/Membership.vue'
 import HelpCenter from '../pages/HelpCenter.vue'
 import Settings from '../pages/account/Settings.vue'
 import OrderDetail from '../pages/account/OrderDetail.vue'
+import ProductDetail from '../pages/shop/ProductDetail.vue';
 
 const routes = [
     { path: '/', name: 'Home', component: Home, meta: { title: 'Home - RedPharma BD' } }, //✅
@@ -30,6 +31,7 @@ const routes = [
     { path: '/upload-prescription', name: 'Upload Prescription', component: OrderTracking, meta: { title: 'Upload Prescription - RedPharma BD' } }, //✅
     { path: '/blog', name: 'Health Articles', component: OrderTracking, meta: { title: 'Health Articles - RedPharma BD' } }, //✅
     { path: '/blog/:slug', name: 'Health Articles', component: OrderTracking, meta: { title: 'Health Articles - RedPharma BD' } }, //✅
+    { path: '/products/:productId', name: 'ProductDetails', component: ProductDetail, meta: { title: 'Product Details - RedPharma BD' } },
 
     { path: '/profile', name: 'Profile', component: Profile, meta: { title: 'Edit Profile - RedPharma BD', requiresAuth: true } }, 
     { path: '/orders', name: 'Orders', component: Orders, meta: { title: 'My Orders - RedPharma BD', requiresAuth: true } },

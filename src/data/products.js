@@ -1,199 +1,99 @@
-import { reactive } from "vue";
+import { ref } from 'vue';
+import { categories } from './categories';
 
-export const products = reactive([
-  {
-    id: 1,
-    name: 'Paracetamol 500mg',
-    shortDescription: 'Pain & fever relief',
-    quantity: 0,
-    categoryId: 1, // Tablets
-    image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
-    price: 2.5,
+const sampleImages = [
+  'https://placehold.co/1080x620',
+  'https://placehold.co/1080x620',
+  'https://placehold.co/1080x620',
+  'https://placehold.co/1080x620',
+  'https://placehold.co/1080x620',
+];
+
+export const products = ref([
+  { 
+    id: 1, 
+    name: 'Paracetamol 500mg', 
+    brand: 'RedPharma', 
+    categoryId: categories[0].id, 
+    image: sampleImages[0], 
+    regularPrice: 12, 
+    offerPrice: 9,
+    discountPercent: 25,
     strength: '500mg',
     packSize: '10 tablets',
-    brand: 'Acacia',
-    offers: '10% off'
-  },
-  {
-    id: 2,
-    name: 'Vitamin C 1000mg',
-    shortDescription: 'Boost immunity',
     quantity: 0,
-    categoryId: 11, // Vitamins & Supplements
-    image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
-    price: 3.0,
-    strength: '1000mg',
-    packSize: '30 tablets',
-    brand: 'HealthPlus',
-    offers: null
+    shortDescription: 'Pain & fever relief',
+    description: 'Paracetamol 500mg helps reduce pain and fever. Suitable for adults and children.',
+    doses: ['Take 1 tablet every 6 hours as needed.', 'Do not exceed 4 tablets in 24 hours.'],
+    genericName: 'Paracetamol'  // ✅ added
   },
-  {
-    id: 3,
-    name: 'Cough Syrup',
-    shortDescription: 'Relieves cough',
+  { 
+    id: 2, 
+    name: 'Ibuprofen 200mg', 
+    brand: 'BluePharma', 
+    categoryId: categories[0].id, 
+    image: sampleImages[1], 
+    regularPrice: 12, 
+    offerPrice: 9,
+    discountPercent: 25,
+    strength: '200mg',
+    packSize: '10 tablets',
     quantity: 0,
-    categoryId: 3, // Liquids & Syrups
-    image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
-    price: 4.5,
+    shortDescription: 'Anti-inflammatory & pain relief',
+    description: 'Ibuprofen 200mg is used to reduce inflammation and pain.',
+    doses: ['Take 1 tablet every 8 hours.', 'Do not exceed 6 tablets in 24 hours.'],
+    genericName: 'Ibuprofen'
+  },
+  { 
+    id: 3, 
+    name: 'Amoxicillin 500mg', 
+    brand: 'GreenPharma', 
+    categoryId: categories[1].id, 
+    image: sampleImages[2], 
+    regularPrice: 15, 
+    offerPrice: 12,
+    discountPercent: 20,
+    strength: '500mg',
+    packSize: '14 capsules',
+    quantity: 0,
+    shortDescription: 'Antibiotic for infections',
+    description: 'Amoxicillin is an antibiotic for bacterial infections.',
+    doses: ['Take 1 capsule every 8 hours.', 'Complete the full course.'],
+    genericName: 'Ibuprofen'
+  },
+  { 
+    id: 4, 
+    name: 'Cough Syrup 100ml', 
+    brand: 'RedPharma', 
+    categoryId: categories[2].id, 
+    image: sampleImages[3], 
+    regularPrice: 8, 
+    offerPrice: 6,
+    discountPercent: 25,
     strength: '100ml',
     packSize: '1 bottle',
-    brand: 'CureMed',
-    offers: '5% off'
-  },
-  {
-    id: 4,
-    name: 'Insulin',
-    shortDescription: 'Diabetes care',
     quantity: 0,
-    categoryId: 4, // Injections
-    image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
-    price: 25.0,
-    strength: '10ml',
-    packSize: '1 vial',
-    brand: 'Novo',
-    offers: null
+    shortDescription: 'Relieves cough & throat irritation',
+    description: 'Relieves cough and throat irritation.',
+    doses: ['Take 10ml three times daily.', 'Shake well before use.'],
+    genericName: 'Dextromethorphan'
   },
-  {
-    id: 5,
-    name: 'Amoxicillin 250mg',
-    shortDescription: 'Antibiotic',
+  { 
+    id: 5, 
+    name: 'Vitamin D3 1000IU', 
+    brand: 'HealthPlus', 
+    categoryId: categories[10].id, 
+    image: sampleImages[4], 
+    regularPrice: 20, 
+    offerPrice: 15,
+    discountPercent: 25,
+    strength: '1000IU',
+    packSize: '30 capsules',
     quantity: 0,
-    categoryId: 1, // Tablets
-    image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
-    price: 5.0,
-    strength: '250mg',
-    packSize: '14 tablets',
-    brand: 'MedLife',
-    offers: '15% off'
+    shortDescription: 'Supports bone health',
+    description: 'Vitamin D3 helps maintain healthy bones and teeth.',
+    doses: ['Take 1 capsule daily.', 'Preferably after food.'],
+    genericName: 'Cholecalciferol (Vitamin D3)'
   },
-  {
-    id: 6,
-    name: 'Ibuprofen 400mg',
-    shortDescription: 'Pain & inflammation',
-    quantity: 0,
-    categoryId: 1, // Tablets
-    image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
-    price: 3.5,
-    strength: '400mg',
-    packSize: '10 tablets',
-    brand: 'Acacia',
-    offers: null
-  },
-  {
-    id: 7,
-    name: 'Vitamin D 2000 IU',
-    shortDescription: 'Bone & immune health',
-    quantity: 0,
-    categoryId: 11, // Vitamins & Supplements
-    image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
-    price: 4.0,
-    strength: '2000 IU',
-    packSize: '30 tablets',
-    brand: 'HealthPlus',
-    offers: '10% off'
-  },
-  {
-    id: 8,
-    name: 'Paracetamol Syrup',
-    shortDescription: 'Fever & pain relief for kids',
-    quantity: 0,
-    categoryId: 3, // Liquids & Syrups
-    image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
-    price: 3.5,
-    strength: '60ml',
-    packSize: '1 bottle',
-    brand: 'CureMed',
-    offers: null
-  },
-  {
-    id: 9,
-    name: 'Insulin Glargine',
-    shortDescription: 'Long-acting insulin',
-    quantity: 0,
-    categoryId: 4, // Injections
-    image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
-    price: 30.0,
-    strength: '10ml',
-    packSize: '1 vial',
-    brand: 'Novo',
-    offers: null
-  },
-  {
-    id: 10,
-    name: 'Hydrocortisone Cream',
-    shortDescription: 'Relieves itching & rash',
-    quantity: 0,
-    categoryId: 7, // Ointments & Creams
-    image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
-    price: 6.0,
-    strength: '15g',
-    packSize: '1 tube',
-    brand: 'MedLife',
-    offers: '5% off'
-  },
-  {
-    id: 11,
-    name: 'Salbutamol Inhaler',
-    shortDescription: 'Asthma relief',
-    quantity: 0,
-    categoryId: 5, // Inhalers
-    image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
-    price: 12.0,
-    strength: '100mcg',
-    packSize: '1 inhaler',
-    brand: 'Respira',
-    offers: '10% off'
-  },
-  {
-    id: 12,
-    name: 'Eye Drops',
-    shortDescription: 'Redness & dryness relief',
-    quantity: 0,
-    categoryId: 6, // Eye/Ear Drops
-    image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
-    price: 5.0,
-    strength: '10ml',
-    packSize: '1 bottle',
-    brand: 'ClearVision',
-    offers: null
-  },
-  {
-    id: 13,
-    name: 'Vitamin B Complex',
-    shortDescription: 'Energy & metabolism',
-    quantity: 0,
-    categoryId: 11, // Vitamins & Supplements
-    image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
-    price: 4.5,
-    strength: '1 tablet',
-    packSize: '30 tablets',
-    brand: 'HealthPlus',
-    offers: null
-  },
-  {
-    id: 14,
-    name: 'First Aid Bandage',
-    shortDescription: 'Cuts & wounds care',
-    quantity: 0,
-    categoryId: 12, // First Aid & Bandages
-    image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
-    price: 2.0,
-    strength: '-',
-    packSize: '1 roll',
-    brand: 'SafeCare',
-    offers: null
-  },
-  {
-    id: 15,
-    name: 'Ointment for Burns',
-    shortDescription: 'Soothes minor burns',
-    quantity: 0,
-    categoryId: 7, // Ointments & Creams
-    image: 'https://www.akaciamedical.co.za/wp-content/uploads/woocommerce-placeholder.png',
-    price: 7.0,
-    strength: '20g',
-    packSize: '1 tube',
-    brand: 'MedLife',
-    offers: '15% off'
-  }
+  // ... continue same for all products
 ]);

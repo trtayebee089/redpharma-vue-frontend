@@ -9,75 +9,75 @@
             <div class="flex items-center justify-between w-full md:w-full">
                 <!-- Logo -->
                 <a href="/" class="flex items-center flex-shrink-0">
-                    <img :src="mainLogo" alt="Logo" class="h-12" />
+                    <img :src="mainLogo" alt="Logo" class="h-10 md:h-12 lg:14" />
                 </a>
 
                 <!-- Desktop Search -->
                 <div class="hidden md:flex flex-1 justify-center px-4 relative">
-                    <div class="relative w-full max-w-2xl">
-                        <div class="relative w-full max-w-2xl">
-                            <!-- Search Input -->
-                            <input type="text" v-model="searchQuery" :placeholder="placeholderText"
-                                class="w-full transition bg-white search-input" />
+                    <div class="relative w-full max-w-full md:max-w-xl lg:max-w-2xl">
+                        <!-- Search Input -->
+                        <input type="text" v-model="searchQuery" :placeholder="placeholderText"
+                            :class="[langStore.langClass]" class="w-full transition bg-white search-input" />
 
-                            <!-- Search Icon (Right) -->
-                            <span
-                                class="absolute right-0 top-0 h-full w-12 flex items-center justify-center bg-gradient-to-bl from-green-400 to-green-600 text-white rounded-r-lg cursor-pointer">
-                                <i class="pi pi-search text-lg"></i>
-                            </span>
-                        </div>
+                        <!-- Search Icon (Right) -->
+                        <span
+                            class="absolute right-0 top-0 h-full w-12 flex items-center justify-center bg-gradient-to-bl from-green-400 to-green-600 text-white rounded-r-lg cursor-pointer">
+                            <i class="pi pi-search text-lg"></i>
+                        </span>
+                    </div>
 
-                        <!-- Live Search Results -->
-                        <div v-if="searchQuery && filteredProducts.length"
-                            class="absolute top-full mt-1 w-full bg-white border border-gray-200 rounded shadow-lg z-50">
-                            <ul>
-                                <li v-for="product in filteredProducts" :key="product.id"
-                                    class="px-4 py-3 hover:bg-gray-50 flex justify-between items-center gap-3">
-                                    <div class="flex-1">
-                                        <p class="font-medium text-gray-800">{{ product . name }}</p>
-                                        <p class="text-sm text-gray-600">
-                                            Brand: {{ product . brand }} | Category:
-                                            {{ getCategoryName(product . categoryId) }}
-                                        </p>
-                                        <p class="text-sm font-semibold text-green-600 mt-1">
-                                            ${{ product . price . toFixed(2) }}
-                                        </p>
-                                    </div>
+                    <!-- Live Search Results -->
+                    <div v-if="searchQuery && filteredProducts.length"
+                        class="absolute top-full mt-1 bg-white border border-gray-200 rounded shadow-lg z-50 max-h-[60vh] overflow-y-auto">
+                        <ul>
+                            <li v-for="product in filteredProducts" :key="product.id"
+                                class="px-4 py-3 hover:bg-gray-50 flex justify-between items-center gap-3">
+                                <div class="flex-1">
+                                    <p class="font-medium text-gray-800">{{ product . name }}</p>
+                                    <p class="text-sm text-gray-600">
+                                        Brand: {{ product . brand }} | Category:
+                                        {{ getCategoryName(product . categoryId) }}
+                                    </p>
+                                    <p class="text-sm font-semibold text-green-600 mt-1">
+                                        ${{ product . regularPrice . toFixed(2) }}
+                                    </p>
+                                </div>
 
-                                    <button @click="addToCart(product)"
-                                        class="relative inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white font-semibold text-sm rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out hover:bg-green-700 hover:shadow-lg">
-                                        Add to Cart
-                                        <span
-                                            class="absolute inset-0 bg-white opacity-10 rounded-lg scale-0 hover:scale-100 transition-transform duration-300"></span>
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
+                                <button @click="addToCart(product)"
+                                    class="relative inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white font-semibold text-sm rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out hover:bg-green-700 hover:shadow-lg">
+                                    Add to Cart
+                                    <span
+                                        class="absolute inset-0 bg-white opacity-10 rounded-lg scale-0 hover:scale-100 transition-transform duration-300"></span>
+                                </button>
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
                 <!-- Desktop Buttons -->
-                <div class="hidden md:flex items-center space-x-4 h-full">
+                <div class="hidden md:flex items-center space-x-4 h-full relative">
                     <router-link to="/delivery-coverage"
-                        class="space-x-2 h-12 bg-green-100 text-green-600 flex items-center justify-center rounded-md hover:bg-green-500 hover:text-white transition border border-green-300 shadow-sm px-3">
+                        class="hidden 2xl:flex space-x-2 h-12 bg-green-100 text-green-600 items-center justify-center rounded-md hover:bg-green-500 hover:text-white transition border border-green-300 shadow-sm px-3">
                         <img :src="deliveryImg" alt="flag" class="w-6 h-6 rounded-sm" />
-                        <span class="font-semibold">Coverage</span>
+                        <span class="font-semibold"
+                            :class="[langStore.langClass]">{{ $t('header.buttons.coverage') }}</span>
                     </router-link>
 
                     <router-link to="/order-tracking"
-                        class="space-x-2 h-12 bg-green-100 text-green-600 flex items-center justify-center rounded-md hover:bg-green-500 hover:text-white transition border border-green-300 shadow-sm px-3">
+                        class="hidden 2xl:flex space-x-2 h-12 bg-green-100 text-green-600 items-center justify-center rounded-md hover:bg-green-500 hover:text-white transition border border-green-300 shadow-sm px-3">
                         <img :src="trackingImg" alt="flag" class="w-6 h-6 rounded-sm" />
-                        <span class="font-semibold">Track</span>
+                        <span
+                            class="font-semibold":class="[langStore.langClass]">{{ $t('header.buttons.track') }}</span>
                     </router-link>
 
                     <button @click="toggleLanguage"
-                        class="space-x-2 w-20 h-12 bg-green-100 text-green-600 flex items-center justify-center rounded-md hover:bg-green-500 hover:text-white transition border border-green-300 shadow-sm">
+                        class="hidden xl:flex space-x-2 w-20 h-12 bg-green-100 text-green-600 items-center justify-center rounded-md hover:bg-green-500 hover:text-white transition border border-green-300 shadow-sm">
                         <img :src="currentFlag" alt="flag" class="w-6 h-6 rounded-sm" />
                         <span class="font-semibold">{{ currentLanguage }}</span>
                     </button>
 
                     <!-- Cart Button -->
-                    <div class="relative">
+                    <div class="relative hidden xl:inline-block">
                         <button @click="cartStore.toggleCart(true)"
                             class="w-12 h-12 bg-green-100 text-green-600 flex items-center justify-center rounded-md hover:bg-green-500 hover:text-white transition border border-green-300 shadow-sm">
                             <i class="pi pi-shopping-cart text-xl"></i>
@@ -116,53 +116,77 @@
             </div>
 
             <!-- Mobile Search -->
-            <div class="w-full mt-2 md:hidden relative">
-                <input type="text" v-model="searchQuery" placeholder="Search medicines..."
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-700" />
+            <div class="flex-1 relative flex md:hidden">
+                <!-- Input Wrapper -->
+                <div class="relative w-full max-w-full">
+                    <input type="text" v-model="searchQuery" :placeholder="placeholderText"
+                        :class="[langStore.langClass]"
+                        class="w-full transition bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-700" />
+                    <span
+                        class="absolute right-0 top-0 h-full w-12 flex items-center justify-center bg-gradient-to-bl from-green-400 to-green-600 text-white rounded-r-lg cursor-pointer">
+                        <i class="pi pi-search text-lg"></i>
+                    </span>
+                </div>
 
+                <!-- Mobile Live Search Results -->
                 <div v-if="searchQuery && filteredProducts.length"
-                    class="absolute top-full mt-1 w-full bg-white border border-gray-200 rounded shadow-lg z-50">
+                    class="absolute top-full mt-1 w-full bg-white border border-gray-200 rounded shadow-lg z-50 max-h-[60vh] overflow-y-auto">
                     <ul>
                         <li v-for="product in filteredProducts" :key="product.id"
                             class="px-4 py-3 hover:bg-gray-50 flex justify-between items-center gap-3">
                             <div class="flex-1">
                                 <p class="font-medium text-gray-800">{{ product . name }}</p>
                                 <p class="text-sm text-gray-600">
-                                    Brand: {{ product . brand }} | Category: {{ getCategoryName(product . categoryId) }}
+                                    Brand: {{ product . brand }} | Category:
+                                    {{ getCategoryName(product . categoryId) }}
                                 </p>
                                 <p class="text-sm font-semibold text-green-600 mt-1">
-                                    ${{ product . price . toFixed(2) }}
+                                    ${{ product . regularPrice . toFixed(2) }}
                                 </p>
                             </div>
-
                             <button @click="addToCart(product)"
                                 class="relative inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white font-semibold text-sm rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out hover:bg-green-700 hover:shadow-lg">
                                 Add to Cart
                                 <span
                                     class="absolute inset-0 bg-white opacity-10 rounded-lg scale-0 hover:scale-100 transition-transform duration-300"></span>
                             </button>
-
                         </li>
                     </ul>
                 </div>
+
             </div>
         </div>
 
-        <!-- Mobile Menu -->
         <transition name="slide-fade">
             <div v-if="isMenuOpen" class="md:hidden bg-white shadow-md">
                 <ul class="flex flex-col px-4 py-4 space-y-2 text-gray-700 font-medium">
                     <li><router-link @click.native="closeMenu" to="/">Home</router-link></li>
                     <li><router-link @click.native="closeMenu" to="/about">About Us</router-link></li>
                     <li><router-link @click.native="closeMenu" to="/cart">Cart</router-link></li>
-                    <li><router-link @click.native="closeMenu" to="/delivery-coverage">Delivery Coverage</router-link></li>
-                    <li><router-link @click.native="closeMenu" to="/order-tracking">Order Tracking</router-link></li>
-                    <li class="flex space-x-2 mt-2">
-                        <button @click="showLoginModal = true"
-                            class="flex-1 bg-green-500 text-white py-2 rounded text-center">
-                            Login
-                        </button>
+                    <li><router-link @click.native="closeMenu" to="/delivery-coverage">Delivery Coverage</router-link>
                     </li>
+                    <li><router-link @click.native="closeMenu" to="/order-tracking">Order Tracking</router-link></li>
+
+                    <!-- Conditional Login / Profile -->
+                    <li class="flex space-x-2 mt-2">
+                        <template v-if="!authStore.isAuthenticated">
+                            <button @click="showLoginModal = true"
+                                class="flex-1 bg-green-500 text-white py-2 rounded text-center">
+                                Login
+                            </button>
+                        </template>
+                        <template v-else>
+                            <button @click="router.push('/profile')"
+                                class="flex-1 bg-green-500 text-white py-2 rounded text-center">
+                                Profile
+                            </button>
+                            <button @click="logout" class="flex-1 bg-red-500 text-white py-2 rounded text-center">
+                                Logout
+                            </button>
+                        </template>
+                    </li>
+
+                    <!-- Language Switcher -->
                     <li class="flex space-x-2 mt-2">
                         <button @click="toggleLanguage"
                             class="flex-1 flex items-center justify-center space-x-2 bg-green-500 text-white py-2 rounded text-center">
@@ -188,18 +212,39 @@
         reactive
     } from 'vue'
     import mainLogo from '@/assets/logo.png';
-    import { products } from "@/data/products.js";
-    import { categories } from "@/data/categories.js";
-    import { useRoute } from 'vue-router'
-    import { useCartStore } from "@/stores/cart"
+    import {
+        products
+    } from "@/data/products.js";
+    import {
+        categories
+    } from "@/data/categories.js";
+    import {
+        useRoute
+    } from 'vue-router'
+    import {
+        useCartStore
+    } from "@/stores/cart"
     import LoginFormModal from '@/components/auth/LoginFormModal.vue';
-    import { useAuthStore } from "@/stores/auth";
+    import {
+        useAuthStore
+    } from "@/stores/auth";
     import UserDropdown from "@/components/auth/UserDropdown.vue";
-    import { useLanguageStore } from "@/stores/language";
+    import {
+        useLanguageStore
+    } from "@/stores/language";
     import usFlag from '@/assets/icons/us-flag.png';
     import bdFlag from '@/assets/icons/bd-flag.png';
     import deliveryImg from '@/assets/icons/express-delivery.png';
     import trackingImg from '@/assets/icons/order-tracking.png';
+
+    import {
+        useI18n
+    } from "vue-i18n";
+    const {
+        t,
+        tm
+    } = useI18n();
+
 
     const flags = {
         en: usFlag,
@@ -221,13 +266,7 @@
     const cartStore = useCartStore();
 
     const searchQuery = ref("");
-    const placeholders = [
-        "Search medicines... (Ex: Paracetamol)",
-        "Search by brand... (Ex: Acme Pharma)",
-        "Search by category... (Ex: Pain Relief)",
-        "Find your prescription... (Ex: Antibiotics)"
-    ];
-
+    const placeholders = computed(() => tm("header.searchPlaceHolders"));
     const placeholderText = ref("");
     let index = 0; // current phrase index
     let charIndex = 0; // current character index
@@ -235,15 +274,14 @@
     let typingInterval;
 
     function typeEffect() {
-        const currentText = placeholders[index];
+        const currentText = placeholders.value[index];
+        if (!currentText) return;
 
         if (!isDeleting) {
-            // typing
             placeholderText.value = currentText.substring(0, charIndex + 1);
             charIndex++;
 
             if (charIndex === currentText.length) {
-                // pause before deleting
                 isDeleting = true;
                 clearInterval(typingInterval);
                 setTimeout(() => {
@@ -251,13 +289,12 @@
                 }, 1500);
             }
         } else {
-            // deleting
             placeholderText.value = currentText.substring(0, charIndex - 1);
             charIndex--;
 
             if (charIndex === 0) {
                 isDeleting = false;
-                index = (index + 1) % placeholders.length;
+                index = (index + 1) % placeholders.value.length;
             }
         }
     }
@@ -281,14 +318,13 @@
         langStore.setLanguage(nextLang);
     };
 
-    // Filter products based on search query
     const filteredProducts = computed(() => {
-        if (!searchQuery.value) return [];
-        const query = searchQuery.value.toLowerCase();
-        return products.filter(
-            (p) =>
-            p.name.toLowerCase().includes(query) ||
-            (p.brand && p.brand.toLowerCase().includes(query))
+        if (!searchQuery.value || !products.value) return [];
+
+        return products.value.filter(
+            p =>
+            p.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+            (p.brand && p.brand.toLowerCase().includes(searchQuery.value.toLowerCase()))
         );
     });
 
