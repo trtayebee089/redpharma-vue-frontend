@@ -169,15 +169,13 @@
         <transition name="slide-fade">
             <div v-if="isMenuOpen" class="md:hidden bg-white shadow-md">
                 <ul class="flex flex-col px-4 py-4 space-y-2 text-gray-700 font-medium">
-                    <li><router-link @click.native="closeMenu" to="/">Home</router-link></li>
-                    <li><router-link @click.native="closeMenu" to="/about">About Us</router-link></li>
-                    <li><router-link @click.native="closeMenu" to="/cart">Cart</router-link></li>
-                    <li><router-link @click.native="closeMenu" to="/delivery-coverage">Delivery Coverage</router-link>
-                    </li>
-                    <li><router-link @click.native="closeMenu" to="/order-tracking">Order Tracking</router-link></li>
-                    <li><router-link @click.native="closeMenu" to="/orders">{{ $t("orders") }}</router-link></li>
-                    <li><router-link @click.native="closeMenu" to="/membership">{{ $t("membership") }}</router-link></li>
-                    <li><router-link @click.native="closeMenu" to="/settings">{{ $t("settings") }}</router-link></li>
+                    <li><router-link @click.native="closeMenu" to="/">{{ $t("header.menu.home") }}</router-link></li>
+                    <li><router-link @click.native="closeMenu" to="/about">{{ $t("header.menu.home") }}</router-link></li>
+                    <li><router-link @click.native="closeMenu" to="/delivery-coverage">{{ $t("header.menu.coverage") }}</router-link></li>
+                    <li><router-link @click.native="closeMenu" to="/order-tracking">{{ $t("header.buttons.track") }}</router-link></li>
+                    <li v-if="authStore.isAuthenticated"><router-link @click.native="closeMenu" to="/orders">{{ $t("header.menu.orders") }}</router-link></li>
+                    <li v-if="authStore.isAuthenticated"><router-link @click.native="closeMenu" to="/membership">{{ $t("header.menu.membership") }}</router-link></li>
+                    <li v-if="authStore.isAuthenticated"><router-link @click.native="closeMenu" to="/settings">{{ $t("header.menu.settings") }}</router-link></li>
                 </ul>
             </div>
         </transition>

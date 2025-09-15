@@ -15,6 +15,7 @@ const messages = {
                 cart: "Cart",
                 track: "Track Order",
                 subscribe: "Subscribe",
+                logout: "Logout"
             },
             menu: {
                 home: "Home",
@@ -189,6 +190,7 @@ const messages = {
                 cart: "কার্ট",
                 track: "অর্ডার ট্র্যাক",
                 subscribe: "সাবস্ক্রাইব করুন",
+                logout: "লগ আউট",
             },
             menu: {
                 home: "হোম",
@@ -346,18 +348,10 @@ const messages = {
                 newsletter: "নিউজলেটারে সাবস্ক্রাইব করুন",
             }
         },
-        orders: "আমার অর্ডার",
-        settings: "সেটিংস",
-        membership: "সদস্যপদ",
         help: "হেল্প সেন্টার (প্রায়শই জিজ্ঞাসিত প্রশ্নাবলী)",
-        logout: "লগ আউট",
-        profile: "প্রোফাইল",
-        orders: "অর্ডারসমূহ",
         add_to_cart: "কার্টে যোগ করুন",
-        
         read_more: "আরও পড়ুন",
         view_all: "সব দেখুন",
-        
         contact_us: "যোগাযোগ করুন",
     },
 };

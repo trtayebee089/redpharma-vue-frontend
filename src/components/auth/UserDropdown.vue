@@ -13,25 +13,25 @@
                 <router-link to="/profile"
                     class="dropdown-item flex items-center px-4 py-2 hover:bg-gray-200 transition">
                     <i class="pi pi-user mr-3 text-green-500"></i>
-                    {{ $t("profile") }}
+                    {{ $t("header.menu.profile") }}
                 </router-link>
 
                 <router-link to="/orders"
                     class="dropdown-item flex items-center px-4 py-2 hover:bg-gray-200 transition">
                     <i class="pi pi-shopping-cart mr-3 text-green-500"></i>
-                    {{ $t("orders") }}
+                    {{ $t("header.menu.orders") }}
                 </router-link>
 
                 <router-link to="/membership"
                     class="dropdown-item flex items-center px-4 py-2 hover:bg-gray-200 transition">
                     <i class="pi pi-id-card mr-3 text-green-500"></i>
-                    {{ $t("membership") }}
+                    {{ $t("header.menu.membership") }}
                 </router-link>
 
                 <router-link to="/settings"
                     class="dropdown-item flex items-center px-4 py-2 hover:bg-gray-200 transition">
                     <i class="pi pi-cog mr-3 text-green-500"></i>
-                    {{ $t("settings") }}
+                    {{ $t("header.menu.settings") }}
                 </router-link>
 
                 <hr class="border-gray-200" />

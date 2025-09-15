@@ -9,7 +9,7 @@
         <!-- Language Change -->
         <div class="bg-white shadow rounded-lg p-6">
             <h2 class="text-lg font-semibold text-gray-800 mb-3">Language</h2>
-            <select v-model="store.lang" @change="store.setLanguage(langStore.lang)"
+            <select v-model="langStore.lang" @change="langStore.setLanguage(langStore.lang)"
                 class="border border-gray-300 rounded px-3 py-2 w-full focus:ring-2 focus:ring-green-500">
                 <option value="en">English</option>
                 <option value="bn">Bangla</option>
@@ -71,6 +71,7 @@
     import { ref } from "vue";
     import { useAuthStore } from "@/stores/auth";
     import { useLanguageStore } from "@/stores/language";
+    import { useRouter } from 'vue-router'
 
     const authStore = useAuthStore();
     const langStore = useLanguageStore();
@@ -82,7 +83,6 @@
     const passwordSuccess = ref(false);
     const changePassword = () => {
         if (currentPassword.value && newPassword.value) {
-            // fake change
             passwordMsg.value = "Password changed successfully!";
             passwordSuccess.value = true;
             currentPassword.value = "";
@@ -112,14 +112,12 @@
     // Logout
     const logout = () => {
         authStore.logout();
-        // redirect if needed
+        router.push('/');
     };
 </script>
 
 <style scoped>
-    /* Optional hover for policy links */
     a:hover {
         color: #059669;
-        /* Tailwind green-600 */
     }
 </style>
