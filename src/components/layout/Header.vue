@@ -170,7 +170,7 @@
             <div v-if="isMenuOpen" class="md:hidden bg-white shadow-md">
                 <ul class="flex flex-col px-4 py-4 space-y-2 text-gray-700 font-medium">
                     <li><router-link @click.native="closeMenu" to="/">{{ $t("header.menu.home") }}</router-link></li>
-                    <li><router-link @click.native="closeMenu" to="/about">{{ $t("header.menu.home") }}</router-link></li>
+                    <li><router-link @click.native="closeMenu" to="/about">{{ $t("header.menu.about") }}</router-link></li>
                     <li><router-link @click.native="closeMenu" to="/delivery-coverage">{{ $t("header.menu.coverage") }}</router-link></li>
                     <li><router-link @click.native="closeMenu" to="/order-tracking">{{ $t("header.buttons.track") }}</router-link></li>
                     <li v-if="authStore.isAuthenticated"><router-link @click.native="closeMenu" to="/orders">{{ $t("header.menu.orders") }}</router-link></li>
