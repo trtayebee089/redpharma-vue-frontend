@@ -103,16 +103,25 @@
                 </div>
 
                 <!-- Mobile Hamburger -->
-                <button @click="toggleMenu" class="md:hidden focus:outline-none ml-3 text-gray-800">
-                    <svg v-if="!isMenuOpen" xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16" />
-                    </svg>
-                    <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+                <div class="flex flex-1 justify-end md:hidden">
+                    <button @click="toggleLanguage"
+                        class="flex items-center justify-center space-x-2 bg-green-500 text-white py-2 px-4 rounded text-center">
+                        <img :src="currentFlag" alt="flag" class="w-6 h-6 rounded-sm" />
+                        <span>{{ currentLanguage }}</span>
+                    </button>
+                    <button @click="toggleMenu"
+                        class="flex items-center justify-center w-12 h-12 border border-green-500 rounded text-gray-800 ml-3 focus:outline-none hover:bg-green-50 transition">
+                        <svg v-if="!isMenuOpen" xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16" />
+                        </svg>
+                        <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+
+                </div>
             </div>
 
             <!-- Mobile Search -->
@@ -166,40 +175,14 @@
                     <li><router-link @click.native="closeMenu" to="/delivery-coverage">Delivery Coverage</router-link>
                     </li>
                     <li><router-link @click.native="closeMenu" to="/order-tracking">Order Tracking</router-link></li>
-
-                    <!-- Conditional Login / Profile -->
-                    <li class="flex space-x-2 mt-2">
-                        <template v-if="!authStore.isAuthenticated">
-                            <button @click="showLoginModal = true"
-                                class="flex-1 bg-green-500 text-white py-2 rounded text-center">
-                                Login
-                            </button>
-                        </template>
-                        <template v-else>
-                            <button @click="router.push('/profile')"
-                                class="flex-1 bg-green-500 text-white py-2 rounded text-center">
-                                Profile
-                            </button>
-                            <button @click="logout" class="flex-1 bg-red-500 text-white py-2 rounded text-center">
-                                Logout
-                            </button>
-                        </template>
-                    </li>
-
-                    <!-- Language Switcher -->
-                    <li class="flex space-x-2 mt-2">
-                        <button @click="toggleLanguage"
-                            class="flex-1 flex items-center justify-center space-x-2 bg-green-500 text-white py-2 rounded text-center">
-                            <img :src="currentFlag" alt="flag" class="w-6 h-6 rounded-sm" />
-                            <span>{{ currentLanguage }}</span>
-                        </button>
-                    </li>
+                    <li><router-link @click.native="closeMenu" to="/orders">{{ $t("orders") }}</router-link></li>
+                    <li><router-link @click.native="closeMenu" to="/membership">{{ $t("membership") }}</router-link></li>
+                    <li><router-link @click.native="closeMenu" to="/settings">{{ $t("settings") }}</router-link></li>
                 </ul>
             </div>
         </transition>
 
-        <LoginFormModal :show="showLoginModal"
-            @close="() => { console.log('Header got close'); showLoginModal = false }" />
+        <LoginFormModal :show="showLoginModal" @close="() => { showLoginModal = false }" />
     </nav>
 </template>
 
@@ -219,7 +202,7 @@
         categories
     } from "@/data/categories.js";
     import {
-        useRoute
+        useRouter
     } from 'vue-router'
     import {
         useCartStore
@@ -232,6 +215,7 @@
     import {
         useLanguageStore
     } from "@/stores/language";
+
     import usFlag from '@/assets/icons/us-flag.png';
     import bdFlag from '@/assets/icons/bd-flag.png';
     import deliveryImg from '@/assets/icons/express-delivery.png';
@@ -245,13 +229,12 @@
         tm
     } = useI18n();
 
-
     const flags = {
         en: usFlag,
         bn: bdFlag
     };
 
-    const route = useRoute()
+    const router = useRouter()
     const showLoginModal = ref(false);
     const authStore = useAuthStore();
     const langStore = useLanguageStore();
@@ -299,6 +282,20 @@
         }
     }
 
+    const goToCart = () => {
+        isMenuOpen.value = false
+        router.push('/profile')
+    }
+
+    const logout = () => {
+        if (!authStore.isAuthenticated) return;
+        authStore.logout();
+        isMenuOpen.value = false
+        router.push({
+            path: '/'
+        }); // redirect to home
+    };
+
     function toggleMenu() {
         isMenuOpen.value = !isMenuOpen.value
     }
@@ -343,9 +340,7 @@
     };
 
     onMounted(() => {
-        // Add scroll listener
         window.addEventListener("scroll", handleScroll);
-
         typingInterval = setInterval(typeEffect, 100);
     });
 

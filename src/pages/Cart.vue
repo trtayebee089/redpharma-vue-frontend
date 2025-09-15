@@ -3,7 +3,15 @@
         <div class="flex flex-col lg:flex-row lg:items-start gap-8">
             <!-- Desktop Cart Table -->
             <div class="hidden md:block flex-1">
-                <h1 class="text-2xl font-bold mb-6 text-gray-700">My Cart</h1>
+                <div class="border-b-2 border-green-600 pb-4 mb-6">
+                    <h1 class="flex items-center space-x-3 text-3xl md:text-4xl font-bold text-gray-900 font-sans">
+                        <i class="pi pi-shopping-cart text-green-600 text-3xl"></i>
+                        <span>My Cart</span>
+                    </h1>
+                    <p class="text-gray-600 text-sm md:text-base mt-1">
+                        Review your selected items, adjust quantities, and proceed to checkout.
+                    </p>
+                </div>
 
                 <div v-if="cartItems.length === 0" class="text-gray-500 text-center py-10">
                     Your cart is empty 🛒
@@ -30,7 +38,9 @@
                                 </td>
 
                                 <!-- Price -->
-                                <td class="px-4 py-3 text-center text-gray-700">${{ item . price . toFixed(2) }}</td>
+                                <td class="px-4 py-3 text-center text-gray-700">
+                                    ${{ (Number(item . offerPrice ?? item . regularPrice) || 0) * (Number(item . quantity) || 1) . toFixed(2) }}
+                                </td>
 
                                 <!-- Quantity -->
                                 <td class="px-4 py-3 text-center">
@@ -47,7 +57,8 @@
 
                                 <!-- Amount -->
                                 <td class="px-4 py-3 text-center text-gray-700">
-                                    ${{ item . price * item . quantity . toFixed(2) }}</td>
+                                    ${{ (Number(item . offerPrice ?? item . regularPrice) || 0) * (Number(item . quantity) || 1) . toFixed(2) }}
+                                </td>
 
                                 <!-- Action -->
                                 <td class="px-4 py-3 text-center">
@@ -77,7 +88,8 @@
                             <h3 class="font-medium text-gray-800">{{ item . name }}</h3>
                             <p class="text-sm text-gray-600 mt-1">Brand: {{ item . brand }}</p>
                             <p class="text-sm font-semibold text-green-600 mt-1">
-                                ${{ item . price * item . quantity . toFixed(2) }}</p>
+                                ${{ (Number(item . offerPrice ?? item . regularPrice) || 0) * (Number(item . quantity) || 1) . toFixed(2) }}
+                            </p>
                         </div>
                         <button @click="removeItem(item)" class="text-red-500 hover:text-red-700 font-semibold text-lg">
                             ✕
@@ -95,7 +107,8 @@
                             <button @click="increaseQty(item)"
                                 class="w-8 h-8 flex items-center justify-center text-gray-700 bg-gray-200 hover:bg-green-400 hover:text-white rounded border border-gray-300 transition">+</button>
                         </div>
-                        <span class="text-gray-700 font-medium">${{ item . price . toFixed(2) }}</span>
+                        <span
+                            class="text-gray-700 font-medium">$${{ (Number(item . offerPrice ?? item . regularPrice) || 0) * (Number(item . quantity) || 1) . toFixed(2) }}</span>
                     </div>
                 </div>
             </div>
@@ -173,7 +186,6 @@
         computed,
         ref
     } from "vue";
-    import PageTemplate from "../components/layout/PageTemplate.vue";
 
     const cartStore = useCartStore();
 
@@ -181,9 +193,13 @@
     const cartItems = computed(() => cartStore.items);
 
     // total
-    const cartTotal = computed(() =>
-        cartStore.items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-    );
+    const cartTotal = computed(() => {
+        return cartStore.items.reduce((sum, item) => {
+            const price = Number(item.offerPrice ?? item.regularPrice) || 0;
+            const qty = Number(item.quantity) || 1;
+            return sum + price * qty;
+        }, 0); // keep as number
+    });
 
     // actions
     const increaseQty = (item) => {

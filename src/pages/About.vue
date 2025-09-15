@@ -70,7 +70,7 @@
         <!-- Best Selling Medicines Section -->
         <div class="max-w-6xl mx-auto leading-relaxed">
             <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center font-wb" :class="[langStore.langClass]">
-                {{ $t('about.heading3') }}</h2>
+                {{ $t('about.best_selling.title') }}</h2>
             <p class="text-gray-700 text-sm text-center">
                 Sergel 20 mg Capsule | Napa 500 mg Tablet | Ceevit 250 mg Chewable Tablet | Monas 10 10 mg Tablet |
                 Pantonix 20 mg Tablet | Ecosprin 75 mg Tablet | SkinO Hydration Boost Gel 70ml | SkinO Daily Gel

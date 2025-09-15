@@ -36,7 +36,6 @@ export const useCartStore = defineStore('cart', {
       this.saveCart()
     },
 
-    // Toggle offcanvas open/close
     toggleCart(open) {
       this.isCartOpen = open ?? !this.isCartOpen
     }

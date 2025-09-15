@@ -45,9 +45,12 @@
             </div>
 
             <!-- Add to Cart -->
-            <button @click="addToCart(product)" class="btn-add-to-cart w-full sm:w-auto mt-4">
-                Add to Cart
+            <button @click="addToCart(product)"
+                class="btn-add-to-cart w-full sm:w-auto mt-4 flex items-center justify-center">
+                <span class="hidden md:inline">Add to Cart</span> <!-- visible ≥768px -->
+                <span class="inline md:hidden">Add</span> <!-- visible <768px -->
             </button>
+
         </div>
     </div>
 </template>
@@ -64,6 +67,9 @@
     import {
         categories
     } from "@/data/categories.js";
+    import {
+        usePush
+    } from "notivue"
 
     const props = defineProps({
         product: {
@@ -74,6 +80,7 @@
 
     const quantity = ref(1);
     const cartStore = useCartStore();
+    const push = usePush()
 
     const addToCart = () => {
         cartStore.addToCart({
@@ -82,7 +89,8 @@
         });
         quantity.value = 1;
 
-        cartStore.toggleCart(true);
+        // cartStore.toggleCart(true);
+        push.success(`${props.product.name} added to cart!`)
     };
 
     const categoryName = computed(() => {

@@ -94,7 +94,7 @@
     const authStore = useAuthStore();
     const user = reactive({
         ...authStore.user
-    }); // editable copy
+    });
 
     const defaultAvatar = "https://placehold.co/150";
     const preview = ref(null);

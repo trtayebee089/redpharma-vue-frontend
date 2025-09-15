@@ -36,18 +36,20 @@
     const goHome = () => {
         router.push('/');
     }
+
     const goProfile = () => {
         if (authStore.isAuthenticated) {
             router.push("/profile");
         } else {
             showLoginModal.value = true;
+            console.log("Login Modal Open");
         }
     };
 </script>
 
 <template>
     <!-- Bottom Navigation (mobile only) -->
-    <nav class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-300 shadow-md z-50 lg:hidden py-1">
+    <nav class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-300 shadow-md z-49 lg:hidden py-1">
         <div class="flex justify-between">
 
             <!-- Category Sidebar Opener -->
@@ -88,25 +90,43 @@
     </nav>
 
     <!-- Login Modal -->
-    <LoginFormModal v-if="showLoginModal" @close="showLoginModal = false" />
+    <LoginFormModal :show="showLoginModal" @close="() => { showLoginModal = false }" />
 
     <!-- Mobile Sidebar Overlay -->
     <transition name="slide-fade">
-        <aside v-if="isSidebarOpen" class="fixed inset-0 z-50 w-64 bg-gray-200 shadow-lg p-4 overflow-y-auto lg:hidden">
-            <button @click="isSidebarOpen = false" class="mb-4 px-3 py-2 bg-green-500 text-white rounded">
-                Close
-            </button>
-            <ul>
-                <li v-for="category in categories" :key="category.id">
-                    <router-link :to="`/category/${category.slug}`" @click="isSidebarOpen = false"
-                        class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-200 transition-colors">
-                        <img :src="category.image" alt="" class="w-6 h-6 mr-3" />
-                        <span>{{ category . name }}</span>
-                    </router-link>
-                </li>
-            </ul>
-        </aside>
+        <div v-if="isSidebarOpen" class="fixed inset-0 z-50 flex">
+
+            <!-- Overlay -->
+            <div class="fixed inset-0 bg-black/40 backdrop-blur-sm" @click="isSidebarOpen = false"></div>
+
+            <!-- Sidebar -->
+            <aside class="relative w-64 bg-white shadow-xl p-4 overflow-y-auto border-r border-gray-200">
+                <!-- Close Button -->
+                <div class="flex justify-end mb-4">
+                    <button @click="isSidebarOpen = false"
+                        class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Categories List -->
+                <ul class="space-y-2">
+                    <li v-for="category in categories" :key="category.id">
+                        <router-link :to="`/category/${category.slug}`" @click="isSidebarOpen = false"
+                            class="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-700 transition">
+                            <img :src="category.image" alt="" class="w-6 h-6 mr-3 rounded-sm object-cover" />
+                            <span class="font-medium">{{ category . name }}</span>
+                        </router-link>
+                    </li>
+                </ul>
+            </aside>
+        </div>
     </transition>
+
+
 </template>
 
 <style scoped>

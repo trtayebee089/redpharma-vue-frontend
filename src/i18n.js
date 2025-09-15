@@ -121,41 +121,44 @@ const messages = {
             shortDescription: "RedPharma is Bangladesh’s most trusted online pharmacy and healthcare platform. Access medicines, doctor consultations, lab tests, and more, all from the comfort of your home.",
             why_us: [
                 {
-                heading: "Benefits of Using RedPharma",
-                type: "list",
-                items: [
-                    "Convenient access to medicines and healthcare services from home.",
-                    "Comprehensive database of healthcare providers across Bangladesh.",
-                    "24/7 customer support for all your needs.",
-                    "Secure and easy-to-use platform.",
-                    "Regular discounts and special deals to save money.",
-                    "Access to health records, prescriptions, and medical advice.",
-                    "Fast and reliable delivery of medicines.",
-                    "Services delivered by professional and experienced healthcare providers.",
-                    "Accurate and reliable information on health and wellness."
-                ]
+                    heading: "Benefits of Using RedPharma",
+                    type: "list",
+                    items: [
+                        "Convenient access to medicines and healthcare services from home.",
+                        "Comprehensive database of healthcare providers across Bangladesh.",
+                        "24/7 customer support for all your needs.",
+                        "Secure and easy-to-use platform.",
+                        "Regular discounts and special deals to save money.",
+                        "Access to health records, prescriptions, and medical advice.",
+                        "Fast and reliable delivery of medicines.",
+                        "Services delivered by professional and experienced healthcare providers.",
+                        "Accurate and reliable information on health and wellness."
+                    ]
                 },
                 {
-                heading: "Convenience & Affordability",
-                type: "paragraphs",
-                items: [
-                    "Order medicines online and get them delivered to your doorstep. RedPharma’s mobile app lets you manage orders and prescriptions easily. Save on both generic and branded medicines with transparent pricing and regular discounts.",
-                    "All medicines meet strict quality standards. Refill prescriptions quickly through the website or app with auto-refill reminders. RedPharma offers a wide range of medicines, OTC products, herbal remedies, and personal care items."
-                ]
+                    heading: "Convenience & Affordability",
+                    type: "paragraphs",
+                    items: [
+                        "Order medicines online and get them delivered to your doorstep. RedPharma’s mobile app lets you manage orders and prescriptions easily. Save on both generic and branded medicines with transparent pricing and regular discounts.",
+                        "All medicines meet strict quality standards. Refill prescriptions quickly through the website or app with auto-refill reminders. RedPharma offers a wide range of medicines, OTC products, herbal remedies, and personal care items."
+                    ]
                 }
             ],
             services: {
                 title: "Services Offered by RedPharma",
                 items: [
-                { title: "Medicine Delivery", description: "Fast and reliable delivery to your doorstep." },
-                { title: "Doctor Consultation", description: "Access qualified medical professionals online." },
-                { title: "Lab Tests", description: "Order lab tests online and receive results quickly." },
-                { title: "Health Records", description: "Manage medical history, lab results, and prescriptions securely." },
-                { title: "Medical Advice & Support", description: "Get expert guidance from healthcare professionals." },
-                { title: "Healthcare Provider Database", description: "Find and compare doctors and clinics in your area." },
-                // { title: "Discounts & Deals", description: "Save on medicine delivery, consultations, and lab tests." }
+                    { title: "Medicine Delivery", description: "Fast and reliable delivery to your doorstep." },
+                    { title: "Doctor Consultation", description: "Access qualified medical professionals online." },
+                    { title: "Lab Tests", description: "Order lab tests online and receive results quickly." },
+                    { title: "Health Records", description: "Manage medical history, lab results, and prescriptions securely." },
+                    { title: "Medical Advice & Support", description: "Get expert guidance from healthcare professionals." },
+                    { title: "Healthcare Provider Database", description: "Find and compare doctors and clinics in your area." },
+                    // { title: "Discounts & Deals", description: "Save on medicine delivery, consultations, and lab tests." }
                 ]
             },
+            best_selling: {
+                title: "Our Best Selling Medicines"
+            }
         },
         footer: {
             title: "Quality Medicines, Trusted Care",
@@ -329,7 +332,9 @@ const messages = {
                 ]
             },
             
-            heading3: "সেরা বিক্রিত ওষুধসমূহ"
+            best_selling: {
+                title: "সেরা বিক্রিত ওষুধসমূহ"
+            }
         },
         footer: {
             title: "গুণগতমানসম্পন্ন ওষুধ, বিশ্বাসযোগ্য যত্ন",

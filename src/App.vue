@@ -6,19 +6,18 @@
     import CartOffCanvas from './components/cart/CartOffCanvas.vue'
     import PrimeVue from 'primevue/config'
     import { useI18n } from "vue-i18n";
+    import { Notivue, Notification, push } from 'notivue'
     import {
         useLanguageStore
     } from "@/stores/language";
     import {
         watch
     } from "vue";
-import FloatingCartButton from './components/cart/FloatingCartButton.vue'
-import MobileFooter from './components/layout/MobileFooter.vue'
-
+    import FloatingCartButton from './components/cart/FloatingCartButton.vue'
+    import MobileFooter from './components/layout/MobileFooter.vue'
+    
+    const { locale } = useI18n();
     const langStore = useLanguageStore();
-    const {
-        locale
-    } = useI18n();
 
     watch(
         () => langStore.lang,
@@ -48,6 +47,10 @@ import MobileFooter from './components/layout/MobileFooter.vue'
         <!-- <FloatingCartButton /> -->
         <MobileFooter />
     </div>
+
+    <Notivue v-slot="item">
+        <Notification :item="item" />
+    </Notivue>
 </template>
 
 <style>

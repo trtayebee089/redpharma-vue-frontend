@@ -7,10 +7,19 @@
             <h3 class="text-lg font-semibold text-gray-800">
                 Cart ({{ cartStore . items . length }} items)
             </h3>
-            <button @click="cartStore.toggleCart(false)"
-                class="text-gray-500 hover:text-gray-700 p-1 rounded-full transition">
-                <i class="pi pi-times text-xl"></i>
-            </button>
+            <div class="flex flex-1 justify-end space-x-2">
+                <!-- Clear Cart -->
+                <button @click="cartStore.clearCart()"
+                    class="text-red-500 hover:text-red-700 px-3 py-1 rounded-full transition">
+                    Clear Cart
+                </button>
+
+                <!-- Close Offcanvas -->
+                <button @click="cartStore.toggleCart(false)"
+                    class="text-gray-500 hover:text-gray-700 p-1 rounded-full transition">
+                    <i class="pi pi-times text-xl"></i>
+                </button>
+            </div>
         </div>
 
         <!-- Cart Items -->
@@ -59,9 +68,7 @@
                         </p>
 
                         <p class="text-green-700 font-semibold text-lg">
-                            <!-- ${{ (Number(item . offerPrice ?? item . regularPrice) || 0) * (Number(item . quantity) || 1) . toFixed(2) }} -->
-                            {{  item . regularPrice }} |
-                            {{  item . offerPrice }}
+                            ${{ (Number(item . offerPrice ?? item . regularPrice) || 0) * (Number(item . quantity) || 1) . toFixed(2) }}
                         </p>
 
 
