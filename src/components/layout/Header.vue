@@ -176,6 +176,11 @@
                     <li v-if="authStore.isAuthenticated"><router-link @click.native="closeMenu" to="/orders">{{ $t("header.menu.orders") }}</router-link></li>
                     <li v-if="authStore.isAuthenticated"><router-link @click.native="closeMenu" to="/membership">{{ $t("header.menu.membership") }}</router-link></li>
                     <li v-if="authStore.isAuthenticated"><router-link @click.native="closeMenu" to="/settings">{{ $t("header.menu.settings") }}</router-link></li>
+                    <li v-if="authStore.isAuthenticated">
+                        <button @click="logout" class="flex items-center text-red-500 hover:bg-red-300 transition w-full text-left">
+                            {{ $t("header.menu.logout") }}
+                        </button>
+                    </li>
                 </ul>
             </div>
         </transition>
