@@ -52,7 +52,7 @@
         </section> -->
 
         <!-- Banner Slider -->
-        <section class="relative pt-6">
+        <section class="relative">
             <div class="rounded-xl overflow-hidden border border-red-100">
                 <Swiper :modules="[Pagination, Navigation, Autoplay]" :slides-per-view="1" :loop="true"
                     :autoplay="{ delay: 4500, disableOnInteraction: false }"
@@ -65,7 +65,7 @@
                 </Swiper>
             </div>
         </section>
-        
+
         <!-- Categories Slider -->
         <section class="mt-10 relative  fade-up">
             <div class="category-slider">
