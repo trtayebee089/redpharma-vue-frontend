@@ -1,19 +1,17 @@
 <template>
     <div>
         <!-- Banner Slider -->
-        <section class="relative fade-up">
+        <!-- <section class="relative fade-up">
             <div class=" rounded-xl overflow-hidden">
                 <Swiper :modules="[Pagination, Navigation, Autoplay]" :slides-per-view="1" :loop="true"
                     :autoplay="{ delay: 4500, disableOnInteraction: false }"
                     class="w-full h-[40vh] sm:h-[35vh] md:h-[45vh] lg:h-[50vh] xl:h-[60vh] relative rounded-xl overflow-hidden shadow-xl">
                     <SwiperSlide v-for="(slide, index) in slides" :key="index" class="relative w-full h-full">
-                        <!-- Background -->
+                        
                         <div class="absolute inset-0 bg-cover bg-center rounded-xl filter brightness-75"
                             :style="{ backgroundImage: `url(${slide.bg})` }" />
-                        <!-- Gradient -->
                         <div
                             class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80 rounded-xl" />
-                        <!-- Content -->
                         <div
                             class="relative z-10 flex flex-col items-center justify-center h-full text-center px-4 sm:px-6 md:px-12">
                             <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-white drop-shadow-2xl mb-4 leading-tight animate-fade-in-down"
@@ -32,17 +30,13 @@
                                 {{ slide . description }}
                             </p>
 
-                            <!-- CTA Buttons -->
                             <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mt-4">
-                                <!-- Call Button -->
                                 <a :href="`tel:${slide.phone}`"
                                     class="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-full shadow-lg flex items-center justify-center text-sm sm:text-base md:text-lg"
                                     :class="[langStore.langClass]">
                                     <i class="pi pi-phone mr-2 text-sm sm:text-base md:text-lg"></i>
                                     {{ slide . buttons . call }}
                                 </a>
-
-                                <!-- WhatsApp Button -->
                                 <a :href="slide.whatsapp" target="_blank"
                                     class="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-full shadow-lg flex items-center justify-center text-sm sm:text-base md:text-lg"
                                     :class="[langStore.langClass]">
@@ -55,8 +49,23 @@
                     </SwiperSlide>
                 </Swiper>
             </div>
-        </section>
+        </section> -->
 
+        <!-- Banner Slider -->
+        <section class="relative pt-6">
+            <div class="rounded-xl overflow-hidden border border-red-100">
+                <Swiper :modules="[Pagination, Navigation, Autoplay]" :slides-per-view="1" :loop="true"
+                    :autoplay="{ delay: 4500, disableOnInteraction: false }"
+                    class="w-full relative rounded-xl overflow-hidden shadow-xl" style="aspect-ratio: 1400/480;">
+                    <SwiperSlide v-for="(slide, index) in slides" :key="index" class="relative w-full h-full ">
+                        <!-- Background Image -->
+                        <img :src="slide.bg" alt="slide image" class="w-full h-full object-contain "
+                            style="object-position: center;" />
+                    </SwiperSlide>
+                </Swiper>
+            </div>
+        </section>
+        
         <!-- Categories Slider -->
         <section class="mt-10 relative  fade-up">
             <div class="category-slider">
@@ -323,6 +332,9 @@
     import {
         computed
     } from "vue";
+    import slider1 from "@/assets/images/slide-1.jpg"
+    import slider2 from "@/assets/images/slide-2.jpg"
+    import slider3 from "@/assets/images/slide-3.jpg"
 
     const {
         t,
@@ -331,9 +343,9 @@
     const langStore = useLanguageStore();
 
     const backgrounds = [
-        "https://img.freepik.com/free-photo/abstract-blur-shopping-mall_1203-8821.jpg",
-        "https://img.freepik.com/free-photo/abstract-blur-defocused-pharmacy-drug-store_1203-9459.jpg",
-        "https://img.freepik.com/free-photo/abstract-blur-shopping-mall_74190-5812.jpg",
+        slider1,
+        slider2,
+        slider3,
     ];
 
     const phoneNumber = "+880123456789";
