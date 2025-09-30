@@ -1,5 +1,5 @@
 <template>
-    <section class="mb-16 relative leading-relaxed max-w-7xl mx-auto px-4">
+    <section class="mb-16 relative leading-relaxed max-w-7xl mx-auto px-4 pt-6">
         <div class="mb-12 fade-up">
             <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-2 text-center relative drop-shadow-md tracking-wide">
                 Contact Us

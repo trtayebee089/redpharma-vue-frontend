@@ -1,20 +1,20 @@
 <template>
-    <div class="relative leading-relaxed mb-16">
+    <div class="relative leading-relaxed mb-16 pt-6">
         <div class="flex flex-col lg:flex-row lg:items-start gap-8">
             <!-- Desktop Cart Table -->
             <div class="hidden md:block flex-1">
                 <div class="border-b-2 border-green-600 pb-4 mb-6">
-                    <h1 class="flex items-center space-x-3 text-3xl md:text-4xl font-bold text-gray-900 font-sans">
+                    <h1 class="flex items-center space-x-3 text-2xl md:text-3xl text-gray-900 font-sans font-extrabold">
                         <i class="pi pi-shopping-cart text-green-600 text-3xl"></i>
-                        <span>My Cart</span>
+                        <span>{{ $t('cart.title') }}</span>
                     </h1>
                     <p class="text-gray-600 text-sm md:text-base mt-1">
-                        Review your selected items, adjust quantities, and proceed to checkout.
+                        {{ $t('cart.description') }}
                     </p>
                 </div>
 
-                <div v-if="cartItems.length === 0" class="text-gray-500 text-center py-10">
-                    Your cart is empty 🛒
+                <div v-if="cartItems.length === 0">
+                    <Alert :severity="'warn'" :message="$t('cart.alert')" />
                 </div>
 
                 <div v-else class="overflow-x-auto shadow">
@@ -34,12 +34,12 @@
                                 <td class="px-4 py-3 flex items-center space-x-3">
                                     <img :src="item.image || 'https://placehold.co/400'"
                                         class="w-12 h-12 object-contain rounded border border-gray-200" />
-                                    <span class="font-medium text-gray-800">{{ item . name }}</span>
+                                    <span class="font-medium text-gray-800">{{ item.name }}</span>
                                 </td>
 
                                 <!-- Price -->
                                 <td class="px-4 py-3 text-center text-gray-700">
-                                    ${{ (Number(item . offerPrice ?? item . regularPrice) || 0) * (Number(item . quantity) || 1) . toFixed(2) }}
+                                    {{ (Number(item.offerPrice ?? item.price) || 0).toFixed(2) }} Tk
                                 </td>
 
                                 <!-- Quantity -->
@@ -49,7 +49,8 @@
                                         <button @click="decreaseQty(item)" :disabled="item.quantity <= 1"
                                             class="w-6 h-6 flex items-center justify-center text-gray-700 bg-gray-200 hover:bg-green-400 hover:text-white rounded border border-gray-300 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition">-</button>
                                         <span
-                                            class="w-6 h-6 flex items-center justify-center text-gray-800 font-medium">{{ item . quantity }}</span>
+                                            class="w-6 h-6 flex items-center justify-center text-gray-800 font-medium">{{
+                                                item.quantity }}</span>
                                         <button @click="increaseQty(item)"
                                             class="w-6 h-6 flex items-center justify-center text-gray-700 bg-gray-200 hover:bg-green-400 hover:text-white rounded border border-gray-300 transition">+</button>
                                     </div>
@@ -57,7 +58,8 @@
 
                                 <!-- Amount -->
                                 <td class="px-4 py-3 text-center text-gray-700">
-                                    ${{ (Number(item . offerPrice ?? item . regularPrice) || 0) * (Number(item . quantity) || 1) . toFixed(2) }}
+                                    {{ (Number(item.offerPrice ?? item.price) || 0) * (Number(item.quantity) || 1)
+                                        .toFixed(2) }} Tk
                                 </td>
 
                                 <!-- Action -->
@@ -85,10 +87,11 @@
                         <img :src="item.image || 'https://placehold.co/60'"
                             class="w-16 h-16 object-contain rounded border border-gray-200" />
                         <div class="flex-1">
-                            <h3 class="font-medium text-gray-800">{{ item . name }}</h3>
-                            <p class="text-sm text-gray-600 mt-1">Brand: {{ item . brand }}</p>
+                            <h3 class="font-medium text-gray-800">{{ item.name }}</h3>
+                            <p class="text-sm text-gray-600 mt-1">Brand: {{ item.brand }}</p>
                             <p class="text-sm font-semibold text-green-600 mt-1">
-                                ${{ (Number(item . offerPrice ?? item . regularPrice) || 0) * (Number(item . quantity) || 1) . toFixed(2) }}
+                                {{ (Number(item.offerPrice ?? item.price) || 0) * (Number(item.quantity) || 1).
+                                    toFixed(2) }} Tk
                             </p>
                         </div>
                         <button @click="removeItem(item)" class="text-red-500 hover:text-red-700 font-semibold text-lg">
@@ -102,22 +105,21 @@
                             class="inline-flex items-center space-x-2 bg-gray-50 px-3 py-1 rounded-md border border-gray-200">
                             <button @click="decreaseQty(item)" :disabled="item.quantity <= 1"
                                 class="w-8 h-8 flex items-center justify-center text-gray-700 bg-gray-200 hover:bg-green-400 hover:text-white rounded border border-gray-300 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition">-</button>
-                            <span
-                                class="w-8 h-8 flex items-center justify-center text-gray-800 font-medium">{{ item . quantity }}</span>
+                            <span class="w-8 h-8 flex items-center justify-center text-gray-800 font-medium">{{ item.
+                                quantity }}</span>
                             <button @click="increaseQty(item)"
                                 class="w-8 h-8 flex items-center justify-center text-gray-700 bg-gray-200 hover:bg-green-400 hover:text-white rounded border border-gray-300 transition">+</button>
                         </div>
-                        <span
-                            class="text-gray-700 font-medium">$${{ (Number(item . offerPrice ?? item . regularPrice) || 0) * (Number(item . quantity) || 1) . toFixed(2) }}</span>
+                        <span class="text-gray-700 font-medium">{{ (Number(item.offerPrice ?? item.price) || 0) *
+                            (Number(item.quantity) || 1).toFixed(2) }} Tk</span>
                     </div>
                 </div>
             </div>
 
 
             <!-- Right Column: Summary & Checkout Form -->
-            <div class="w-full lg:w-1/3">
+            <div v-if="cartStore.items.length" class="w-full lg:w-1/3">
                 <div class="border border-green-300 rounded-lg bg-gray-50 shadow-sm overflow-hidden">
-
                     <!-- Header -->
                     <div class="bg-green-100 px-6 py-4 border-b border-green-200">
                         <h2 class="text-lg font-bold text-green-700">Order Summary</h2>
@@ -128,18 +130,18 @@
                         <!-- Subtotal & Shipping -->
                         <div class="flex justify-between text-gray-700 border-b border-gray-200 pb-2">
                             <span>Subtotal</span>
-                            <span class="font-medium">${{ cartTotal . toFixed(2) }}</span>
+                            <span class="font-medium">{{ cartStore.cartSubtotal.toFixed(2) }} Tk</span>
                         </div>
                         <div class="flex justify-between text-gray-700 border-b border-gray-200 pb-2 pt-2">
                             <span>Shipping</span>
-                            <span class="text-green-600 font-medium">Free</span>
+                            <span class="text-green-600 font-medium">{{ cartStore.shippingRate }} Tk</span>
                         </div>
 
                         <!-- Total -->
                         <div
                             class="flex justify-between font-bold text-lg text-gray-800 mt-4 border-t border-gray-300 pt-2">
                             <span>Total</span>
-                            <span>${{ cartTotal . toFixed(2) }}</span>
+                            <span>{{ cartStore.totalAmount.toFixed(2) }} Tk</span>
                         </div>
 
                         <!-- Checkout Form -->
@@ -174,70 +176,82 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </template>
 
 <script setup>
-    import {
-        useCartStore
-    } from "@/stores/cart";
-    import {
-        computed,
-        ref
-    } from "vue";
+import {
+    useCartStore
+} from "@/stores/cart";
+import {
+    computed,
+    ref,
+    reactive
+} from "vue";
+import {
+    useI18n
+} from "vue-i18n";
+import {
+    useLanguageStore
+} from "@/stores/language";
+import Alert from "@/components/common/Alert.vue";
+import { useCheckout } from '@/composables/useCheckout';
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/auth";
 
-    const cartStore = useCartStore();
+const authStore = useAuthStore();
+const router = useRouter();
+const { t, tm } = useI18n();
+const cartStore = useCartStore();
+const langStore = useLanguageStore();
+const checkoutForm = reactive({
+    fullName: authStore.user?.name || '',
+    phone: authStore.user?.phone_number || '',
+    address: authStore.user?.address || ''
+});
+const { loading, error, successMessage, submitOrder } = useCheckout();
+const cartItems = computed(() => cartStore.items);
 
-    // cart items
-    const cartItems = computed(() => cartStore.items);
+// actions
+const increaseQty = (item) => {
+    cartStore.updateQuantity(item.id, item.quantity + 1);
+};
 
-    // total
-    const cartTotal = computed(() => {
-        return cartStore.items.reduce((sum, item) => {
-            const price = Number(item.offerPrice ?? item.regularPrice) || 0;
-            const qty = Number(item.quantity) || 1;
-            return sum + price * qty;
-        }, 0); // keep as number
-    });
-
-    // actions
-    const increaseQty = (item) => {
-        cartStore.updateQuantity(item.id, item.quantity + 1);
-    };
-
-    const decreaseQty = (item) => {
-        if (item.quantity > 1) {
-            cartStore.updateQuantity(item.id, item.quantity - 1);
-        }
-    };
-
-    const removeItem = (item) => cartStore.removeFromCart(item.id);
-    const checkoutForm = ref({
-        fullName: "",
-        phone: "",
-        address: ""
-    })
-
-    const submitCheckout = () => {
-        if (!cartStore.items.length) {
-            alert("Your cart is empty!")
-            return
-        }
-
-        // Handle checkout submission
-        console.log("Checkout Data:", checkoutForm.value)
-        console.log("Cart Items:", cartStore.items)
-
-        // Example: clear cart after order
-        cartStore.clearCart()
-        alert("Order placed successfully!")
-
-        // Reset form
-        checkoutForm.value = {
-            fullName: "",
-            phone: "",
-            address: ""
-        }
+const decreaseQty = (item) => {
+    if (item.quantity > 1) {
+        cartStore.updateQuantity(item.id, item.quantity - 1);
     }
+};
+
+const removeItem = (item) => cartStore.removeFromCart(item.id);
+
+const submitCheckout = async () => {
+    if (!cartStore.items.length) {
+        alert("Your cart is empty!");
+        return;
+    }
+
+    try {
+        const result = await submitOrder(checkoutForm);
+
+        if (result?.success) {
+            // Clear cart and reset form
+            cartStore.clearCart();
+            checkoutForm.fullName = "";
+            checkoutForm.phone = "";
+            checkoutForm.address = "";
+
+            router.push({
+                name: "OrderConfirmation",
+                params: { order_id: result.sale.id }, // use the correct param name
+                state: { order: result.sale, tracking: result.tracking }
+            });
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Failed to place order. Please try again.");
+    }
+};
 </script>

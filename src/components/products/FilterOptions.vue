@@ -1,5 +1,5 @@
 <template>
-    <div class="p-4 bg-white rounded-lg shadow w-full">
+    <div class="p-4 bg-white rounded-lg shadow w-full transform transition-transform duration-300">
         <h2 class="font-semibold mb-3 text-gray-700">Filter by</h2>
 
         <!-- Price Filter -->

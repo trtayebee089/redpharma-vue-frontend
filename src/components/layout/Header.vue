@@ -1,9 +1,8 @@
 <template>
-    <nav
-        :class="[
-            'fixed top-0 left-0 w-full z-50 bg-green-50 transition-shadow border-b border-green-200',
-            { 'shadow-md': isSticky }
-        ]">
+    <nav :class="[
+        'fixed top-0 left-0 w-full z-50 bg-green-50 transition-shadow border-b border-green-200',
+        { 'shadow-md': isSticky }
+    ]">
         <div class="px-4 md:px-6 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-0">
             <!-- Row for Logo + Desktop Search + Buttons -->
             <div class="flex items-center justify-between w-full md:w-full">
@@ -33,18 +32,18 @@
                             <li v-for="product in filteredProducts" :key="product.id"
                                 class="px-4 py-3 hover:bg-gray-50 flex justify-between items-center gap-3">
                                 <div class="flex-1">
-                                    <p class="font-medium text-gray-800">{{ product . name }}</p>
+                                    <p class="font-medium text-gray-800">{{ product.name }}</p>
                                     <p class="text-sm text-gray-600">
-                                        Brand: {{ product . brand }} | Category:
-                                        {{ getCategoryName(product . categoryId) }}
+                                        Brand: {{ product.brand }} | Category:
+                                        {{ getCategoryName(product.categoryId) }}
                                     </p>
                                     <p class="text-sm font-semibold text-green-600 mt-1">
-                                        ${{ product . regularPrice . toFixed(2) }}
+                                        ${{ product.regularPrice.toFixed(2) }}
                                     </p>
                                 </div>
 
                                 <button @click="addToCart(product)"
-                                    class="relative inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white font-semibold text-sm rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out hover:bg-green-700 hover:shadow-lg">
+                                    class="relative inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white font-semibold text-sm rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out hover:bg-red-700 hover:shadow-lg hover:border-red-800">
                                     Add to Cart
                                     <span
                                         class="absolute inset-0 bg-white opacity-10 rounded-lg scale-0 hover:scale-100 transition-transform duration-300"></span>
@@ -57,41 +56,45 @@
                 <!-- Desktop Buttons -->
                 <div class="hidden md:flex items-center space-x-4 h-full relative">
                     <router-link to="/delivery-coverage"
-                        class="hidden 2xl:flex space-x-2 h-12 bg-green-100 text-green-600 items-center justify-center rounded-md hover:bg-green-500 hover:text-white transition border border-green-300 shadow-sm px-3">
+                        class="hidden 2xl:flex space-x-2 h-12 bg-green-100 text-green-600 items-center justify-center rounded-md hover:border-red-300 hover:bg-gradient-to-b hover:from-red-500 hover:to-red-800 hover:text-white transition border border-green-300 shadow-sm px-3">
                         <img :src="deliveryImg" alt="flag" class="w-6 h-6 rounded-sm" />
-                        <span class="font-semibold"
-                            :class="[langStore.langClass]">{{ $t('header.buttons.coverage') }}</span>
+                        <span class="font-semibold" :class="[langStore.langClass]">{{ $t('header.buttons.coverage')
+                        }}</span>
                     </router-link>
 
                     <router-link to="/order-tracking"
-                        class="hidden 2xl:flex space-x-2 h-12 bg-green-100 text-green-600 items-center justify-center rounded-md hover:bg-green-500 hover:text-white transition border border-green-300 shadow-sm px-3">
+                        class="hidden 2xl:flex space-x-2 h-12 bg-green-100 text-green-600 items-center justify-center rounded-md hover:border-red-300 hover:bg-gradient-to-b hover:from-red-500 hover:to-red-800 hover:text-white transition border border-green-300 shadow-sm px-3">
                         <img :src="trackingImg" alt="flag" class="w-6 h-6 rounded-sm" />
-                        <span
-                            class="font-semibold":class="[langStore.langClass]">{{ $t('header.buttons.track') }}</span>
+                        <span class="font-semibold" :class="[langStore.langClass]">{{ $t('header.buttons.track')
+                        }}</span>
                     </router-link>
 
                     <button @click="toggleLanguage"
-                        class="hidden xl:flex space-x-2 w-20 h-12 bg-green-100 text-green-600 items-center justify-center rounded-md hover:bg-green-500 hover:text-white transition border border-green-300 shadow-sm">
+                        class="hidden xl:flex space-x-2 w-20 h-12 bg-green-100 text-green-600 items-center justify-center rounded-md hover:border-red-300 hover:bg-gradient-to-b hover:from-red-500 hover:to-red-800 hover:text-white transition border border-green-300 shadow-sm">
                         <img :src="currentFlag" alt="flag" class="w-6 h-6 rounded-sm" />
                         <span class="font-semibold">{{ currentLanguage }}</span>
                     </button>
 
                     <!-- Cart Button -->
                     <div class="relative hidden xl:inline-block">
-                        <button @click="cartStore.toggleCart(true)"
-                            class="w-12 h-12 bg-green-100 text-green-600 flex items-center justify-center rounded-md hover:bg-green-500 hover:text-white transition border border-green-300 shadow-sm">
+                        <button @click="cartStore.toggleCart(true)" class="w-12 h-12 flex items-center justify-center rounded-md border border-green-300 shadow-sm text-green-600
+                                bg-green-100
+                                hover:text-white
+                                hover:border-red-300
+                                transition-all duration-300
+                                hover:bg-gradient-to-b hover:from-red-500 hover:to-red-800">
                             <i class="pi pi-shopping-cart text-xl"></i>
                         </button>
                         <!-- Badge -->
-                        <span v-if="cartStore.totalQty"
+                        <span v-if="cartStore.uniqueItems"
                             class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
-                            {{ cartStore . totalQty }}
+                            {{ cartStore.uniqueItems }}
                         </span>
                     </div>
 
                     <!-- Login Button with User Icon -->
                     <button v-if="!authStore.isAuthenticated" @click="showLoginModal = true"
-                        class="flex items-center justify-center space-x-2 px-4 rounded-lg bg-green-500 hover:bg-green-600 text-white shadow-sm h-12">
+                        class="flex items-center justify-center space-x-2 px-4 rounded-lg bg-green-500 hover:border-red-300 hover:bg-gradient-to-b hover:from-red-500 hover:to-red-800 text-white shadow-sm h-12">
                         <span class="w-8 h-8 bg-white text-green-600 flex items-center justify-center rounded-full">
                             <i class="pi pi-user text-lg"></i>
                         </span>
@@ -110,13 +113,13 @@
                         <span>{{ currentLanguage }}</span>
                     </button>
                     <button @click="toggleMenu"
-                        class="flex items-center justify-center w-12 h-12 border border-green-500 rounded text-gray-800 ml-3 focus:outline-none hover:bg-green-50 transition">
+                        class="flex items-center justify-center w-12 h-12 border border-green-500 rounded text-gray-800 ml-3 focus:outline-none hover:bg-red-50 transition">
                         <svg v-if="!isMenuOpen" xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16" />
                         </svg>
-                        <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
@@ -144,17 +147,17 @@
                         <li v-for="product in filteredProducts" :key="product.id"
                             class="px-4 py-3 hover:bg-gray-50 flex justify-between items-center gap-3">
                             <div class="flex-1">
-                                <p class="font-medium text-gray-800">{{ product . name }}</p>
+                                <p class="font-medium text-gray-800">{{ product.name }}</p>
                                 <p class="text-sm text-gray-600">
-                                    Brand: {{ product . brand }} | Category:
-                                    {{ getCategoryName(product . categoryId) }}
+                                    Brand: {{ product.brand }} | Category:
+                                    {{ getCategoryName(product.categoryId) }}
                                 </p>
                                 <p class="text-sm font-semibold text-green-600 mt-1">
-                                    ${{ product . regularPrice . toFixed(2) }}
+                                    ${{ product.regularPrice.toFixed(2) }}
                                 </p>
                             </div>
                             <button @click="addToCart(product)"
-                                class="relative inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white font-semibold text-sm rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out hover:bg-green-700 hover:shadow-lg">
+                                class="relative inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white font-semibold text-sm rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out hover:bg-red-700 hover:shadow-lg">
                                 Add to Cart
                                 <span
                                     class="absolute inset-0 bg-white opacity-10 rounded-lg scale-0 hover:scale-100 transition-transform duration-300"></span>
@@ -169,276 +172,289 @@
         <transition name="slide-fade">
             <div v-if="isMenuOpen" class="md:hidden bg-white shadow-md">
                 <ul class="flex flex-col px-4 py-4 space-y-2 text-gray-700 font-medium">
-                    <li><router-link @click.native="closeMenu" to="/">{{ $t("header.menu.home") }}</router-link></li>
-                    <li><router-link @click.native="closeMenu" to="/about">{{ $t("header.menu.about") }}</router-link></li>
-                    <li><router-link @click.native="closeMenu" to="/delivery-coverage">{{ $t("header.menu.coverage") }}</router-link></li>
-                    <li><router-link @click.native="closeMenu" to="/order-tracking">{{ $t("header.buttons.track") }}</router-link></li>
-                    <li v-if="authStore.isAuthenticated"><router-link @click.native="closeMenu" to="/orders">{{ $t("header.menu.orders") }}</router-link></li>
-                    <li v-if="authStore.isAuthenticated"><router-link @click.native="closeMenu" to="/membership">{{ $t("header.menu.membership") }}</router-link></li>
-                    <li v-if="authStore.isAuthenticated"><router-link @click.native="closeMenu" to="/settings">{{ $t("header.menu.settings") }}</router-link></li>
+                    <li><router-link @click.native="closeMenu" to="/">{{ $t('header.menu.home') }}</router-link></li>
+                    <li><router-link @click.native="closeMenu" to="/about">{{ $t('header.menu.about') }}</router-link>
+                    </li>
+                    <li><router-link @click.native="closeMenu" to="/delivery-coverage">{{ $t('header.menu.coverage')
+                    }}</router-link></li>
+                    <li><router-link @click.native="closeMenu" to="/order-tracking">{{ $t('header.buttons.track')
+                    }}</router-link></li>
+                    <li v-if="authStore.isAuthenticated"><router-link @click.native="closeMenu" to="/orders">{{
+                        $t('header.menu.orders') }}</router-link></li>
+                    <li v-if="authStore.isAuthenticated"><router-link @click.native="closeMenu" to="/membership">{{
+                        $t('header.menu.membership') }}</router-link></li>
+                    <li v-if="authStore.isAuthenticated"><router-link @click.native="closeMenu" to="/settings">{{
+                        $t('header.menu.settings') }}</router-link></li>
                     <li v-if="authStore.isAuthenticated">
-                        <button @click="logout" class="flex items-center text-red-500 hover:bg-red-300 transition w-full text-left">
-                            {{ $t("header.menu.logout") }}
+                        <button @click="logout"
+                            class="flex items-center text-red-500 hover:bg-red-300 transition w-full text-left">
+                            {{ $t('header.menu.logout') }}
                         </button>
                     </li>
                 </ul>
             </div>
         </transition>
 
-        <LoginFormModal :show="showLoginModal" @close="() => { showLoginModal = false }" />
+        <LoginFormModal :show="showLoginModal" @close="() => { showLoginModal = false }" @open-register="openRegister" />
+
+        <RegistrationModal :show="showRegister" @close="showRegister = false" @open-login="() => showLoginModal.value = true" />
+
     </nav>
 </template>
 
 <script setup>
-    import {
-        ref,
-        onMounted,
-        onUnmounted,
-        computed,
-        reactive
-    } from 'vue'
-    import mainLogo from '@/assets/logo.png';
-    import {
-        products
-    } from "@/data/products.js";
-    import {
-        categories
-    } from "@/data/categories.js";
-    import {
-        useRouter
-    } from 'vue-router'
-    import {
-        useCartStore
-    } from "@/stores/cart"
-    import LoginFormModal from '@/components/auth/LoginFormModal.vue';
-    import {
-        useAuthStore
-    } from "@/stores/auth";
-    import UserDropdown from "@/components/auth/UserDropdown.vue";
-    import {
-        useLanguageStore
-    } from "@/stores/language";
+import {
+    ref,
+    onMounted,
+    onUnmounted,
+    computed,
+    reactive
+} from 'vue'
+import mainLogo from '@/assets/logo.png';
+import {
+    products
+} from "@/data/products.js";
+import {
+    categories
+} from "@/data/categories.js";
+import {
+    useRouter
+} from 'vue-router'
+import {
+    useCartStore
+} from "@/stores/cart"
+import LoginFormModal from '@/components/auth/LoginFormModal.vue';
+import {
+    useAuthStore
+} from "@/stores/auth";
+import UserDropdown from "@/components/auth/UserDropdown.vue";
+import {
+    useLanguageStore
+} from "@/stores/language";
+import RegistrationModal from "@/components/auth/RegistrationModal.vue";
 
-    import usFlag from '@/assets/icons/us-flag.png';
-    import bdFlag from '@/assets/icons/bd-flag.png';
-    import deliveryImg from '@/assets/icons/express-delivery.png';
-    import trackingImg from '@/assets/icons/order-tracking.png';
+import usFlag from '@/assets/icons/us-flag.png';
+import bdFlag from '@/assets/icons/bd-flag.png';
+import deliveryImg from '@/assets/icons/express-delivery.png';
+import trackingImg from '@/assets/icons/order-tracking.png';
 
-    import {
-        useI18n
-    } from "vue-i18n";
-    const {
-        t,
-        tm
-    } = useI18n();
+import {
+    useI18n
+} from "vue-i18n";
+const {
+    t,
+    tm
+} = useI18n();
 
-    const flags = {
-        en: usFlag,
-        bn: bdFlag
-    };
+const flags = {
+    en: usFlag,
+    bn: bdFlag
+};
 
-    const router = useRouter()
-    const showLoginModal = ref(false);
-    const authStore = useAuthStore();
-    const langStore = useLanguageStore();
+const router = useRouter()
+const showLoginModal = ref(false);
+const authStore = useAuthStore();
+const langStore = useLanguageStore();
 
-    const currentLanguage = computed(() => langStore.lang.toUpperCase());
-    const currentFlag = computed(() => flags[langStore.lang]);
+const currentLanguage = computed(() => langStore.lang.toUpperCase());
+const currentFlag = computed(() => flags[langStore.lang]);
 
-    const isActive = (path) => route.path === path
+const isActive = (path) => route.path === path
+const showRegister = ref(false);
 
-    const isMenuOpen = ref(false)
-    const isSticky = ref(false)
-    const cartStore = useCartStore();
+const isMenuOpen = ref(false)
+const isSticky = ref(false)
+const cartStore = useCartStore();
 
-    const searchQuery = ref("");
-    const placeholders = computed(() => tm("header.searchPlaceHolders"));
-    const placeholderText = ref("");
-    let index = 0; // current phrase index
-    let charIndex = 0; // current character index
-    let isDeleting = false;
-    let typingInterval;
+const searchQuery = ref("");
+const placeholders = computed(() => tm("header.searchPlaceHolders"));
+const placeholderText = ref("");
+let index = 0;
+let charIndex = 0;
+let isDeleting = false;
+let typingInterval;
 
-    function typeEffect() {
-        const currentText = placeholders.value[index];
-        if (!currentText) return;
+function openRegister() {
+    showLoginModal.value = false;
+    showRegister.value = true;
+    console.log("Register Modal: " + showRegister.value) // getting this log
+}
 
-        if (!isDeleting) {
-            placeholderText.value = currentText.substring(0, charIndex + 1);
-            charIndex++;
+function typeEffect() {
+    const currentText = placeholders.value[index];
+    if (!currentText) return;
 
-            if (charIndex === currentText.length) {
-                isDeleting = true;
-                clearInterval(typingInterval);
-                setTimeout(() => {
-                    typingInterval = setInterval(typeEffect, 100);
-                }, 1500);
-            }
-        } else {
-            placeholderText.value = currentText.substring(0, charIndex - 1);
-            charIndex--;
+    if (!isDeleting) {
+        placeholderText.value = currentText.substring(0, charIndex + 1);
+        charIndex++;
 
-            if (charIndex === 0) {
-                isDeleting = false;
-                index = (index + 1) % placeholders.value.length;
-            }
+        if (charIndex === currentText.length) {
+            isDeleting = true;
+            clearInterval(typingInterval);
+            setTimeout(() => {
+                typingInterval = setInterval(typeEffect, 100);
+            }, 1500);
+        }
+    } else {
+        placeholderText.value = currentText.substring(0, charIndex - 1);
+        charIndex--;
+
+        if (charIndex === 0) {
+            isDeleting = false;
+            index = (index + 1) % placeholders.value.length;
         }
     }
+}
 
-    const goToCart = () => {
-        isMenuOpen.value = false
-        router.push('/profile')
-    }
+const logout = () => {
+    if (!authStore.isAuthenticated) return;
+    authStore.logout();
+    isMenuOpen.value = false
+    router.push({
+        path: '/'
+    });
+};
 
-    const logout = () => {
-        if (!authStore.isAuthenticated) return;
-        authStore.logout();
-        isMenuOpen.value = false
-        router.push({
-            path: '/'
-        }); // redirect to home
-    };
+function toggleMenu() {
+    isMenuOpen.value = !isMenuOpen.value
+}
 
-    function toggleMenu() {
-        isMenuOpen.value = !isMenuOpen.value
-    }
+function closeMenu() {
+    isMenuOpen.value = false
+}
 
-    function closeMenu() {
-        isMenuOpen.value = false
-    }
+function handleScroll() {
+    isSticky.value = window.scrollY > 50
+}
 
-    function handleScroll() {
-        isSticky.value = window.scrollY > 50
-    }
+const toggleLanguage = () => {
+    const langs = ["en", "bn"];
+    const currentIndex = langs.indexOf(langStore.lang);
+    const nextLang = langs[(currentIndex + 1) % langs.length];
+    langStore.setLanguage(nextLang);
+};
 
-    const toggleLanguage = () => {
-        const langs = ["en", "bn"];
-        const currentIndex = langs.indexOf(langStore.lang);
-        const nextLang = langs[(currentIndex + 1) % langs.length];
-        langStore.setLanguage(nextLang);
-    };
+const filteredProducts = computed(() => {
+    if (!searchQuery.value || !products.value) return [];
 
-    const filteredProducts = computed(() => {
-        if (!searchQuery.value || !products.value) return [];
-
-        return products.value.filter(
-            p =>
+    return products.value.filter(
+        p =>
             p.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
             (p.brand && p.brand.toLowerCase().includes(searchQuery.value.toLowerCase()))
-        );
+    );
+});
+
+// Get category name by ID
+const getCategoryName = (categoryId) => {
+    const category = categories.find((c) => c.id === categoryId);
+    return category ? category.name : "Unknown";
+};
+
+// Add product to cart
+const addToCart = (product) => {
+    cartStore.addToCart({
+        ...product,
+        quantity: 1
     });
+};
 
-    // Get category name by ID
-    const getCategoryName = (categoryId) => {
-        const category = categories.find((c) => c.id === categoryId);
-        return category ? category.name : "Unknown";
-    };
+onMounted(() => {
+    window.addEventListener("scroll", handleScroll);
+    typingInterval = setInterval(typeEffect, 100);
+});
 
-    // Add product to cart
-    const addToCart = (product) => {
-        cartStore.addToCart({
-            ...product,
-            quantity: 1
-        });
-    };
-
-    onMounted(() => {
-        window.addEventListener("scroll", handleScroll);
-        typingInterval = setInterval(typeEffect, 100);
-    });
-
-    onUnmounted(() => {
-        window.removeEventListener('scroll', handleScroll)
-        clearInterval(typingInterval);
-    })
+onUnmounted(() => {
+    window.removeEventListener('scroll', handleScroll)
+    clearInterval(typingInterval);
+})
 </script>
 
 <style scoped>
-    /* Slide fade transition for mobile menu */
-    .slide-fade-enter-active,
-    .slide-fade-leave-active {
-        transition: all 0.3s ease;
-    }
+/* Slide fade transition for mobile menu */
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+    transition: all 0.3s ease;
+}
 
-    .slide-fade-enter-from,
-    .slide-fade-leave-to {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+    opacity: 0;
+    transform: translateY(-10px);
+}
 
-    .btn-navbar {
-        border-radius: 30px;
-        font-family: Inter, sans-serif;
-        font-size: 14px;
-        font-weight: 500;
-        letter-spacing: -0.3px;
-        padding: 8px 30px;
-        position: relative;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
+.btn-navbar {
+    border-radius: 30px;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.3px;
+    padding: 8px 30px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
-    .btn-navbar::after {
-        content: '';
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 0;
-        height: 0;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-        transition: width 0.4s ease, height 0.4s ease;
-        z-index: 0;
-    }
+.btn-navbar::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+    z-index: 0;
+}
 
-    .btn-navbar:hover::after {
-        width: 200%;
-        height: 500%;
-    }
+.btn-navbar:hover::after {
+    width: 200%;
+    height: 500%;
+}
 
-    .btn-navbar>* {
-        position: relative;
-        z-index: 1;
-    }
+.btn-navbar>* {
+    position: relative;
+    z-index: 1;
+}
 
-    .search-input {
-        min-width: 100%;
-        border: 1px solid #22c55e;
-        border-radius: 0.45rem;
-        padding: 0.75rem 1rem;
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #374151;
-        /* text-gray-700 */
-        outline: none;
-    }
+.search-input {
+    min-width: 100%;
+    border: 1px solid #22c55e;
+    border-radius: 0.45rem;
+    padding: 0.75rem 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #374151;
+    /* text-gray-700 */
+    outline: none;
+}
 
-    .search-input:focus {
-        border-color: #16a34a;
-        /* Tailwind green-600 */
-        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3);
-    }
+.search-input:focus {
+    border-color: #16a34a;
+    /* Tailwind green-600 */
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3);
+}
 
-    /* Placeholder styles */
-    .search-input::placeholder {
-        font-weight: 700;
-        /* bold */
-        font-size: 1.1rem;
-        /* slightly bigger */
-        color: #16a34a;
-        /* green */
-        opacity: 0.9;
-        transition: color 0.3s ease;
-    }
+/* Placeholder styles */
+.search-input::placeholder {
+    font-weight: 700;
+    /* bold */
+    font-size: 1.1rem;
+    /* slightly bigger */
+    color: #16a34a;
+    /* green */
+    opacity: 0.9;
+    transition: color 0.3s ease;
+}
 
-    /* On focus, placeholder fades */
-    .search-input:focus::placeholder {
-        color: #9ca3af;
-        /* gray-400 */
-    }
+/* On focus, placeholder fades */
+.search-input:focus::placeholder {
+    color: #9ca3af;
+    /* gray-400 */
+}
 </style>

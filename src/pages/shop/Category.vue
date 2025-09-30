@@ -1,223 +1,204 @@
 <template>
-  <div>
-    <!-- Breadcrumb & Header -->
-    <section class="relative fade-up">
-      <div
-        class="rounded-xl overflow-hidden border border-green-100 shadow-sm p-5"
-      >
-        <!-- Breadcrumb -->
-        <nav class="text-sm text-gray-500 mb-2" aria-label="Breadcrumb">
-          <ol class="list-reset flex space-x-2">
-            <li>
-              <router-link to="/" class="hover:text-green-600"
-                >Home</router-link
-              >
-              <span class="mx-2">/</span>
-            </li>
-            <li>
-              <span class="hover:text-green-600">Category</span>
-              <span class="mx-2">/</span>
-            </li>
-            <li class="text-gray-800 font-semibold">
-              {{ category?.name || "Category" }}
-            </li>
-          </ol>
-        </nav>
-
-        <!-- Title and Description -->
-        <div
-          class="flex flex-col md:flex-row md:justify-between md:items-center"
-        >
-          <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2 md:mb-0">
-            {{ category?.name || "Category" }}
-          </h1>
-          <p class="text-gray-600 text-sm md:text-base">
-            Showing {{ filteredProducts.length }} products in "{{
-              category?.name || "this category"
-            }}"
-          </p>
-        </div>
-
-        <p
-          v-if="category?.description"
-          class="mt-3 text-gray-700 text-sm md:text-base max-w-3xl"
-        >
-          {{ category.description }}
-        </p>
-      </div>
-    </section>
-
-    <!-- Layout -->
-    <section class="relative fade-up flex flex-col md:flex-row gap-6 mt-10">
-      <!-- Sidebar (Desktop only) -->
-      <aside class="hidden md:block w-64 p-4 bg-white rounded-lg shadow">
-        <FilterOptions
-          :max-price="maxPrice"
-          :selected-brand="selectedBrand"
-          :in-stock-only="inStockOnly"
-          :min-rating="minRating"
-          @reset="resetFilters"
-        />
-      </aside>
-
-      <!-- Main Content -->
-      <div class="flex-1">
-        <!-- Mobile -->
-        <div class="flex md:hidden justify-between items-center mb-4 space-x-2">
-          <!-- Filter button -->
-          <button
-            @click="showFilters = true"
-            class="flex-1 px-4 py-2 bg-green-700 text-white rounded"
-          >
-            Filter
-          </button>
-
-          <!-- Sort dropdown -->
-          <select v-model="sortOption" class="flex-1 border px-3 py-2 rounded">
-            <option value="default">Sort By</option>
-            <option value="priceAsc">Price: Low to High</option>
-            <option value="priceDesc">Price: High to Low</option>
-            <option value="nameAsc">Name: A to Z</option>
-            <option value="nameDesc">Name: Z to A</option>
-          </select>
-        </div>
-
-        <!-- Products Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <ProductGridItem
-            v-for="product in filteredProducts"
-            :key="product.id"
-            :product="product"
-          />
-        </div>
-
-        <!-- No products -->
-        <p v-if="filteredProducts.length === 0" class="mt-4 text-gray-600">
-          No products found in this category.
-        </p>
-      </div>
-    </section>
-
-    <!-- Mobile Filter Modal -->
-    <transition name="slide-fade">
-    <div
-      v-if="showFilters"
-      class="fixed inset-0 z-50 bg-black/60 bg-opacity-50 flex justify-start"
-      @click="showFilters = false"
-    >
-      <div class="bg-white w-3/4 max-w-xs p-6 shadow-lg">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-lg font-semibold">Filters</h2>
-          <button
-            @click="showFilters = false"
-            class="text-gray-500 hover:text-gray-800"
-          >
-            &times;
-          </button>
-        </div>
-        <FilterOptions
-          :max-price="maxPrice"
-          :selected-brand="selectedBrand"
-          :in-stock-only="inStockOnly"
-          :min-rating="minRating"
-          @reset="resetFilters"
-        />
-        <button
-          @click="showFilters = false"
-          class="mt-4 w-full px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 transition"
-        >
-          Apply Filters
-        </button>
-      </div>
+    <!-- Loading Spinner -->
+    <div v-if="isLoading" class="flex justify-center items-center min-h-[300px] ">
+        <svg class="animate-spin h-10 w-10 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z">
+            </path>
+        </svg>
     </div>
-    </transition>
-  </div>
+
+    <div v-else class="pt-6">
+        <!-- Breadcrumb & Header -->
+        <BreadCrumb
+            :crumbs="[
+                { label: 'Home', to: '/' }, { label: 'Category', to: '/categories' }, { label: category?.name }
+            ]"
+            :title="category?.name" :subtitle="`Showing ${filteredProducts.length} products in ${category?.name}`"
+            :description="category?.description" />
+
+        <section class="relative fade-up flex flex-col md:flex-row gap-6 mt-10 transform transition-transform duration-300" v-if="category">
+            <!-- Main Content -->
+            <div class="flex-1">
+                <!-- Mobile Filters -->
+                <!-- <div class="flex justify-between items-center mb-4 space-x-2">
+                    <button @click="showFilters = true" class="px-4 py-2 bg-green-700 text-white rounded w-auto">
+                        Filter
+                    </button>
+                    <select v-model="sortOption" class="w-auto border px-3 py-2 rounded">
+                        <option value="default">Sort By</option>
+                        <option value="priceAsc">Price: Low to High</option>
+                        <option value="priceDesc">Price: High to Low</option>
+                        <option value="nameAsc">Name: A to Z</option>
+                        <option value="nameDesc">Name: Z to A</option>
+                    </select>
+                </div> -->
+
+                <!-- Products Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <ProductGridItem v-for="product in filteredProducts" :key="product.id"
+                        :product="product" />
+                </div>
+
+
+                <div class="flex justify-center mt-6 space-x-2" v-if="pagination && pagination.last_page > 1">
+                    <!-- Prev button -->
+                    <button @click="changePage(pagination.current_page - 1)" :disabled="pagination.current_page === 1"
+                        class="px-3 py-1 rounded border bg-white text-gray-700 disabled:opacity-50">
+                        Prev
+                    </button>
+
+                    <!-- Page numbers -->
+                    <template v-for="page in pageNumbersToShow" :key="page">
+                        <span v-if="page === '...'">...</span>
+                        <button v-else @click="changePage(page)"
+                            :class="page === pagination.current_page ?
+                                'px-3 py-1 rounded border bg-green-600 text-white' :
+                                'px-3 py-1 rounded border bg-white text-gray-700'">
+                            {{ page }}
+                        </button>
+                    </template>
+
+                    <!-- Next button -->
+                    <button @click="changePage(pagination.current_page + 1)"
+                        :disabled="pagination.current_page === pagination.last_page"
+                        class="px-3 py-1 rounded border bg-white text-gray-700 disabled:opacity-50">
+                        Next
+                    </button>
+                </div>
+
+                <p v-if="filteredProducts.length === 0" class="mt-4 text-gray-600">
+                    No products found in this category.
+                </p>
+            </div>
+        </section>
+
+        <!-- Mobile Filter Modal -->
+        <transition name="slide-fade">
+            <div v-if="showFilters" class="fixed inset-0 z-50 bg-black/60 flex justify-start"
+                @click.self="showFilters = false">
+                <div class="bg-white w-3/4 max-w-xs p-6 shadow-lg">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold">Filters</h2>
+                        <button @click="showFilters = false" class="text-gray-500 hover:text-gray-800">
+                            &times;
+                        </button>
+                    </div>
+                    <FilterOptions :max-price="maxPrice" :selected-brand="selectedBrand"
+                        :in-stock-only="inStockOnly" :min-rating="minRating" @reset="resetFilters" />
+                    <button @click="showFilters = false"
+                        class="mt-4 w-full px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 transition">
+                        Apply Filters
+                    </button>
+                </div>
+            </div>
+        </transition>
+    </div>
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
-import { useRoute } from "vue-router";
-import { products } from "@/data/products.js";
-import { categories } from "@/data/categories.js";
-import ProductGridItem from "@/components/products/ProductGridItem.vue";
+    import {
+        ref,
+        computed,
+        watch
+    } from "vue";
+    import {
+        useRoute,
+        useRouter
+    } from "vue-router";
+    import ProductGridItem from "@/components/products/ProductGridItem.vue";
+    import FilterOptions from "@/components/products/FilterOptions.vue";
+    import BreadCrumb from "@/components/common/BreadCrumb.vue";
+    import {
+        useCategories
+    } from "@/composables/useCategories.js";
 
-// Extract filter sidebar into reusable component
-import FilterOptions from "@/components/products/FilterOptions.vue";
+    const route = useRoute();
+    const router = useRouter();
 
-const route = useRoute();
+    const slug = ref(route.params.slug);
+    const {
+        categories,
+        category,
+        products,
+        pagination,
+        fetchCategoryDetails,
+        loading: isLoading,
+        error,
+        sortOption
+    } = useCategories();
 
-// Reactive states
-const slug = ref(route.params.slug);
-const category = ref(categories.find((cat) => cat.slug === slug.value));
+    const maxPrice = ref(null);
+    const selectedBrand = ref("");
+    const inStockOnly = ref(false);
+    const minRating = ref(null);
+    const showFilters = ref(false);
 
-// Filters
-const maxPrice = ref(null);
-const selectedBrand = ref("");
-const inStockOnly = ref(false);
-const minRating = ref(null);
-const sortOption = ref("default");
+    function resetFilters() {
+        maxPrice.value = null;
+        selectedBrand.value = "";
+        inStockOnly.value = false;
+        minRating.value = null;
+    }
 
-// Mobile filter modal
-const showFilters = ref(false);
+    const filteredProducts = computed(() => products.value || []);
 
-// Reset filters
-function resetFilters() {
-  maxPrice.value = null;
-  selectedBrand.value = "";
-  inStockOnly.value = false;
-  minRating.value = null;
-}
+    // Function to change page
+    function changePage(page) {
+        if (!pagination.value) return;
+        if (page >= 1 && page <= pagination.value.last_page) {
+            fetchCategoryDetails(slug.value, page);
+        }
+    }
 
-// Watch route changes
-watch(
-  () => route.params.slug,
-  (newSlug) => {
-    slug.value = newSlug;
-    category.value = categories.find((cat) => cat.slug === newSlug);
-    resetFilters();
-  }
-);
+    // Compute which page numbers to show
+    const pageNumbersToShow = computed(() => {
+        if (!pagination.value) return [];
+        const total = pagination.value.last_page;
+        const current = pagination.value.current_page;
 
-// Filtered products
-const filteredProducts = computed(() => {
-  let filtered = products.value.filter(
-    (p) => p.categoryId === category.value?.id
-  );
+        const visible = 5; // total visible pages including active
+        let start = Math.max(1, current - 1); // active page as 2nd button
+        let end = start + visible - 1;
 
-  if (maxPrice.value != null && maxPrice.value > 0) {
-    filtered = filtered.filter(
-      (p) => (p.offerPrice ?? p.regularPrice) <= maxPrice.value
+        if (end > total) {
+            end = total;
+            start = Math.max(1, end - visible + 1);
+        }
+
+        const pages = [];
+        if (start > 1) pages.push(1);
+        if (start > 2) pages.push("...");
+
+        for (let i = start; i <= end; i++) {
+            pages.push(i);
+        }
+
+        if (end < total - 1) pages.push("...");
+        if (end < total) pages.push(total);
+
+        return pages;
+    });
+
+    // Watch slug changes
+    watch( () => route.params.slug,
+        async (newSlug) => {
+            slug.value = newSlug;
+            await fetchCategoryDetails(newSlug);
+            resetFilters();
+
+            if (!category.value && !isLoading.value) {
+                router.replace("/categories");
+            }
+        }, {
+            immediate: true
+        }
     );
-  }
 
-  if (selectedBrand.value) {
-    filtered = filtered.filter((p) => p.brand === selectedBrand.value);
-  }
-
-  if (inStockOnly.value) {
-    filtered = filtered.filter((p) => p.inStock === true);
-  }
-
-  if (minRating.value != null) {
-    filtered = filtered.filter((p) => (p.rating ?? 0) >= minRating.value);
-  }
-
-  if (sortOption.value === "priceAsc") {
-    filtered.sort(
-      (a, b) =>
-        (a.offerPrice ?? a.regularPrice) - (b.offerPrice ?? b.regularPrice)
-    );
-  } else if (sortOption.value === "priceDesc") {
-    filtered.sort(
-      (a, b) =>
-        (b.offerPrice ?? b.regularPrice) - (a.offerPrice ?? a.regularPrice)
-    );
-  } else if (sortOption.value === "nameAsc") {
-    filtered.sort((a, b) => a.name.localeCompare(b.name));
-  } else if (sortOption.value === "nameDesc") {
-    filtered.sort((a, b) => b.name.localeCompare(a.name));
-  }
-
-  return filtered;
-});
+    watch(sortOption, async () => {
+        if (category.value) {
+            await fetchCategoryDetails(slug.value, 1);
+        }
+    });
 </script>

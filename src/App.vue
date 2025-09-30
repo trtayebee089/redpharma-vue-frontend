@@ -36,7 +36,7 @@
         <div class="flex flex-1 relative">
             <CategorySidebar class="hidden md:block" />
 
-            <main class="container mx-auto flex-1 pt-16 p-6 mb-18 my-16 relative leading-relaxed fade-up main-content">
+            <main class="container mx-auto flex-1 p-6 mb-18 my-16 relative leading-relaxed fade-up main-content">
                 <router-view />
             </main>
         </div>
@@ -68,7 +68,7 @@
     }
 
     .main-content {
-        padding-top: 70px;
+        /* padding-top: 70px; */
         min-height: calc(100vh - 70px);
         width: calc(100% - 16rem);
     }

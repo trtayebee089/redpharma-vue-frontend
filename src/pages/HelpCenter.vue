@@ -1,6 +1,6 @@
 <template>
     <PageTemplate>
-        <div class="relative fade-up mb-16 container mx-auto max-w-5xl">
+        <div class="relative fade-up mb-16 container mx-auto max-w-5xl pt-6">
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">Help Center</h1>
                 <p class="text-gray-600">Find answers to the most frequently asked questions.</p>

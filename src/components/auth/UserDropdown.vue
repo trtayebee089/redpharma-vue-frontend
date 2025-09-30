@@ -3,7 +3,7 @@
         <!-- Button -->
         <button @click.stop="toggle"
             class="flex items-center space-x-2 px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg shadow-md">
-            <img :src="user.avatar" alt="User Avatar" class="w-8 h-8 rounded-full border" />
+            <img :src="user.avator" alt="User Avatar" class="w-8 h-8 rounded-full border" />
             <span class="font-semibold hidden xl:inline">{{ user . name }}</span>
             <i class="pi pi-chevron-down hidden xl:inline"></i>
         </button>
@@ -62,7 +62,6 @@
     const router = useRouter();
     const authStore = useAuthStore();
     const user = computed(() => authStore.user);
-
     const open = ref(false);
     const toggle = () => {
         open.value = !open.value;

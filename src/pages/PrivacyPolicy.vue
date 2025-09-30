@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="relative leading-relaxed fade-up mt-10 container mx-auto max-w-5xl">
+        <div class="relative leading-relaxed fade-up mt-10 container mx-auto max-w-5xl pt-6">
             <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6 text-center">Privacy Policy</h1>
 
             <p class="text-gray-700 mb-4">

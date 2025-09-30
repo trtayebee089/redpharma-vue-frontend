@@ -1,16 +1,18 @@
 <template>
     <Modal v-if="show" :isOpen="show" @close="() => emit('close')">
         <div class="flex items-center justify-center h-96">
-            <!-- If logged in -->
             <transition name="fade" mode="out-in">
+                <!-- Logged in -->
                 <div v-if="authStore.isAuthenticated" class="text-center">
-                    <h2 class="text-3xl font-bold text-green-600 mb-2">Welcome, {{ authStore . user . name }}!</h2>
+                    <h2 class="text-3xl font-bold text-green-600 mb-2">
+                        Welcome, {{ authStore.user?.name || "Customer" }}!
+                    </h2>
                     <p class="text-gray-700 text-lg">You are logged in successfully.</p>
                 </div>
 
-                <!-- Login Form -->
+                <!-- Login/Register -->
                 <div v-else class="flex flex-col md:flex-row w-full">
-                    <!-- Left Promo Banner -->
+                    <!-- Promo Banner -->
                     <div class="hidden md:flex w-1/2 bg-green-100 items-center justify-center">
                         <img src="https://img.pikbest.com/templates/20240729/health-and-medical-promotion-website-banner-design_10686814.jpg!sw800"
                             alt="Promo Banner" class="rounded-lg shadow-md object-cover h-full w-full" />
@@ -18,14 +20,14 @@
 
                     <!-- Right Content -->
                     <div class="w-full md:w-1/2 p-8 flex flex-col justify-center relative">
-                        <!-- Brand Logo -->
                         <div class="flex justify-center mb-6">
                             <img :src="mainLogo" alt="Brand Logo" class="h-12" />
                         </div>
 
-                        <!-- Login Form -->
                         <div class="space-y-4">
-                            <h2 class="text-2xl font-semibold text-gray-800 text-center mb-4">Login / Register</h2>
+                            <h2 class="text-2xl font-semibold text-gray-800 text-center mb-4">
+                                Login
+                            </h2>
 
                             <!-- Mobile Input -->
                             <div class="flex border rounded overflow-hidden">
@@ -41,25 +43,36 @@
                                     class="w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
                             </div>
 
-                            <!-- Terms & Conditions -->
+                            <!-- T&C -->
                             <p class="text-xs text-gray-500 text-center">
                                 By continuing, you agree to our
                                 <router-link to="/terms" class="text-green-500 hover:underline">Terms &
                                     Conditions</router-link>,
-                                <router-link to="/privacy" class="text-green-500 hover:underline">Privacy
+                                <router-link to="/privacy-and-policy" class="text-green-500 hover:underline">Privacy
                                     Policy</router-link>
                                 &
                                 <router-link to="/refund" class="text-green-500 hover:underline">Refund
                                     Policy</router-link>.
                             </p>
 
-                            <!-- Submit Button -->
+                            <!-- Registration -->
+                            <p class="text-xs text-gray-500 text-center">
+                                Don't Have An Account?
+                                <button @click="switchToRegister" class="text-green-500 hover:underline">
+                                    Create an Account
+                                </button>
+                            </p>
+
+                            <!-- Submit -->
                             <button @click="submitLogin" :disabled="authStore.loading"
-                                class="bg-green-500 hover:bg-green-600 text-white py-2 rounded font-semibold w-full transition">
-                                <span v-if="authStore.loading">Logging in...</span>
+                                class="bg-green-500 hover:bg-green-600 text-white py-2 rounded font-semibold w-full transition disabled:opacity-50">
+                                <span v-if="authStore.loading">Please wait...</span>
                                 <span v-else>Login</span>
                             </button>
-                            <p v-if="authStore.error" class="text-red-500">{{ authStore . error }}</p>
+
+                            <p v-if="authStore.error" class="text-red-500 text-center">
+                                {{ authStore.error }}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -69,56 +82,56 @@
 </template>
 
 <script setup>
-    import {
-        ref,
-        watch
-    } from "vue";
-    import Modal from "../common/Modal.vue";
-    import mainLogo from "@/assets/logo.png";
-    import {
-        useAuthStore
-    } from "@/stores/auth";
+import { ref, watch } from "vue";
+import Modal from "../common/Modal.vue";
+import mainLogo from "@/assets/logo.png";
+import { useAuthStore } from "@/stores/auth";
 
-    const props = defineProps({
-        show: Boolean
-    });
-    const emit = defineEmits(["close"]);
+const props = defineProps({
+    show: Boolean,
+});
+const emit = defineEmits(["close", "open-register"]);
 
-    const authStore = useAuthStore();
-    const mobile = ref("01765649100");
-    const password = ref("password");
+const authStore = useAuthStore();
+const mobile = ref("01688052518");
+const password = ref("12345678");
 
-    // Submit login
-    const submitLogin = async () => {
-        try {
-            await authStore.login({
-                mobile: mobile.value,
-                password: password.value
-            });
-        } catch (err) {
-            console.error("Login failed:", authStore.error);
+function switchToRegister() {
+    emit("close");
+    emit("open-register");
+}
+
+// Submit
+const submitLogin = async () => {
+    try {
+        await authStore.login({
+            phone_number: mobile.value,
+            password: password.value,
+        });
+    } catch (err) {
+        console.error("Login failed:", authStore.error);
+    }
+};
+
+// Auto-close on success
+watch(
+    () => authStore.isAuthenticated,
+    (isAuth) => {
+        if (isAuth) {
+            setTimeout(() => emit("close"), 2000);
         }
-    };
-
-    // Auto-close modal after login
-    watch(
-        () => authStore.isAuthenticated,
-        (isAuth) => {
-            if (isAuth) {
-                setTimeout(() => emit("close"), 3000); // auto close after 3s
-            }
-        }
-    );
+    }
+);
 </script>
 
 <style scoped>
-    .fade-enter-active,
-    .fade-leave-active {
-        transition: opacity 0.3s;
-    }
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s;
+}
 
-    .fade-enter-from,
-    .fade-leave-to {
-        opacity: 0;
-    }
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
 </style>

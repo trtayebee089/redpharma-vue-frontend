@@ -3,9 +3,15 @@ import { defineStore } from 'pinia'
 export const useCartStore = defineStore('cart', {
   state: () => ({
     items: JSON.parse(localStorage.getItem('cartItems') || '[]'),
-    isCartOpen: false // <-- add this for offcanvas toggle
+    isCartOpen: false,
+    shippingRate: 50
   }),
   actions: {
+    getQuantity(productId) {
+        const item = this.items.find(i => i.id === productId);
+        return item ? item.quantity : 0;
+    },
+
     saveCart() {
       localStorage.setItem('cartItems', JSON.stringify(this.items))
     },
@@ -41,6 +47,17 @@ export const useCartStore = defineStore('cart', {
     }
   },
   getters: {
-    totalQty: state => state.items.reduce((acc, i) => acc + i.quantity, 0)
+    totalQty: state => state.items.reduce((acc, i) => acc + i.quantity, 0),
+    uniqueItems: state => state.items.length,
+      cartSubtotal: state => state.items.reduce((sum, item) => {
+      const price = Number(item.offerPrice ?? item.price) || 0;
+      const qty = Number(item.quantity) || 1;
+      return sum + price * qty;
+    }, 0),
+    totalAmount: state => state.items.reduce((sum, item) => {
+      const price = Number(item.offerPrice ?? item.price) || 0;
+      const qty = Number(item.quantity) || 1;
+      return sum + price * qty;
+    }, 0) + state.shippingRate,
   }
 })

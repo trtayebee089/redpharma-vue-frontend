@@ -161,6 +161,33 @@ const messages = {
                 title: "Our Best Selling Medicines"
             }
         },
+        cart: {
+            title: "My Shopping Cart",
+            description: "Review your selected items, adjust quantities, and proceed to checkout.",
+            summary: "Order Summary",
+            subtotal: "Subtotal",
+            shipping: "Shipping Fee",
+            grand: "Grand Total",
+            alert: "Your cart is empty. Please Add some products first for checkout.",
+            form: {
+                name: "Full name",
+                phone: "Phone Number",
+                address: "Shipping Address"
+            },
+            table: {
+                thead: {
+                    product: "Product",
+                    price: "Unit Price",
+                    qty: "Quantity",
+                    total: "Total Amount",
+                    action: "Action"
+                }
+            }
+        },
+        orderConfirmation: {
+            title: "Order Confirmation",
+            description: "Thank you for your order. Our Rider will call you within 2hrs."
+        },
         footer: {
             title: "Quality Medicines, Trusted Care",
             description: "RedPharma BD is your trusted online pharmacy in Bangladesh. Fast delivery, genuine medicines, and top healthcare products.",
@@ -336,6 +363,28 @@ const messages = {
             
             best_selling: {
                 title: "সেরা বিক্রিত ওষুধসমূহ"
+            }
+        },
+        cart: {
+            title: "আমার শপিং কার্ট",
+            description: "আপনার নির্বাচিত আইটেমগুলি পর্যালোচনা করুন, পরিমাণ সমন্বয় করুন, এবং চেকআউট করুন।",
+            summary: "অর্ডার সংক্ষিপ্তসার",
+            subtotal: "মোট অংশ",
+            shipping: "শিপিং ফি",
+            grand: "মোট মূল্য",
+            form: {
+                name: "পূর্ণ নাম",
+                phone: "ফোন নম্বর",
+                address: "শিপিং ঠিকানা"
+            },
+            table: {
+                thead: {
+                    product: "পণ্য",
+                    price: "একক মূল্য",
+                    qty: "পরিমাণ",
+                    total: "মোট মূল্য",
+                    action: "ক্রিয়া"
+                }
             }
         },
         footer: {

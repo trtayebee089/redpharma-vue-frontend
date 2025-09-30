@@ -1,5 +1,5 @@
 <template>
-    <section class="relative leading-relaxed fade-up mb-16">
+    <section class="relative leading-relaxed fade-up mb-16 pt-6">
         <h1 class="text-3xl font-extrabold mb-3 text-gray-800 bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent tracking-wide">
             Delivery Coverage
         </h1>

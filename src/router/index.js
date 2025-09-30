@@ -17,6 +17,8 @@ import HelpCenter from '../pages/HelpCenter.vue'
 import Settings from '../pages/account/Settings.vue'
 import OrderDetail from '../pages/account/OrderDetail.vue'
 import ProductDetail from '../pages/shop/ProductDetail.vue';
+import CategoryGrid from '../pages/shop/CategoryGrid.vue';
+import OrderConfirmation from '../pages/shop/OrderConfirmation.vue';
 
 const routes = [
     { path: '/', name: 'Home', component: Home, meta: { title: 'Home - RedPharma BD' } }, //✅
@@ -24,6 +26,7 @@ const routes = [
     { path: '/request-order', name: 'Request Order', component: RequestOrder, meta: { title: 'Request Order - RedPharma BD' } }, //✅
     { path: '/cart', name: 'Cart', component: Cart, meta: { title: 'Cart - RedPharma BD' } }, 
     { path: '/contact', name: 'Contact Us', component: Contact, meta: { title: 'Contact Us - RedPharma BD' } }, //✅
+    { path: '/categories', name: 'CategoryList', component: CategoryGrid, meta: { title: 'Categories - RedPharma BD' } }, 
     { path: '/category/:slug', name: 'Category', component: Category, meta: { title: 'Category - RedPharma BD' } }, 
     { path: '/privacy-and-policy', name: 'Privacy & Policy', component: PrivacyPolicy, meta: { title: 'Privacy & Policy - RedPharma BD' } }, //✅
     { path: '/delivery-coverage', name: 'Delivery Coverage', component: DeliveryCoverage, meta: { title: 'Delivery Coverage - RedPharma BD' } }, //✅
@@ -31,7 +34,8 @@ const routes = [
     { path: '/upload-prescription', name: 'Upload Prescription', component: OrderTracking, meta: { title: 'Upload Prescription - RedPharma BD' } }, //✅
     { path: '/blog', name: 'Health Articles', component: OrderTracking, meta: { title: 'Health Articles - RedPharma BD' } }, //✅
     { path: '/blog/:slug', name: 'Health Articles', component: OrderTracking, meta: { title: 'Health Articles - RedPharma BD' } }, //✅
-    { path: '/products/:productId', name: 'ProductDetails', component: ProductDetail, meta: { title: 'Product Details - RedPharma BD' } },
+    { path: '/products/:slug', name: 'ProductDetails', component: ProductDetail, meta: { title: 'Product Details - RedPharma BD' } },
+    { path: "/order-confirmation/:order_id", name: "OrderConfirmation", component: () => OrderConfirmation, props: true },
 
     { path: '/profile', name: 'Profile', component: Profile, meta: { title: 'Edit Profile - RedPharma BD', requiresAuth: true } }, 
     { path: '/orders', name: 'Orders', component: Orders, meta: { title: 'My Orders - RedPharma BD', requiresAuth: true } },
@@ -44,6 +48,13 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes,
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition;
+        } 
+        
+        return { top: 0, left: 0, behavior: 'smooth' };
+    },
 });
 
 // Global guard for auth
