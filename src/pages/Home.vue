@@ -277,7 +277,8 @@ import PrescriptionUpload from '../components/common/PrescriptionUpload.vue'
 const {
     categories,
     loading,
-    error
+    error,
+    fetchCategories
 } = useCategories();
 const {
     featured,
