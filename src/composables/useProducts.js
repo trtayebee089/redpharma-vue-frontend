@@ -10,6 +10,8 @@ export function useProducts() {
     const pagination = ref(null);
     const loading = ref(false);
     const error = ref(null);
+    const bestSelling = ref([]);
+    let controller = null;
 
     const fetchProducts = async ({
         page = 1,
@@ -58,6 +60,44 @@ export function useProducts() {
             loading.value = false;
         }
     };
+
+    const fetchSearchResults = async (query) => {
+        if (!query || query.trim().length < 2) {
+            products.value = [];
+            return;
+        }
+
+        if (controller) controller.abort();
+        controller = new AbortController();
+
+        loading.value = true;
+        error.value = null;
+
+        try {
+            const response = await api.get(`/search/${encodeURIComponent(query)}`, {
+                signal: controller.signal,
+            });
+            products.value = response.data.data || [];
+        } catch (err) {
+            if (err.name !== "CanceledError") {
+                error.value = err.message || "Failed to fetch search results";
+            }
+        } finally {
+            loading.value = false;
+        }
+    };
+
+    const fetchBestSellingProducts = async (query) => {
+        loading.value = true;
+        try {
+            const response = await api.get(`/${PRODUCTS}/best-selling`);
+            bestSelling.value = response.data.data || response.data;
+        } catch (err) {
+            error.value = err.message || "Failed to fetch best selling products";
+        } finally {
+            loading.value = false;
+        }
+    }
     
     onMounted(() => {
         fetchProducts();
@@ -67,11 +107,14 @@ export function useProducts() {
         products,
         product,
         featured,
+        bestSelling,
         pagination,
         loading,
         error,
         fetchProducts,
         fetchProductDetails,
         fetchFeaturedProducts,
+        fetchSearchResults,
+        fetchBestSellingProducts
     };
 }

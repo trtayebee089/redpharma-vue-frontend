@@ -53,7 +53,8 @@
                         <td class="px-4 py-3 text-gray-700">{{ order.items.join(', ') }}</td>
                         <td class="px-4 py-3 text-right font-semibold text-gray-800">৳ {{ order.total }}</td>
                         <td class="px-4 py-3 text-center">
-                            <router-link :to="`/orders/${order.id}`" class="text-green-600 hover:underline">
+                            <router-link :to="{ name: 'order-detail', params: { orderId: order.id }, state: { order } }"
+                                class="text-green-600 hover:underline">
                                 View
                             </router-link>
                         </td>
@@ -99,7 +100,6 @@ onMounted(async () => {
     if (authStore.isAuthenticated) {
         loading.value = true;
         orders.value = await authStore.fetchOrders();
-        console.log(await authStore.fetchOrders())
         loading.value = false;
     } else {
         orders.value = [];
@@ -107,7 +107,6 @@ onMounted(async () => {
     }
 });
 
-// Filtered orders based on selected tab
 const filteredOrders = computed(() => {
     if (!orders.value || orders.value.length === 0) return [];
     if (activeTab.value === "all") return orders.value;

@@ -2,13 +2,21 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import api from "@/api/config"
+import { computed } from "vue";
+
 export const useAuthStore = defineStore("auth", {
     state: () => ({
         user: JSON.parse(localStorage.getItem("user")) || null,
         token: localStorage.getItem("token") || null,
         loading: false,
         error: null,
-        orders: []
+        orders: [],
+        order: null,
+        points: 0,
+        membership: null,
+        rewardPointTiers: [],
+        rewardPointSettings: [],
+        rewardPointUsages: [],
     }),
 
     getters: {
@@ -17,9 +25,67 @@ export const useAuthStore = defineStore("auth", {
             if (status === "all") return state.orders;
             return state.orders.filter(o => o.status.toLowerCase() === status.toLowerCase());
         },
+        membershipInfo: (state) => {
+            if (!state.user || !state.user.points || !state.rewardPointTiers.length) return null;
+
+            const points = state.user.points;
+            const tiers = state.rewardPointTiers;
+
+            let current = tiers.find(t => points >= t.min_points && points <= t.max_points);
+
+            if (!current) {
+                current = {
+                    name: "No Tier Yet",
+                    min_points: 0,
+                    max_points: tiers[0]?.min_points || 100,
+                    discount_rate: 0,
+                    colorClass: "bg-gray-200 text-gray-800",
+                    bgColor: "#C2A68C",
+                };
+            }
+
+            const next = tiers.find(t => points < t.min_points) || current;
+
+            const currMin = current.min_points || 0;
+            const currMax = current.max_points || currMin + 1;
+
+            let progress = 0;
+            if (points < currMin) progress = (points / currMax) * 100;
+            else if (points >= currMax) progress = 100;
+            else progress = ((points - currMin) / (currMax - currMin)) * 100;
+
+            return {
+                points,
+                currentTier: current,
+                nextTier: next,
+                progress: Math.min(progress, 100),
+                discount: current.discount_rate || 0,
+            };
+        }
     },
 
     actions: {
+        async fetchRewardPointTiers() {
+            try {
+                const response = await api.get("/reward-point-tiers");
+
+                if (response.status === 200) {
+                    this.rewardPointTiers = response.data.tiers || [];
+                    this.rewardPointSettings = response.data.settings || {};
+                    this.rewardPointUsages = response.data.usages || [];
+                } else {
+                    this.rewardPointTiers = [];
+                }
+            } catch (error) {
+                console.error("Failed to load reward tiers:", error);
+                this.rewardPointTiers = [];
+            }
+        },
+
+        setRewardPointTiers(tiers) {
+            this.rewardPointTiers = tiers || [];
+        },
+
         async login({ phone_number, password }) {
             this.loading = true;
             this.error = null;
@@ -84,7 +150,7 @@ export const useAuthStore = defineStore("auth", {
                 this.user = data;
                 localStorage.setItem("user", JSON.stringify(data));
             } catch (err) {
-                this.logout();
+                console.warn("Failed to refresh user after checkout:", err);
             }
         },
 
@@ -155,6 +221,35 @@ export const useAuthStore = defineStore("auth", {
             }
         },
 
+        async fetchOrderDetail(orderId) {
+            this.loading = true;
+            this.error = null;
+
+            try {
+                const token = localStorage.getItem("token");
+
+                // Use template literal to insert orderId
+                const { data } = await api.get(`/customer/orders/${orderId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (data.success) {
+                    this.order = data.data;
+                    return this.order;
+                } else {
+                    this.error = "Failed to fetch order details";
+                    return null;
+                }
+            } catch (err) {
+                this.error = err.response?.data?.message || "Failed to fetch order details";
+                return null;
+            } finally {
+                this.loading = false;
+            }
+        },
+
         async updatePassword({ currentPassword, newPassword, confirmPassword }) {
             this.loading = true;
             this.error = null;
@@ -176,8 +271,7 @@ export const useAuthStore = defineStore("auth", {
                     }
                 );
 
-                // Optionally, you can show a success message
-                return data; // contains server response, e.g., success message
+                return data;
             } catch (err) {
                 this.error =
                     err.response?.data?.message ||

@@ -1,5 +1,6 @@
 import { ref } from "vue";
 import axios from "axios";
+import api from "@/api/config";
 
 export function useServices() {
     const brandLogo = ref(null);
@@ -9,6 +10,7 @@ export function useServices() {
     const contact = ref({});
     const deliveryAreas = ref([]);
     const returnRefunds = ref(null);
+    const rewardPointTiers = ref([]);
 
     const loading = ref(false);
     const error = ref(null);
@@ -36,6 +38,21 @@ export function useServices() {
     const getDeliveryAreas = () => fetchData("delivery-areas", deliveryAreas);
     const getReturnRefunds = () => fetchData("returns", returnRefunds);
 
+    const getRewardPointTiers = async () => {
+        try {
+            const response = await api.get("/reward-point-tiers");
+            
+            if (response.status === 200) {
+                rewardPointTiers.value = response.data.data;
+            } else {
+                rewardPointTiers.value = [];
+            }
+        } catch (error) {
+            console.error("Failed to load reward tiers:", error);
+            rewardPointTiers.value = [];
+        }
+    };
+
     return {
         brandLogo,
         about,
@@ -52,6 +69,8 @@ export function useServices() {
         getPrivacyPolicy,
         getContact,
         getDeliveryAreas,
-        getReturnRefunds
+        getReturnRefunds,
+        rewardPointTiers,
+        getRewardPointTiers,
     };
 }

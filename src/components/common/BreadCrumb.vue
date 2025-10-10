@@ -1,6 +1,16 @@
 <template>
-    <section class="relative fade-up" v-if="title">
-        <div class="rounded-xl overflow-hidden border border-green-100 shadow-sm p-5">
+    <section class="relative fade-up bg-red-50 rounded-xl overflow-hidden border border-red-100 shadow-sm" v-if="title">
+        <div class="absolute inset-0 opacity-10 pointer-events-none">
+            <svg class="w-full h-full" preserveAspectRatio="none">
+                <defs>
+                    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <path d="M20 0 L0 0 0 20" fill="none" stroke="#E62727" stroke-width="0.5" />
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)"></rect>
+            </svg>
+        </div>
+        <div class="p-5">
             <!-- Breadcrumb -->
             <nav class="text-sm text-gray-500 mb-2" aria-label="Breadcrumb">
                 <ol class="list-reset flex space-x-2">

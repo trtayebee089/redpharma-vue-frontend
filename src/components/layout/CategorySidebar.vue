@@ -1,16 +1,4 @@
 <template>
-    <!-- Desktop Sidebar: shows only from 1024px -->
-    <!-- <aside class="hidden lg:block w-64 bg-gray-100 shadow-red-400 pt-4 category-sidebar shadow-right">
-        <ul class="pt-4">
-            <li v-for="category in categories" :key="category.id" class="last:border-b-0">
-                <router-link :to="`/category/${category.slug}`"
-                    class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-200 transition-colors">
-                    <img :src="category.image" alt="" class="w-6 h-6 mr-3" />
-                    <span>{{ category . name }}</span>
-                </router-link>
-            </li>
-        </ul>
-    </aside> -->
     <aside class="hidden lg:block w-64 bg-gray-100 shadow-red-400 pt-4 category-sidebar shadow-right">
         <ul class="pt-4">
             <li v-for="category in categories" :key="category.id" class="last:border-b-0">
@@ -20,7 +8,7 @@
                         'bg-red-200 font-bold text-red-950': route.params.slug === category.slug
                     }">
                     <div class="flex items-center">
-                        <img v-if="category.image" :src="category.image" alt="" class="w-6 h-6 mr-3" />
+                        <img v-if="category.image" :src="category.image" alt="" class="w-6 h-6 mr-3" loading="lazy" />
                         <span>{{ category . name }}</span>
                     </div>
                     <i class="pi pi-chevron-right text-sm"></i>

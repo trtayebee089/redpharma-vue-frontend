@@ -21,6 +21,27 @@
             </p>
         </div>
 
+        <section class="mb-8 bg-white shadow-sm rounded-lg p-6 border border-green-200" v-if="isNewCustomer">
+            <h2 class="text-2xl font-bold mb-6 flex items-center justify-center space-x-3 relative">
+                <i class="pi pi-shopping-cart text-green-500 text-xl"></i>
+                <span class="bg-clip-text text-transparent bg-gradient-to-b from-green-400 to-green-700">
+                    Credentials
+                </span>
+            </h2>
+            <p class="mb-4">Use this login credentials to sign in to your account and enjoy discount and rewards.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-4 text-sm  ">
+                <div class="flex justify-between">
+                    <span class="font-medium text-gray-700">Username: (Your Contact Number)</span>
+                    <span class="text-gray-900">{{ order.customer.phone_number || "-" }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="font-medium text-gray-700">Password:</span>
+                    <span class="text-gray-900">{{ temporaryPassword }}</span>
+                </div>
+            </div>
+        </section>
+
         <section class="mb-8 bg-white shadow-sm rounded-lg p-6 border border-green-200">
             <h2 class="text-2xl font-bold mb-6 flex items-center justify-center space-x-3 relative">
                 <i class="pi pi-shopping-cart text-green-500 text-xl"></i>
@@ -174,6 +195,11 @@ const order_id = route.params?.order_id;
 
 const formatCurrency = (value) => (value != null ? "৳" + parseFloat(value).toFixed(2) : "-");
 const formatDate = (value) => (value ? new Date(value).toLocaleString("en-BD", { dateStyle: "medium", timeStyle: "short" }) : "-");
+
+const orderx = history.state?.order
+const trackingx = history.state?.tracking
+const isNewCustomer = history.state?.isNewCustomer
+const temporaryPassword = history.state?.temporaryPassword
 
 // Fetch order details
 onMounted(async () => {

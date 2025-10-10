@@ -1,6 +1,6 @@
 <template>
     <Modal v-if="show" :isOpen="show" @close="() => emit('close')">
-        <div class="flex items-center justify-center h-96">
+        <div class="flex items-center justify-center h-100">
             <transition name="fade" mode="out-in">
                 <!-- Logged in -->
                 <div v-if="authStore.isAuthenticated" class="text-center">
@@ -44,8 +44,8 @@
                             </div>
 
                             <!-- T&C -->
-                            <p class="text-xs text-gray-500 text-center">
-                                By continuing, you agree to our
+                            <p class="text-xs text-gray-500 text-center mb-2">
+                                By continuing, you agree to our <br>
                                 <router-link to="/terms" class="text-green-500 hover:underline">Terms &
                                     Conditions</router-link>,
                                 <router-link to="/privacy-and-policy" class="text-green-500 hover:underline">Privacy

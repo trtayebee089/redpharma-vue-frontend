@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia'
+import { useAuthStore } from "@/stores/auth";
 
 export const useCartStore = defineStore('cart', {
   state: () => ({
     items: JSON.parse(localStorage.getItem('cartItems') || '[]'),
     isCartOpen: false,
-    shippingRate: 50
+    shippingRate: 50,
+    applyDiscount: false,
   }),
   actions: {
     getQuantity(productId) {
@@ -49,15 +51,19 @@ export const useCartStore = defineStore('cart', {
   getters: {
     totalQty: state => state.items.reduce((acc, i) => acc + i.quantity, 0),
     uniqueItems: state => state.items.length,
-      cartSubtotal: state => state.items.reduce((sum, item) => {
+    cartSubtotal: state => state.items.reduce((sum, item) => {
       const price = Number(item.offerPrice ?? item.price) || 0;
       const qty = Number(item.quantity) || 1;
       return sum + price * qty;
     }, 0),
-    totalAmount: state => state.items.reduce((sum, item) => {
-      const price = Number(item.offerPrice ?? item.price) || 0;
-      const qty = Number(item.quantity) || 1;
-      return sum + price * qty;
-    }, 0) + state.shippingRate,
+    membershipDiscount: (state) => {
+      const authStore = useAuthStore();
+      const discountRate = authStore.membershipInfo?.discount || 0;
+      return state.applyDiscount ? (state.cartSubtotal * discountRate / 100) : 0;
+    },
+    totalAmount: (state) => {
+      const grandTotal = state.cartSubtotal - state.membershipDiscount + state.shippingRate;
+      return Math.ceil(grandTotal);
+    }
   }
 })

@@ -94,9 +94,9 @@ const messages = {
                 }
             },
             quick_actions: [
-                { text: "Book Appointment", link: "tel:+8801300000000", bg: "bg-green-200", textColor: "text-green-800", icon: "pi pi-calendar" },
+                { text: "Book Appointment", link: "tel:+8801300000000", bg: "bg-red-200", textColor: "text-red-800", icon: "pi pi-calendar" },
                 { text: "Call To Order", link: "tel:+8801300000000", bg: "bg-green-400", textColor: "text-green-800", icon: "pi pi-phone" },
-                { text: "Doctor Consultation", link: "tel:+8801300000000", bg: "bg-green-200", textColor: "text-green-800", icon: "pi pi-user-md" },
+                { text: "Doctor Consultation", link: "tel:+8801300000000", bg: "bg-red-200", textColor: "text-red-800", icon: "pi pi-user-md" },
             ],
             how_to_order: {
                 title: "How to Order Medicines",
@@ -186,7 +186,27 @@ const messages = {
         },
         orderConfirmation: {
             title: "Order Confirmation",
-            description: "Thank you for your order. Our Rider will call you within 2hrs."
+            description: "Thank you for your order."
+        },
+        tracking: {
+            title: "Track Your Order",
+            description: "Enter your mobile order number in the box above to check your delivery status, view updates, and follow your package journey in real time.",
+            placeholder: "Enter your tracking number here...",
+            button: "Track Order",
+            not_found: "No order found with this tracking number. Please check and try again.",
+            loading: "Checking order status...",
+        },
+        membership: {
+            title: "Membership Plans",
+            description: "Earn points on your purchases and enjoy exclusive discounts based on your tier!",
+            next_tier: "Next Tier",
+            benefits: "Benefits",
+            points: "Points",
+            discount: "Discount",
+            points_needed: "Points Needed",
+            recent_usage: "Recent Points Usage",
+            current_points: "Current Points",
+            current_tier: "Current Tier",
         },
         footer: {
             title: "Quality Medicines, Trusted Care",
@@ -295,9 +315,9 @@ const messages = {
                 }
             },
             quick_actions: [
-                { text: "অ্যাপয়েন্টমেন্ট নিন", link: "tel:+8801300000000", bg: "bg-green-200", textColor: "text-green-800", icon: "pi pi-calendar" },
+                { text: "অ্যাপয়েন্টমেন্ট নিন", link: "tel:+8801300000000", bg: "bg-red-200", textColor: "text-green-800", icon: "pi pi-calendar" },
                 { text: "অর্ডার করতে কল করুন", link: "tel:+8801300000000", bg: "bg-green-400", textColor: "text-green-800", icon: "pi pi-phone" },
-                { text: "ডাক্তারের পরামর্শ নিন", link: "tel:+8801300000000", bg: "bg-green-200", textColor: "text-green-800", icon: "pi pi-user-md" },
+                { text: "ডাক্তারের পরামর্শ নিন", link: "tel:+8801300000000", bg: "bg-red-200", textColor: "text-green-800", icon: "pi pi-user-md" },
             ],
             how_to_order: {
                 title: "কিভাবে ওষুধ অর্ডার করবেন",
@@ -386,6 +406,30 @@ const messages = {
                     action: "ক্রিয়া"
                 }
             }
+        },
+        orderConfirmation: {
+            title: "অর্ডার নিশ্চিতকরণ",
+            description: "আপনার অর্ডারের জন্য ধন্যবাদ।"
+        },
+        tracking: {
+            title: "আপনার অর্ডার ট্র্যাক করুন",
+            description: "উপরের বক্সে আপনার অর্ডার নম্বরটি লিখে ডেলিভারি স্ট্যাটাস, আপডেট এবং রিয়েল-টাইমে প্যাকেজের অবস্থান দেখতে পারেন।",
+            placeholder: "এখানে আপনার ট্র্যাকিং নম্বর লিখুন...",
+            button: "অর্ডার ট্র্যাক করুন",
+            not_found: "এই ট্র্যাকিং নম্বরের কোনো অর্ডার পাওয়া যায়নি। দয়া করে যাচাই করে আবার চেষ্টা করুন।",
+            loading: "অর্ডার স্ট্যাটাস যাচাই করা হচ্ছে...",
+        },
+        membership: {
+            title: "মেম্বারশিপ প্ল্যান",
+            description: "আপনার কেনাকাটায় পয়েন্ট অর্জন করুন এবং আপনার স্তর অনুযায়ী এক্সক্লুসিভ ডিসকাউন্ট উপভোগ করুন!",
+            next_tier: "পরবর্তী স্তর",
+            benefits: "সুবিধাসমূহ",
+            points: "পয়েন্ট",
+            discount: "ডিসকাউন্ট",
+            points_needed: "প্রয়োজনীয় পয়েন্ট",
+            recent_usage: "সাম্প্রতিক পয়েন্ট ব্যবহার",
+            current_points: "বর্তমান পয়েন্ট",
+            current_tier: "বর্তমান স্তর",
         },
         footer: {
             title: "গুণগতমানসম্পন্ন ওষুধ, বিশ্বাসযোগ্য যত্ন",

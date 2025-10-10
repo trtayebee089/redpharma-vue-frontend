@@ -3,12 +3,29 @@
         <div class="flex flex-col lg:flex-row lg:items-start gap-8">
             <!-- Desktop Cart Table -->
             <div class="hidden md:block flex-1">
-                <div class="border-b-2 border-green-600 pb-4 mb-6">
-                    <h1 class="flex items-center space-x-3 text-2xl md:text-3xl text-gray-900 font-sans font-extrabold">
-                        <i class="pi pi-shopping-cart text-green-600 text-3xl"></i>
-                        <span>{{ $t('cart.title') }}</span>
+                <div
+                    class="max-w-5xl mx-auto text-center leading-relaxed bg-green-100 rounded-lg p-6 relative overflow-hidden mb-6">
+                    <!-- Decorative background pattern -->
+                    <div class="absolute inset-0 opacity-10 pointer-events-none">
+                        <svg class="w-full h-full" preserveAspectRatio="none">
+                            <defs>
+                                <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                                    <path d="M20 0 L0 0 0 20" fill="none" stroke="#08CB00" stroke-width="2.0" />
+                                </pattern>
+                            </defs>
+                            <rect width="100%" height="100%" fill="url(#grid)"></rect>
+                        </svg>
+                    </div>
+
+                    <!-- Title -->
+                    <h1 class="text-3xl md:text-4xl font-bold text-green-600 leading-relaxed mb-2 relative z-10"
+                        :class="langStore.langClass">
+                        {{ $t('cart.title') }}
                     </h1>
-                    <p class="text-gray-600 text-sm md:text-base mt-1">
+
+                    <!-- Subtitle -->
+                    <p class="text-gray-700 text-lg md:text-xl leading-relaxed relative z-10 max-w-2xl mx-auto"
+                        :class="langStore.langClass">
                         {{ $t('cart.description') }}
                     </p>
                 </div>
@@ -128,14 +145,45 @@
                     <div class="px-6 py-4 space-y-4">
 
                         <!-- Subtotal & Shipping -->
-                        <div class="flex justify-between text-gray-700 border-b border-gray-200 pb-2">
+                        <div class="flex justify-between text-gray-700 pb-2">
                             <span>Subtotal</span>
                             <span class="font-medium">{{ cartStore.cartSubtotal.toFixed(2) }} Tk</span>
                         </div>
-                        <div class="flex justify-between text-gray-700 border-b border-gray-200 pb-2 pt-2">
+                        <div class="flex justify-between text-gray-700 pb-2">
                             <span>Shipping</span>
                             <span class="text-green-600 font-medium">{{ cartStore.shippingRate }} Tk</span>
                         </div>
+                        <template v-if="authStore.isAuthenticated && authStore.membershipInfo && authStore.rewardPointSettings.minimum_amount <= cartStore.cartSubtotal && authStore.membershipInfo?.discount > 0">
+                            <!-- Apply Discount Toggle -->
+                            <div class="flex justify-between items-center text-gray-700 pb-2"
+                                v-if="authStore.membershipInfo?.discount > 0">
+                                <p>
+                                    <span>Apply Discount ({{ authStore.membershipInfo.discount }}%)</span>
+                                </p>
+
+                                <!-- Toggle Switch -->
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" v-model="cartStore.applyDiscount" />
+                                    <div
+                                        class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-green-500 transition-all duration-200">
+                                    </div>
+                                    <div
+                                        class="absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full shadow transform peer-checked:translate-x-5 transition-all duration-200">
+                                    </div>
+                                </label>
+                            </div>
+
+                            <!-- Discount Amount (only visible if toggle ON) -->
+                            <div class="flex justify-between text-gray-700 pb-2"
+                                v-if="authStore.membershipInfo?.discount > 0 && cartStore.applyDiscount">
+                                <p>
+                                    <span>Discount</span>
+                                </p>
+                                <span class="text-green-600 font-medium">
+                                    {{ cartStore.membershipDiscount.toFixed(2) }} Tk
+                                </span>
+                            </div>
+                        </template>
 
                         <!-- Total -->
                         <div
@@ -182,51 +230,39 @@
 </template>
 
 <script setup>
-import {
-    useCartStore
-} from "@/stores/cart";
-import {
-    computed,
-    ref,
-    reactive
-} from "vue";
-import {
-    useI18n
-} from "vue-i18n";
-import {
-    useLanguageStore
-} from "@/stores/language";
-import Alert from "@/components/common/Alert.vue";
-import { useCheckout } from '@/composables/useCheckout';
+import { computed, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
+
+import { useCartStore } from "@/stores/cart";
 import { useAuthStore } from "@/stores/auth";
+import { useLanguageStore } from "@/stores/language";
+import Alert from "@/components/common/Alert.vue";
+import { useCheckout } from "@/composables/useCheckout";
 
 const authStore = useAuthStore();
-const router = useRouter();
-const { t, tm } = useI18n();
 const cartStore = useCartStore();
 const langStore = useLanguageStore();
+const router = useRouter();
+const { t } = useI18n();
+const { submitOrder } = useCheckout();
+
 const checkoutForm = reactive({
     fullName: authStore.user?.name || '',
     phone: authStore.user?.phone_number || '',
-    address: authStore.user?.address || ''
+    address: authStore.user?.address || '',
 });
-const { loading, error, successMessage, submitOrder } = useCheckout();
+
 const cartItems = computed(() => cartStore.items);
 
-// actions
-const increaseQty = (item) => {
-    cartStore.updateQuantity(item.id, item.quantity + 1);
-};
-
+// Quantity actions
+const increaseQty = (item) => cartStore.updateQuantity(item.id, item.quantity + 1);
 const decreaseQty = (item) => {
-    if (item.quantity > 1) {
-        cartStore.updateQuantity(item.id, item.quantity - 1);
-    }
+    if (item.quantity > 1) cartStore.updateQuantity(item.id, item.quantity - 1);
 };
-
 const removeItem = (item) => cartStore.removeFromCart(item.id);
 
+// Checkout submission
 const submitCheckout = async () => {
     if (!cartStore.items.length) {
         alert("Your cart is empty!");
@@ -235,18 +271,19 @@ const submitCheckout = async () => {
 
     try {
         const result = await submitOrder(checkoutForm);
-
         if (result?.success) {
-            // Clear cart and reset form
             cartStore.clearCart();
-            checkoutForm.fullName = "";
-            checkoutForm.phone = "";
-            checkoutForm.address = "";
+            checkoutForm.fullName = '';
+            checkoutForm.phone = '';
+            checkoutForm.address = '';
+            if (authStore.token) {
+                await authStore.fetchUser();
+            }
 
             router.push({
                 name: "OrderConfirmation",
-                params: { order_id: result.sale.id }, // use the correct param name
-                state: { order: result.sale, tracking: result.tracking }
+                params: { order_id: result.sale.id },
+                state: { order: result.sale, tracking: result.tracking, isNewCustomer: result.is_new_customer, temporaryPassword: result.temporary_password }
             });
         }
     } catch (err) {
@@ -254,4 +291,10 @@ const submitCheckout = async () => {
         alert("Failed to place order. Please try again.");
     }
 };
+
+onMounted(async () => {
+    if (!authStore.rewardPointTiers.length) {
+        await authStore.fetchRewardPointTiers();
+    }
+});
 </script>

@@ -18,23 +18,22 @@
                 <!-- Title -->
                 <h1 class="text-3xl md:text-4xl font-bold text-green-600 leading-relaxed mb-2 relative z-10"
                     :class="langStore.langClass">
-                    Track Your Consignment
+                    {{ $t('tracking.title') }}
                 </h1>
 
                 <!-- Subtitle -->
                 <p class="text-gray-700 text-lg md:text-xl leading-relaxed relative z-10 max-w-2xl mx-auto"
                     :class="langStore.langClass">
-                    Enter your mobile order number in the box above to check your delivery status, view updates, and
-                    follow your package journey in real time.
+                    {{$t('tracking.description')}}
                 </p>
             </div>
 
             <div class="flex justify-center mb-12">
-                <input type="text" v-model="trackingNumber" placeholder="Enter Mobile Order Number"
+                <input type="text" v-model="trackingNumber" :placeholder="$t('tracking.placeholder')"
                     class="w-full max-w-md px-4 py-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
                 <button @click="trackOrder"
                     class="px-6 py-3 bg-green-500 text-white rounded-r-lg hover:bg-green-600 transition">
-                    Track
+                    {{$t('tracking.button')}}
                 </button>
             </div>
 

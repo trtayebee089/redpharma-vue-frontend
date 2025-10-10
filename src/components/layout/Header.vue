@@ -1,12 +1,8 @@
 <template>
-    <nav :class="[
-        'fixed top-0 left-0 w-full z-50 bg-green-50 transition-shadow border-b border-green-200',
-        { 'shadow-md': isSticky }
-    ]">
+    <nav
+        :class="['fixed top-0 left-0 w-full z-50 bg-green-50 transition-shadow border-b border-green-200', { 'shadow-md': isSticky }]">
         <div class="px-4 md:px-6 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-0">
-            <!-- Row for Logo + Desktop Search + Buttons -->
             <div class="flex items-center justify-between w-full md:w-full">
-                <!-- Logo -->
                 <a href="/" class="flex items-center flex-shrink-0">
                     <img :src="mainLogo" alt="Logo" class="h-10 md:h-12 lg:14" />
                 </a>
@@ -18,6 +14,11 @@
                         <input type="text" v-model="searchQuery" :placeholder="placeholderText"
                             :class="[langStore.langClass]" class="w-full transition bg-white search-input" />
 
+                        <!-- Clear Icon -->
+                        <span v-if="searchQuery" @click="searchQuery = ''"
+                            class="absolute right-12 top-0 h-full w-10 flex items-center justify-center text-gray-500 hover:text-red-500 cursor-pointer transition">
+                            <i class="pi pi-times text-lg"></i>
+                        </span>
                         <!-- Search Icon (Right) -->
                         <span
                             class="absolute right-0 top-0 h-full w-12 flex items-center justify-center bg-gradient-to-bl from-green-400 to-green-600 text-white rounded-r-lg cursor-pointer">
@@ -30,15 +31,16 @@
                         class="absolute top-full mt-1 bg-white border border-gray-200 rounded shadow-lg z-50 max-h-[60vh] overflow-y-auto">
                         <ul>
                             <li v-for="product in filteredProducts" :key="product.id"
-                                class="px-4 py-3 hover:bg-gray-50 flex justify-between items-center gap-3">
+                                class="px-4 py-3 hover:bg-red-100 flex justify-between items-center gap-3">
                                 <div class="flex-1">
-                                    <p class="font-medium text-gray-800">{{ product.name }}</p>
+                                    <p class="font-medium text-gray-800">{{ capitalizeWords(product.name) }}</p>
                                     <p class="text-sm text-gray-600">
-                                        Brand: {{ product.brand }} | Category:
-                                        {{ getCategoryName(product.categoryId) }}
+                                        Brand: {{ product.brand.title }} | Category:
+                                        {{ product.category?.name }}
                                     </p>
-                                    <p class="text-sm font-semibold text-green-600 mt-1">
-                                        ${{ product.regularPrice.toFixed(2) }}
+                                    <p class="text-md font-bold text-green-600 m-0">
+                                        {{ product.promotion_price ? product.promotion_price.toFixed(2) :
+                                            product.price.toFixed(2) }} Tk
                                     </p>
                                 </div>
 
@@ -55,18 +57,18 @@
 
                 <!-- Desktop Buttons -->
                 <div class="hidden md:flex items-center space-x-4 h-full relative">
-                    <router-link to="/delivery-coverage"
+                    <!-- <router-link to="/delivery-coverage"
                         class="hidden 2xl:flex space-x-2 h-12 bg-green-100 text-green-600 items-center justify-center rounded-md hover:border-red-300 hover:bg-gradient-to-b hover:from-red-500 hover:to-red-800 hover:text-white transition border border-green-300 shadow-sm px-3">
                         <img :src="deliveryImg" alt="flag" class="w-6 h-6 rounded-sm" />
                         <span class="font-semibold" :class="[langStore.langClass]">{{ $t('header.buttons.coverage')
                         }}</span>
-                    </router-link>
+                    </router-link> -->
 
                     <router-link to="/order-tracking"
                         class="hidden 2xl:flex space-x-2 h-12 bg-green-100 text-green-600 items-center justify-center rounded-md hover:border-red-300 hover:bg-gradient-to-b hover:from-red-500 hover:to-red-800 hover:text-white transition border border-green-300 shadow-sm px-3">
                         <img :src="trackingImg" alt="flag" class="w-6 h-6 rounded-sm" />
                         <span class="font-semibold" :class="[langStore.langClass]">{{ $t('header.buttons.track')
-                        }}</span>
+                            }}</span>
                     </router-link>
 
                     <button @click="toggleLanguage"
@@ -134,6 +136,11 @@
                     <input type="text" v-model="searchQuery" :placeholder="placeholderText"
                         :class="[langStore.langClass]"
                         class="w-full transition bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-700" />
+                    <!-- Clear Icon -->
+                    <span v-if="searchQuery" @click="searchQuery = ''"
+                        class="absolute right-12 top-0 h-full w-10 flex items-center justify-center text-gray-500 hover:text-red-500 cursor-pointer transition">
+                        <i class="pi pi-times text-lg"></i>
+                    </span>
                     <span
                         class="absolute right-0 top-0 h-full w-12 flex items-center justify-center bg-gradient-to-bl from-green-400 to-green-600 text-white rounded-r-lg cursor-pointer">
                         <i class="pi pi-search text-lg"></i>
@@ -149,11 +156,12 @@
                             <div class="flex-1">
                                 <p class="font-medium text-gray-800">{{ product.name }}</p>
                                 <p class="text-sm text-gray-600">
-                                    Brand: {{ product.brand }} | Category:
-                                    {{ getCategoryName(product.categoryId) }}
+                                    {{ product.brand?.title }} <br>
+                                    {{ product.category?.name }}
                                 </p>
-                                <p class="text-sm font-semibold text-green-600 mt-1">
-                                    ${{ product.regularPrice.toFixed(2) }}
+                                <p class="text-md font-bold text-green-600 m-0">
+                                    {{ product.promotion_price ? product.promotion_price.toFixed(2) :
+                                        product.price.toFixed(2) }} Tk
                                 </p>
                             </div>
                             <button @click="addToCart(product)"
@@ -175,10 +183,10 @@
                     <li><router-link @click.native="closeMenu" to="/">{{ $t('header.menu.home') }}</router-link></li>
                     <li><router-link @click.native="closeMenu" to="/about">{{ $t('header.menu.about') }}</router-link>
                     </li>
-                    <li><router-link @click.native="closeMenu" to="/delivery-coverage">{{ $t('header.menu.coverage')
-                    }}</router-link></li>
+                    <!-- <li><router-link @click.native="closeMenu" to="/delivery-coverage">{{ $t('header.menu.coverage')
+                    }}</router-link></li> -->
                     <li><router-link @click.native="closeMenu" to="/order-tracking">{{ $t('header.buttons.track')
-                    }}</router-link></li>
+                            }}</router-link></li>
                     <li v-if="authStore.isAuthenticated"><router-link @click.native="closeMenu" to="/orders">{{
                         $t('header.menu.orders') }}</router-link></li>
                     <li v-if="authStore.isAuthenticated"><router-link @click.native="closeMenu" to="/membership">{{
@@ -194,57 +202,35 @@
                 </ul>
             </div>
         </transition>
-
-        <LoginFormModal :show="showLoginModal" @close="() => { showLoginModal = false }" @open-register="openRegister" />
-
-        <RegistrationModal :show="showRegister" @close="showRegister = false" @open-login="() => showLoginModal.value = true" />
-
     </nav>
+
+    <LoginFormModal :show="showLoginModal" @close="() => { showLoginModal = false }" @open-register="openRegister" />
+
+    <RegistrationModal :show="showRegister" @close="showRegister = false"
+        @open-login="() => showLoginModal.value = true" />
 </template>
 
 <script setup>
-import {
-    ref,
-    onMounted,
-    onUnmounted,
-    computed,
-    reactive
-} from 'vue'
+import { ref, onMounted, onUnmounted, computed, reactive, watch } from 'vue'
 import mainLogo from '@/assets/logo.png';
-import {
-    products
-} from "@/data/products.js";
-import {
-    categories
-} from "@/data/categories.js";
-import {
-    useRouter
-} from 'vue-router'
-import {
-    useCartStore
-} from "@/stores/cart"
+import { products } from "@/data/products.js";
+import { categories } from "@/data/categories.js";
+import { useRouter } from 'vue-router'
+import { useCartStore } from "@/stores/cart"
 import LoginFormModal from '@/components/auth/LoginFormModal.vue';
-import {
-    useAuthStore
-} from "@/stores/auth";
+import { useAuthStore } from "@/stores/auth";
 import UserDropdown from "@/components/auth/UserDropdown.vue";
-import {
-    useLanguageStore
-} from "@/stores/language";
+import { useLanguageStore } from "@/stores/language";
 import RegistrationModal from "@/components/auth/RegistrationModal.vue";
+import { useProducts } from "@/composables/useProducts";
 
 import usFlag from '@/assets/icons/us-flag.png';
 import bdFlag from '@/assets/icons/bd-flag.png';
 import deliveryImg from '@/assets/icons/express-delivery.png';
 import trackingImg from '@/assets/icons/order-tracking.png';
 
-import {
-    useI18n
-} from "vue-i18n";
-const {
-    t,
-    tm
-} = useI18n();
+import { useI18n } from "vue-i18n";
+const { t, tm } = useI18n();
 
 const flags = {
     en: usFlag,
@@ -255,6 +241,7 @@ const router = useRouter()
 const showLoginModal = ref(false);
 const authStore = useAuthStore();
 const langStore = useLanguageStore();
+const { products: searchResults, fetchSearchResults, loading } = useProducts();
 
 const currentLanguage = computed(() => langStore.lang.toUpperCase());
 const currentFlag = computed(() => flags[langStore.lang]);
@@ -273,6 +260,15 @@ let index = 0;
 let charIndex = 0;
 let isDeleting = false;
 let typingInterval;
+
+function capitalizeWords(text) {
+    if (!text) return '';
+    return text
+        .toLowerCase()
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
 
 function openRegister() {
     showLoginModal.value = false;
@@ -334,23 +330,17 @@ const toggleLanguage = () => {
     langStore.setLanguage(nextLang);
 };
 
-const filteredProducts = computed(() => {
-    if (!searchQuery.value || !products.value) return [];
+let debounceTimeout = null;
 
-    return products.value.filter(
-        p =>
-            p.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-            (p.brand && p.brand.toLowerCase().includes(searchQuery.value.toLowerCase()))
-    );
+watch(searchQuery, (newQuery) => {
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => {
+        fetchSearchResults(newQuery);
+    }, 400);
 });
 
-// Get category name by ID
-const getCategoryName = (categoryId) => {
-    const category = categories.find((c) => c.id === categoryId);
-    return category ? category.name : "Unknown";
-};
+const filteredProducts = computed(() => searchResults.value);
 
-// Add product to cart
 const addToCart = (product) => {
     cartStore.addToCart({
         ...product,
@@ -370,7 +360,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Slide fade transition for mobile menu */
 .slide-fade-enter-active,
 .slide-fade-leave-active {
     transition: all 0.3s ease;

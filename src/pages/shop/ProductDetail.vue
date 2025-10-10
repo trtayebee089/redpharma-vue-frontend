@@ -4,61 +4,83 @@
         <!-- Section 1: Product Info -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-lg shadow border border-gray-200">
             <!-- Left: Product Image -->
-            <div class="flex justify-center items-center">
-                <img :src="product.image" :alt="product.name"
-                    class="w-full max-w-md rounded-lg border border-gray-200" />
+            <div class="relative w-full max-w-md aspect-[16/9] rounded-lg overflow-hidden flex items-center justify-center bg-gradient-to-br"
+                :class="defaultImagePlaceHolder.type === 'category'
+                    ? 'from-gray-200 via-gray-100 to-gray-300'
+                    : 'from-gray-200 via-gray-300 to-gray-200'">
+                <img :src="defaultImagePlaceHolder.url" :alt="productDetail.name" loading="lazy" :class="[
+                    'object-contain',
+                    defaultImagePlaceHolder.type === 'category'
+                        ? 'w-20 h-20'   // smaller for category icon
+                        : 'w-full h-full' // full for product image
+                ]" />
             </div>
 
             <!-- Right: Product Details -->
-            <div class="flex flex-col justify-between space-y-4">
+            <div class="flex flex-col justify-between space-y-6">
+                <!-- Product Info -->
                 <div>
-                    <h1 class="text-2xl md:text-3xl font-bold text-gray-800">{{ productDetail.name }}</h1>
-                    <p class="text-sm text-gray-500 mt-1" v-if="productDetail.brand">Brand: <span class="font-medium">{{
-                        productDetail.brand.title }}</span></p>
-                    <p class="text-sm text-gray-500" v-if="productDetail.category">
-                        Category: <span class="font-medium">{{ fullCategoryName }}</span>
-                    </p>
+                    <!-- Name -->
+                    <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight tracking-tight">
+                        {{ productDetail.name }}
+                    </h1>
 
-                    <!-- Price -->
-                    <div class="flex items-center space-x-4 mt-3">
-                        <p class="text-xl font-bold text-green-600" v-if="product.offerPrice">${{
-                            product.offerPrice.toFixed(2) }}</p>
-                        <p v-if="product.offerPrice < product.regularPrice" class="line-through text-gray-400">
+                    <!-- Brand & Category -->
+                    <div class="mt-2 space-y-1">
+                        <p v-if="productDetail.brand" class="text-sm text-gray-600">
+                            <span class="font-medium text-gray-800">Brand:</span>
+                            {{ productDetail.brand.title }}
+                        </p>
+                        <p v-if="productDetail.category" class="text-sm text-gray-600">
+                            <span class="font-medium text-gray-800">Category:</span>
+                            {{ fullCategoryName }}
+                        </p>
+                    </div>
+
+                    <!-- Price Section -->
+                    <div class="flex items-center flex-wrap gap-3 mt-5">
+                        <p class="text-2xl font-bold text-green-600" v-if="product.offerPrice">
+                            ${{ product.offerPrice.toFixed(2) }}
+                        </p>
+
+                        <p v-if="product.offerPrice < product.regularPrice" class="text-gray-400 line-through text-lg">
                             ${{ product.regularPrice.toFixed(2) }}
                         </p>
+
                         <span v-if="product.offerPrice < product.regularPrice"
-                            class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded">
+                            class="bg-green-50 text-green-700 font-semibold text-xs px-3 py-1 rounded-full shadow-sm border border-green-200">
                             -{{ product.discountPercentage }}%
                         </span>
                     </div>
 
-                    <div class="flex items-center justify-start gap-4">
+                    <!-- Quantity & Cart Controls -->
+                    <div class="flex items-center justify-start gap-5 mt-6">
                         <!-- Quantity Controls -->
-                        <div class="inline-flex items-center space-x-2 bg-gray-50 px-3 py-1 rounded-md border border-gray-200">
+                        <div class="inline-flex items-center border border-gray-300 rounded-md bg-gray-50 px-2 py-1 shadow-sm hover:shadow transition-all duration-200">
                             <button @click="decreaseQty" :disabled="quantity <= 1 || isStockOut"
-                                class="w-10 h-10 flex items-center justify-center text-gray-700 bg-gray-200 hover:bg-red-600 hover:text-white rounded border border-gray-300 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition">
-                                -
+                                class="w-9 h-9 flex items-center justify-center rounded-md bg-gray-200 hover:bg-red-500 hover:text-white text-gray-700 disabled:bg-gray-300 disabled:text-gray-500 transition">
+                                <i class="pi pi-minus"></i>
                             </button>
 
-                            <span class="w-10 h-10 flex items-center justify-center text-gray-800 font-medium">
+                            <span class="w-10 text-center font-semibold text-gray-800 text-lg">
                                 {{ quantity }}
                             </span>
 
                             <button @click="increaseQty" :disabled="isStockOut"
-                                class="w-10 h-10 flex items-center justify-center text-gray-700 bg-gray-200 hover:bg-green-600 hover:text-white rounded border border-gray-300 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition">
-                                +
+                                class="w-9 h-9 flex items-center justify-center rounded-md bg-gray-200 hover:bg-green-500 hover:text-white text-gray-700 disabled:bg-gray-300 disabled:text-gray-500 transition">
+                                <i class="pi pi-plus"></i>
                             </button>
                         </div>
 
                         <!-- Add to Cart -->
-                        <button @click="addToCart(productDetail)" :disabled="isStockOut"
-                            :class="[
-                                'px-6 py-2 font-semibold rounded transition text-white',
-                                isStockOut ? 'bg-red-600 cursor-not-allowed hover:bg-red-700 ' : 'bg-green-600 hover:bg-green-700 '
-                            ]"
-                        >
-                            <span v-if="!isStockOut">Add to Cart</span>
-                            <span v-else>Unavailable</span>
+                        <button @click="addToCart(productDetail)" :disabled="isStockOut" :class="[
+                            'px-8 py-3 rounded-md font-semibold text-white shadow-md transition-all duration-200 focus:ring-2 focus:ring-offset-1',
+                            isStockOut
+                                ? 'bg-red-600 cursor-not-allowed hover:bg-red-700 focus:ring-red-300'
+                                : 'bg-green-600 hover:bg-green-700 focus:ring-green-400'
+                            ]">
+                            <span v-if="!isStockOut">🛒 Add to Cart</span>
+                            <span v-else>❌ Unavailable</span>
                         </button>
                     </div>
                 </div>
@@ -117,11 +139,27 @@ const route = useRoute();
 const { product, fetchProductDetails } = useProducts();
 const productDetail = ref(null);
 
-const defaultImagePlaceHolder = 'https://placehold.co/1920x1080';
 const cartStore = useCartStore();
 const push = usePush();
 const alternativeProducts = ref([]);
 const quantity = ref(1);
+
+const defaultImagePlaceHolder = computed(() => {
+    const prodImage = product.value.image?.trim();
+    const catImage = product.value.category?.image?.trim();
+
+    if (prodImage && !prodImage.includes("https://placehold.co") && !prodImage.includes("no-image.png")) {
+        console.log("Product Image: " + prodImage)
+        return { url: prodImage, type: 'product' };
+    }
+    else if (catImage && !catImage.includes("https://placehold.co") && !catImage.includes("no-image.png")) {
+        console.log("Category Image: " + catImage)
+        return { url: catImage, type: 'category' };
+    }
+    else {
+        return { url: "https://placehold.co/1920x1080", type: 'placeholder' };
+    }
+});
 
 const isStockOut = computed(() => {
     if (!productDetail.value) return false;

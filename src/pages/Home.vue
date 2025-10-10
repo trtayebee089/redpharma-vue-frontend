@@ -5,9 +5,9 @@
             <div class="rounded-xl overflow-hidden border border-red-100">
                 <Swiper :modules="[Pagination, Navigation, Autoplay]" :slides-per-view="1" :loop="true"
                     :autoplay="{ delay: 4500, disableOnInteraction: false }"
-                    class="w-full relative rounded-xl overflow-hidden shadow-xl" style="aspect-ratio: 1400/480;">
+                    class="swiper-container w-full relative rounded-xl overflow-hidden shadow-xl"
+                    style="aspect-ratio: 1400/480;">
                     <SwiperSlide v-for="(slide, index) in backgrounds" :key="index" class="relative w-full h-full ">
-                        <!-- Background Image -->
                         <img :src="slide" alt="slide image" class="w-full h-full object-contain "
                             style="object-position: center;" />
                     </SwiperSlide>
@@ -16,46 +16,51 @@
         </section>
 
         <!-- Categories Slider -->
-        <section class="mt-10 relative fade-up">
+        <section class="mt-4 md:mt-10 relative fade-up">
             <div class="category-slider">
-                <h2 class="text-2xl md:text-3xl font-bold mb-5 text-gray-800 relative inline-block"
+                <h2 class="text-xl md:text-2xl lg:text-3xl font-bold mb-5 text-gray-800 relative inline-block"
                     :class="[langStore.langClass]">
                     {{ $t('home.product_categories') }}
                     <span class="absolute left-0 bottom-0 w-16 h-1 bg-green-500 rounded-full"></span>
                 </h2>
 
-                <!-- Only render Swiper when categories are loaded -->
                 <div v-if="!loading && categories.length">
-                    <!-- Custom Navigation Buttons -->
                     <div class="swiper-button-prev"></div>
                     <div class="swiper-button-next"></div>
 
-                    <Swiper :modules="[Navigation, Pagination]"
-                        :slides-per-view="2"
-                        :space-between="16"
-                        :breakpoints="{
-                            640: { slidesPerView: 3, spaceBetween: 16 },
-                            768: { slidesPerView: 4, spaceBetween: 20 },
-                            1024: { slidesPerView: 4, spaceBetween: 24 },
-                            1280: { slidesPerView: 6, spaceBetween: 24 }
-                        }"
-                        :loop="true"
-                        :navigation="{ prevEl: '.swiper-button-prev', nextEl: '.swiper-button-next' }"
-                        class="pt-5 pb-5"
-                    >
-                        <SwiperSlide v-for="category in categories" :key="category.id" class="overflow-visible">
-                            <router-link :to="`/category/${category.slug}`"
+                    <Swiper :modules="[Navigation, Pagination]" :slides-per-view="2" :space-between="16" :breakpoints="{
+                        640: { slidesPerView: 3, spaceBetween: 16 },
+                        768: { slidesPerView: 4, spaceBetween: 20 },
+                        1024: { slidesPerView: 4, spaceBetween: 24 },
+                        1280: { slidesPerView: 6, spaceBetween: 24 }
+                    }" :loop="true" :navigation="{ prevEl: '.swiper-button-prev', nextEl: '.swiper-button-next' }"
+                        class="pt-5 pb-5">
+                        <SwiperSlide v-for="(category, index) in loading ? Array(6) : categories" :key="index"
+                            class="overflow-visible">
+                            <router-link v-if="!loading" :to="`/category/${category.slug}`"
                                 class="bg-white rounded-lg p-4 text-center flex flex-col items-center hover:shadow-lg transition border-gray-300 border">
-                                <img :src="category.image" alt="" class="h-16 mx-auto mb-2 object-contain" />
+                                <img :src="category.image" alt="" class="h-16 mx-auto mb-2 object-contain" loading="lazy"/>
                                 <p class="text-sm font-medium text-gray-800">{{ category.name }}</p>
                             </router-link>
+
+                            <!-- Placeholder / Skeleton -->
+                            <div v-else
+                                class="bg-gray-200 rounded-lg p-4 h-32 animate-pulse flex items-center justify-center">
+                                <div class="w-16 h-16 bg-gray-300 rounded-full"></div>
+                            </div>
                         </SwiperSlide>
                     </Swiper>
                 </div>
 
                 <!-- Loading placeholder -->
                 <div v-else class="text-center py-10 text-gray-500">
-                    Loading categories...
+                    <svg class="animate-spin h-10 w-10 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                        </circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z">
+                        </path>
+                    </svg>
                 </div>
             </div>
         </section>
@@ -114,8 +119,17 @@
 
         <!-- How to Order Medicines Section -->
         <section class="mt-10 relative overflow-hidden rounded-xl fade-up">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center shadow-lg bg-green-100 p-6 rounded-xl">
-
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center shadow-lg bg-red-50 p-6 rounded-xl">
+                <div class="absolute inset-0 opacity-10 pointer-events-none">
+                    <svg class="w-full h-full" preserveAspectRatio="none">
+                        <defs>
+                            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                                <path d="M20 0 L0 0 0 20" fill="none" stroke="#FF0B55" stroke-width="0.5" />
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#grid)"></rect>
+                    </svg>
+                </div>
                 <!-- Left Column: Steps -->
                 <div class="md:col-span-8 flex flex-col justify-center">
                     <h2 class="text-2xl md:text-3xl font-bold mb-5 text-gray-800 relative inline-block"
@@ -124,8 +138,8 @@
                         <p v-for="(step, index) in tm('home.how_to_order.steps')" :key="index"
                             class="flex items-start gap-3 font-ws" :class="[langStore.langClass]">
                             <span
-                                class="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">{{
-                                index + 1 }}</span>
+                                class="bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">{{
+                                    index + 1 }}</span>
                             {{ step }}
                         </p>
                     </div>
@@ -144,7 +158,8 @@
         <section class="mt-10 relative featured-product-slider fade-up">
             <div class="category-slider">
                 <h2 class="text-2xl md:text-3xl font-bold mb-5 text-gray-800 relative inline-block"
-                    :class="[langStore.langClass]">{{ $t('home.featured_products') }}</h2>
+                    :class="[langStore.langClass]">{{ $t('home.featured_products') }}<span
+                        class="absolute left-0 bottom-0 w-16 h-1 bg-green-500 rounded-full"></span></h2>
 
                 <Swiper :modules="[Navigation, Pagination, Autoplay]" :slides-per-view="2" :space-between="16"
                     :breakpoints="{
@@ -167,7 +182,7 @@
         </section>
 
         <!-- Health Articles Section -->
-        <section class="my-12   fade-up">
+        <section class="my-12   fade-up hidden">
             <h2 class="text-2xl md:text-3xl font-bold mb-5 text-gray-800 relative inline-block"
                 :class="[langStore.langClass]">
                 {{ $t('home.health_articles') }}
@@ -185,8 +200,19 @@
             </Swiper>
         </section>
 
-        <section class="bg-green-50 py-12 md:py-16 rounded-lg my-10 fade-up">
+        <!-- Testimonials -->
+        <section class="bg-red-50 py-12 md:py-16 rounded-lg my-10 fade-up">
             <div class="container mx-auto px-6 md:px-12">
+                <div class="absolute inset-0 opacity-10 pointer-events-none">
+                    <svg class="w-full h-full" preserveAspectRatio="none">
+                        <defs>
+                            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                                <path d="M20 0 L0 0 0 20" fill="none" stroke="#FF0B55" stroke-width="0.5" />
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#grid)"></rect>
+                    </svg>
+                </div>
                 <!-- Heading -->
                 <div class="text-center mb-12">
                     <h2 class="text-2xl md:text-3xl font-bold mb-2 text-gray-800 relative inline-block"
@@ -230,7 +256,6 @@
             </div>
         </section>
 
-        <!-- About Us Section -->
         <About />
     </div>
 </template>
@@ -253,12 +278,8 @@ import {
     Autoplay
 } from 'swiper/modules'
 import ProductGridItem from '@/components/products/ProductGridItem.vue'
-import {
-    useI18n
-} from "vue-i18n";
-import {
-    useLanguageStore
-} from "@/stores/language";
+import { useI18n } from "vue-i18n";
+import { useLanguageStore } from "@/stores/language";
 import {
     computed,
     onMounted
@@ -346,7 +367,6 @@ const testimonials = [{
 
 onMounted(async () => {
     await fetchFeaturedProducts();
-    await fetchCategories();
 });
 </script>
 
@@ -384,6 +404,10 @@ onMounted(async () => {
     animation: fadeInUp 0.8s ease-out forwards;
 }
 
+.swiper-container {
+    aspect-ratio: 1400 / 480;
+}
+
 /* Custom Swiper Navigation Buttons */
 .swiper-button-prev,
 .swiper-button-next {
@@ -402,6 +426,30 @@ onMounted(async () => {
     cursor: pointer;
     z-index: 30;
     transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+
+    .swiper-button-prev,
+    .swiper-button-next {
+        width: 30px;
+        height: 30px;
+        top: 70%;
+    }
+
+    .swiper-button-prev::after,
+    .swiper-button-next::after {
+        font-size: 14px;
+        /* optional: smaller arrow icons */
+    }
+
+    .swiper-button-prev {
+        left: -10px !important;
+    }
+
+    .swiper-button-next {
+        right: -10px !important;
+    }
 }
 
 .swiper-button-prev:hover,

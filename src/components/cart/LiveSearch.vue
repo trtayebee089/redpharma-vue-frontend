@@ -50,7 +50,7 @@
         }
     })
 
-    const searchQuery = ref('')
+    const searchQuery = ref('x')
 
     const filteredProducts = computed(() => {
         if (!searchQuery.value || !products.value) return []

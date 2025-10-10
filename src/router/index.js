@@ -39,7 +39,7 @@ const routes = [
 
     { path: '/profile', name: 'Profile', component: Profile, meta: { title: 'Edit Profile - RedPharma BD', requiresAuth: true } }, 
     { path: '/orders', name: 'Orders', component: Orders, meta: { title: 'My Orders - RedPharma BD', requiresAuth: true } },
-    { path: '/orders/:orderId', name: 'Order Detail', component: OrderDetail, meta: { title: 'Order Detail - RedPharma BD', requiresAuth: true } },
+    { path: '/orders/:orderId', name: 'order-detail', component: OrderDetail, meta: { title: 'Order Detail - RedPharma BD', requiresAuth: true } },
     { path: '/membership', name: 'Membership', component: Membership, meta: { title: 'Membership - RedPharma BD', requiresAuth: true } },
     { path: '/settings', name: 'Settings', component: Settings, meta: { title: 'Settings - RedPharma BD', requiresAuth: true } }, //✅
     { path: '/help-center', name: 'HelpCenter', component: HelpCenter, meta: { title: 'Help Center (FAQ) - RedPharma BD' } },
@@ -61,14 +61,12 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const authStore = useAuthStore();
 
-    // Set page title
     if (to.meta.title) {
         document.title = to.meta.title;
     }
 
-    // Check authentication
     if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-        next({ path: '/' }); // redirect to Home if not logged in
+        next({ path: '/' });
     } else {
         next();
     }

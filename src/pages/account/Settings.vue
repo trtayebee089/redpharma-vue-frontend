@@ -1,9 +1,31 @@
 <template>
-    <div class="max-w-4xl mx-auto p-6 font-sans text-gray-800 space-y-6 pt-0">
+    <div class="max-w-4xl mx-auto p-6 font-sans text-gray-800 space-y-6 relative leading-relaxed fade-up mb-16">
         <!-- Page Header -->
-        <div class="fade-up">
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">Settings</h1>
-            <p class="text-gray-600">Manage your account preferences and security settings.</p>
+        <div
+            class="max-w-5xl mx-auto text-center leading-relaxed bg-green-100 rounded-lg p-6 relative overflow-hidden mb-6">
+            <!-- Decorative background pattern -->
+            <div class="absolute inset-0 opacity-10 pointer-events-none">
+                <svg class="w-full h-full" preserveAspectRatio="none">
+                    <defs>
+                        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                            <path d="M20 0 L0 0 0 20" fill="none" stroke="#013302" stroke-width="1.0" />
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#grid)"></rect>
+                </svg>
+            </div>
+
+            <!-- Title -->
+            <h1 class="text-3xl md:text-4xl font-bold text-green-600 leading-relaxed mb-2 relative z-10"
+                :class="langStore.langClass">
+                Settings
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="text-gray-700 text-lg md:text-xl leading-relaxed relative z-10 max-w-2xl mx-auto"
+                :class="langStore.langClass">
+                Manage your account preferences and security settings.
+            </p>
         </div>
 
         <!-- Language Change -->

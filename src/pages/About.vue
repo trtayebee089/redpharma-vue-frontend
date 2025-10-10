@@ -1,9 +1,9 @@
 <template>
-    <section class="bg-gray-50 text-gray-800 space-y-12 pt-6">
+    <section class="bg-white text-gray-800 space-y-12 pt-6">
 
         <!-- Hero Section -->
         <div
-            class="max-w-5xl mx-auto space-y-4 text-center leading-relaxed bg-green-50 rounded-lg p-6 relative overflow-hidden">
+            class="max-w-6xl mx-auto space-y-4 text-center leading-relaxed bg-green-100 rounded-lg p-6 relative overflow-hidden">
             <div class="absolute inset-0 opacity-10 pointer-events-none">
                 <svg class="w-full h-full" preserveAspectRatio="none">
                     <defs>
@@ -14,9 +14,9 @@
                     <rect width="100%" height="100%" fill="url(#grid)"></rect>
                 </svg>
             </div>
-            <h1 class="text-3xl md:text-4xl font-bold text-green-600 leading-relaxed font-wb"
+            <h1 class="text-xl sm:text-xl md:text-4xl font-bold text-green-600 leading-relaxed font-wb"
                 :class="[langStore.langClass]">{{ $t('about.title') }}</h1>
-            <p class="text-gray-700 text-lg md:text-xl leading-relaxed font-ws" :class="[langStore.langClass]">
+            <p class="text-gray-700 text-md md:text-lg leading-relaxed font-ws" :class="[langStore.langClass]">
                 {{ $t('about.shortDescription') }}</p>
         </div>
 
@@ -28,18 +28,18 @@
 
                 <!-- Section Heading -->
                 <h2 class="text-2xl font-semibold text-gray-800 font-wb" :class="[langStore.langClass]">
-                    {{ section . heading }}</h2>
+                    {{ section.heading }}</h2>
 
                 <!-- List Type -->
                 <ul v-if="section.type === 'list'" class="list-decimal list-inside space-y-2 text-gray-700">
-                    <li v-for="(item, i) in section.items" :key="i"
-                        :class="[langStore.langClass, 'font-ws']">{{ item }}</li>
+                    <li v-for="(item, i) in section.items" :key="i" :class="[langStore.langClass, 'font-ws']">{{ item }}
+                    </li>
                 </ul>
 
                 <!-- Paragraphs Type -->
                 <div v-else-if="section.type === 'paragraphs'" class="space-y-4 text-gray-700">
-                    <p v-for="(item, i) in section.items" :key="i"
-                        :class="[langStore.langClass, 'font-ws']">{{ item }}</p>
+                    <p v-for="(item, i) in section.items" :key="i" :class="[langStore.langClass, 'font-ws']">{{ item }}
+                    </p>
                 </div>
 
             </div>
@@ -49,7 +49,7 @@
 
         <!-- Services Section -->
         <div class="max-w-6xl mx-auto space-y-6 leading-relaxed">
-            <h2 class="text-2xl font-semibold text-gray-800 text-center font-wb" :class="[langStore.langClass]">
+            <h2 class="text-2xl font-semibold text-gray-800 text-center font-wb relative" :class="[langStore.langClass]">
                 {{ $t('about.services.title') }}</h2>
             <!-- Services Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-4">
@@ -57,29 +57,23 @@
                     class="bg-white p-4 sm:p-5 md:p-6 rounded-lg shadow hover:shadow-lg transition border border-green-200 flex flex-col justify-between">
                     <h3 class="text-green-600 font-semibold text-lg sm:text-xl md:text-lg font-wb mb-2"
                         :class="[langStore.langClass]">
-                        {{ service . title }}
+                        {{ service.title }}
                     </h3>
                     <p class="text-gray-700 text-sm sm:text-base md:text-sm mt-1 font-ws"
                         :class="[langStore.langClass]">
-                        {{ service . description }}
+                        {{ service.description }}
                     </p>
                 </div>
             </div>
         </div>
 
         <!-- Best Selling Medicines Section -->
-        <div class="max-w-6xl mx-auto leading-relaxed">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center font-wb" :class="[langStore.langClass]">
-                {{ $t('about.best_selling.title') }}</h2>
-            <p class="text-gray-700 text-sm text-center">
-                Sergel 20 mg Capsule | Napa 500 mg Tablet | Ceevit 250 mg Chewable Tablet | Monas 10 10 mg Tablet |
-                Pantonix 20 mg Tablet | Ecosprin 75 mg Tablet | SkinO Hydration Boost Gel 70ml | SkinO Daily Gel
-                Moisturizer 70ml | Freyias Aloe Vera Gel 200ml | Caplino Niacinamide Serum 10% 30ml | SkinO Tea Tree
-                Soothing Shower Gel 220ml | The Ordinary Niacinamide 10% Zinc 1% 30ml | Cerave Acne Control Cleanser
-                237ml | APLB Glutathione Niacinamide Body Lotion 300ml | Dermamate Melasma Solution Facewash 100ml |
-                Deconstruct Gel Sunscreen SPF 55+ PA+++ 50g | Pond's Hydra Miracle Hyaluronic Gel 100ml | Axis-Y Dark
-                Spot Correcting Glow Serum 5ml | Pantene Miracles Moisture & Power Bond Repair Shampoo 440ml | Simple
-                Refreshing Facial Wash 150ml
+        <div class="max-w-6xl mx-auto leading-relaxed text-center">
+            <h2 class="text-xl md:text-2xl lg:text-3xl font-bold mb-5 text-gray-800 relative inline-block" :class="[langStore.langClass]">
+                {{ $t('about.best_selling.title') }}
+            </h2>
+            <p class="text-gray-700 text-sm md:text-lg text-center">
+                {{bestSelling.map(item => `${item.name}`.trim()).join(' | ')}}
             </p>
         </div>
 
@@ -87,31 +81,31 @@
 </template>
 
 <script setup>
-    import {
-        useI18n
-    } from "vue-i18n";
-    import {
-        useLanguageStore
-    } from "@/stores/language";
-    const {
-        t,
-        tm
-    } = useI18n();
-    const langStore = useLanguageStore();
+import { useI18n } from "vue-i18n";
+import { useLanguageStore } from "@/stores/language";
+import { useProducts } from "@/composables/useProducts";
+import { computed, onMounted } from "vue";
+const { bestSelling, fetchBestSellingProducts, loading } = useProducts();
+const { t, tm } = useI18n();
+const langStore = useLanguageStore();
+
+onMounted(async () => {
+    await fetchBestSellingProducts();
+});
 </script>
 
 <style scoped>
-    section>div {
-        opacity: 0;
-        transform: translateY(20px);
-        animation: fadeInUp 0.8s forwards;
-        animation-delay: 0.2s;
-    }
+section>div {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s forwards;
+    animation-delay: 0.2s;
+}
 
-    @keyframes fadeInUp {
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
+}
 </style>

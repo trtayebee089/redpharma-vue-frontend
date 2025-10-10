@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import { useCartStore } from '@/stores/cart';
+import { useAuthStore } from '@/stores/auth';
 import api from "@/api/config";
 import axios from 'axios';
 
@@ -39,6 +40,10 @@ export function useCheckout() {
         successMessage.value = null;
 
         try {
+            const authStore = useAuthStore();
+            const membershipDiscountRate = authStore.membershipInfo?.discount || 0;
+            const discountAmount = (cartStore.cartSubtotal * membershipDiscountRate) / 100;
+
             const payload = {
                 user_id: 1,
                 warehouse_id: checkoutForm.warehouseId,
@@ -54,6 +59,10 @@ export function useCheckout() {
                 subtotal: cartStore.cartSubtotal,
                 shipping_cost: cartStore.shippingRate,
                 total: cartStore.totalAmount,
+                order_discount_type: membershipDiscountRate > 0 ? 'percentage' : null,
+                order_discount_value: membershipDiscountRate || 0,
+                discount_value: discountAmount || 0,
+                discount_applied: cartStore.applyDiscount,
                 items: cartStore.items.map(item => ({
                     product_id: item.id,
                     qty: item.quantity,
@@ -66,11 +75,10 @@ export function useCheckout() {
                 uniqueItems: cartStore.uniqueItems,
                 total_qty: cartStore.totalQty
             };
-            
-            const response = await axios.post('http://localhost:8000/api/checkout', payload)
+
+            const response = await axios.post('http://localhost:8000/api/checkout', payload);
 
             successMessage.value = 'Order placed successfully!';
-            
             cartStore.clearCart();
 
             return response.data;

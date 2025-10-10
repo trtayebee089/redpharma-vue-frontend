@@ -21,22 +21,8 @@
         <section class="relative fade-up flex flex-col md:flex-row gap-6 mt-10 transform transition-transform duration-300" v-if="category">
             <!-- Main Content -->
             <div class="flex-1">
-                <!-- Mobile Filters -->
-                <!-- <div class="flex justify-between items-center mb-4 space-x-2">
-                    <button @click="showFilters = true" class="px-4 py-2 bg-green-700 text-white rounded w-auto">
-                        Filter
-                    </button>
-                    <select v-model="sortOption" class="w-auto border px-3 py-2 rounded">
-                        <option value="default">Sort By</option>
-                        <option value="priceAsc">Price: Low to High</option>
-                        <option value="priceDesc">Price: High to Low</option>
-                        <option value="nameAsc">Name: A to Z</option>
-                        <option value="nameDesc">Name: Z to A</option>
-                    </select>
-                </div> -->
-
                 <!-- Products Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                     <ProductGridItem v-for="product in filteredProducts" :key="product.id"
                         :product="product" />
                 </div>
