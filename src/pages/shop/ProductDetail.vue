@@ -1,18 +1,15 @@
 <template>
-    <section v-if="productDetail" class="bg-gray-50 text-gray-800 space-y-12 px-4 md:px-8 lg:px-16 pt-6">
+    <section v-if="productDetail" class="bg-gray-50 text-gray-800 space-y-12 px-0 md:px-8 lg:px-16 pt-6">
 
         <!-- Section 1: Product Info -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-lg shadow border border-gray-200">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-4 rounded-lg shadow border border-gray-200 lg:p-6">
             <!-- Left: Product Image -->
-            <div class="relative w-full max-w-md aspect-[16/9] rounded-lg overflow-hidden flex items-center justify-center bg-gradient-to-br"
-                :class="defaultImagePlaceHolder.type === 'category'
-                    ? 'from-gray-200 via-gray-100 to-gray-300'
-                    : 'from-gray-200 via-gray-300 to-gray-200'">
+            <div class="relative w-full max-w-md aspect-[16/9] rounded-lg overflow-hidden flex items-center justify-center bg-gradient-to-br from-gray-200 via-gray-300 to-gray-200 md:from-gray-200 md:via-gray-300 md:to-gray-200">
                 <img :src="defaultImagePlaceHolder.url" :alt="productDetail.name" loading="lazy" :class="[
                     'object-contain',
                     defaultImagePlaceHolder.type === 'category'
-                        ? 'w-20 h-20'   // smaller for category icon
-                        : 'w-full h-full' // full for product image
+                        ? 'w-20 h-20 md:w-20 md:h-20'
+                        : 'w-full h-auto md:w-full md:h-full'
                 ]" />
             </div>
 
@@ -21,7 +18,8 @@
                 <!-- Product Info -->
                 <div>
                     <!-- Name -->
-                    <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight tracking-tight">
+                    <h1
+                        class="text-xl md:text-xl lg:text-2xl xl:text-4xl font-extrabold text-gray-900 leading-tight tracking-tight">
                         {{ productDetail.name }}
                     </h1>
 
@@ -53,36 +51,35 @@
                         </span>
                     </div>
 
-                    <!-- Quantity & Cart Controls -->
-                    <div class="flex items-center justify-start gap-5 mt-6">
+                    <div class="flex flex-wrap items-center gap-4 mt-6">
                         <!-- Quantity Controls -->
-                        <div class="inline-flex items-center border border-gray-300 rounded-md bg-gray-50 px-2 py-1 shadow-sm hover:shadow transition-all duration-200">
+                        <div
+                            class="inline-flex items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-sm">
+                            <!-- Decrease -->
                             <button @click="decreaseQty" :disabled="quantity <= 1 || isStockOut"
-                                class="w-9 h-9 flex items-center justify-center rounded-md bg-gray-200 hover:bg-red-500 hover:text-white text-gray-700 disabled:bg-gray-300 disabled:text-gray-500 transition">
+                                class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
                                 <i class="pi pi-minus"></i>
                             </button>
 
-                            <span class="w-10 text-center font-semibold text-gray-800 text-lg">
-                                {{ quantity }}
-                            </span>
+                            <!-- Quantity Input -->
+                            <input type="number" v-model.number="quantity" min="1"
+                                class="w-16 text-center text-gray-800 font-medium bg-white border-l border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all rounded-none" />
 
+                            <!-- Increase -->
                             <button @click="increaseQty" :disabled="isStockOut"
-                                class="w-9 h-9 flex items-center justify-center rounded-md bg-gray-200 hover:bg-green-500 hover:text-white text-gray-700 disabled:bg-gray-300 disabled:text-gray-500 transition">
+                                class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-green-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
                                 <i class="pi pi-plus"></i>
                             </button>
                         </div>
 
                         <!-- Add to Cart -->
-                        <button @click="addToCart(productDetail)" :disabled="isStockOut" :class="[
-                            'px-8 py-3 rounded-md font-semibold text-white shadow-md transition-all duration-200 focus:ring-2 focus:ring-offset-1',
-                            isStockOut
-                                ? 'bg-red-600 cursor-not-allowed hover:bg-red-700 focus:ring-red-300'
-                                : 'bg-green-600 hover:bg-green-700 focus:ring-green-400'
-                            ]">
-                            <span v-if="!isStockOut">🛒 Add to Cart</span>
+                        <button @click="addToCart(productDetail)" :disabled="isStockOut"
+                            class="flex-1 md:flex-none flex items-center justify-center whitespace-nowrap px-6 py-3 rounded-md font-semibold text-white shadow-md transition-all duration-200 focus:ring-2 focus:ring-offset-1 bg-green-600 hover:bg-green-700 focus:ring-green-400 disabled:bg-red-600 disabled:cursor-not-allowed disabled:hover:bg-red-700">
+                            <span v-if="!isStockOut">Add to Cart</span>
                             <span v-else>❌ Unavailable</span>
                         </button>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -105,7 +102,7 @@
             </h2>
 
             <div v-if="alternativeProducts.length"
-                class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 <div v-for="alt in alternativeProducts" :key="alt.id" class="overflow-visible">
                     <ProductGridItem :product="alt" />
                 </div>

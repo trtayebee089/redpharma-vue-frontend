@@ -32,7 +32,7 @@
                         <ul>
                             <li v-for="product in filteredProducts" :key="product.id"
                                 class="px-4 py-3 hover:bg-red-100 flex justify-between items-center gap-3">
-                                <div class="flex-1">
+                                <router-link :to="`/products/${product.slug}`" class="flex-1 flex flex-col gap-1">
                                     <p class="font-medium text-gray-800">{{ capitalizeWords(product.name) }}</p>
                                     <p class="text-sm text-gray-600">
                                         Brand: {{ product.brand.title }} | Category:
@@ -42,7 +42,7 @@
                                         {{ product.promotion_price ? product.promotion_price.toFixed(2) :
                                             product.price.toFixed(2) }} Tk
                                     </p>
-                                </div>
+                                </router-link>
 
                                 <button @click="addToCart(product)"
                                     class="relative inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white font-semibold text-sm rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out hover:bg-red-700 hover:shadow-lg hover:border-red-800">
@@ -153,7 +153,7 @@
                     <ul>
                         <li v-for="product in filteredProducts" :key="product.id"
                             class="px-4 py-3 hover:bg-gray-50 flex justify-between items-center gap-3">
-                            <div class="flex-1">
+                            <router-link :to="`/products/${product.slug}`" class="flex-1 flex flex-col gap-1">
                                 <p class="font-medium text-gray-800">{{ product.name }}</p>
                                 <p class="text-sm text-gray-600">
                                     {{ product.brand?.title }} <br>
@@ -163,7 +163,7 @@
                                     {{ product.promotion_price ? product.promotion_price.toFixed(2) :
                                         product.price.toFixed(2) }} Tk
                                 </p>
-                            </div>
+                            </router-link>
                             <button @click="addToCart(product)"
                                 class="relative inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white font-semibold text-sm rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out hover:bg-red-700 hover:shadow-lg">
                                 Add to Cart
@@ -223,6 +223,7 @@ import UserDropdown from "@/components/auth/UserDropdown.vue";
 import { useLanguageStore } from "@/stores/language";
 import RegistrationModal from "@/components/auth/RegistrationModal.vue";
 import { useProducts } from "@/composables/useProducts";
+import { usePush } from "notivue"
 
 import usFlag from '@/assets/icons/us-flag.png';
 import bdFlag from '@/assets/icons/bd-flag.png';
@@ -252,6 +253,7 @@ const showRegister = ref(false);
 const isMenuOpen = ref(false)
 const isSticky = ref(false)
 const cartStore = useCartStore();
+const push = usePush()
 
 const searchQuery = ref("");
 const placeholders = computed(() => tm("header.searchPlaceHolders"));
@@ -273,7 +275,6 @@ function capitalizeWords(text) {
 function openRegister() {
     showLoginModal.value = false;
     showRegister.value = true;
-    console.log("Register Modal: " + showRegister.value) // getting this log
 }
 
 function typeEffect() {
@@ -346,6 +347,9 @@ const addToCart = (product) => {
         ...product,
         quantity: 1
     });
+
+    searchQuery.value = ""
+    push.success(`${ product.name} added to cart!`)
 };
 
 onMounted(() => {

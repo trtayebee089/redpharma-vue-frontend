@@ -1,6 +1,5 @@
 <template>
-    <div
-        class="bg-white rounded-lg shadow hover:shadow-lg transition flex flex-col h-full relative border border-gray-200">
+    <div class="bg-white rounded-lg shadow hover:shadow-lg transition flex flex-col h-full relative border border-gray-200">
         <!-- Offer Badge -->
         <div v-if="product.offers && !isStockOut"
             class="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full font-semibold z-10">
