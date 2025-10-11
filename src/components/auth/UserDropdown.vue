@@ -76,7 +76,6 @@
     // close on outside click
     const handleClickOutside = (e) => {
         if (!e.target.closest(".dropdown-wrapper")) {
-            console.log("Clicked outside dropdown. Closing.");
             open.value = false;
         }
     };

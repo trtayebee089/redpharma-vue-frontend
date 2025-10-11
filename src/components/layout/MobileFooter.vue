@@ -42,7 +42,6 @@
             router.push("/profile");
         } else {
             showLoginModal.value = true;
-            console.log("Login Modal Open");
         }
     };
 </script>

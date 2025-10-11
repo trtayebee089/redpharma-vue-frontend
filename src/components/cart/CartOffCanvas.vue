@@ -35,8 +35,7 @@
 
                     <!-- Left: Image + Details -->
                     <div class="flex items-center gap-3 flex-1 min-w-0 w-full sm:w-auto relative">
-                        <img v-if="item.image" :src="item.image" alt="product"
-                            class="w-16 h-16 object-cover rounded-lg border border-gray-200" />
+                        <img v-if="item.image" :src="item.image" alt="product" class="w-16 h-16 object-cover rounded-lg border border-gray-200" />
 
                         <div class="flex-1 min-w-0">
                             <p class="font-medium text-gray-800 text-sm truncate">{{ item.name }}</p>
@@ -53,20 +52,21 @@
                             </button>
 
                             <!-- Quantity Controls -->
-                            <div class="flex items-center space-x-2 mt-2">
-                                <button @click="decreaseQty(item)" :disabled="item.quantity <= 1" class="w-6 h-6 flex items-center justify-center border rounded-sm
-                        disabled:bg-gray-200 disabled:cursor-not-allowed disabled:border-gray-400 disabled:text-gray-700
-                        text-green-700 bg-green-200 hover:bg-green-400 hover:text-white border-green-400 transition">
+                            <div
+                                class="inline-flex items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-sm mt-2">
+                                <!-- Decrease -->
+                                <button @click="decreaseQty" :disabled="quantity <= 1 || isStockOut"
+                                    class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
                                     <i class="pi pi-minus"></i>
                                 </button>
 
-                                <span
-                                    class="w-6 h-6 flex items-center justify-center border border-gray-300 text-gray-800 rounded text-sm">
-                                    {{ item.quantity }}
-                                </span>
+                                <!-- Quantity Input -->
+                                <input type="number" v-model.number="item.quantity" min="1"
+                                    class="w-12 text-center text-gray-800 font-medium bg-white border-l border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all rounded-none" />
 
-                                <button @click="increaseQty(item)"
-                                    class="w-6 h-6 flex items-center justify-center bg-green-200 border border-green-400 rounded-sm text-green-600 text-sm hover:bg-green-400 hover:text-white transition">
+                                <!-- Increase -->
+                                <button @click="increaseQty" :disabled="isStockOut"
+                                    class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-green-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
                                     <i class="pi pi-plus"></i>
                                 </button>
                             </div>

@@ -127,7 +127,6 @@ onMounted(async () => {
     if (authStore.isAuthenticated) {
         try {
             order.value = await authStore.fetchOrderDetail(orderId);
-            console.log(order.value)
         } catch (err) {
             error.value = "Failed to fetch order details.";
         } finally {

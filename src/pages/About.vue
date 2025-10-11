@@ -3,7 +3,7 @@
 
         <!-- Hero Section -->
         <div
-            class="max-w-6xl mx-auto space-y-4 text-center leading-relaxed bg-green-100 rounded-lg p-6 relative overflow-hidden">
+            class="max-w-6xl mx-auto text-center leading-relaxed bg-green-100 rounded-lg p-6 relative overflow-hidden">
             <div class="absolute inset-0 opacity-10 pointer-events-none">
                 <svg class="w-full h-full" preserveAspectRatio="none">
                     <defs>
@@ -66,17 +66,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Best Selling Medicines Section -->
-        <div class="max-w-6xl mx-auto leading-relaxed text-center">
-            <h2 class="text-xl md:text-2xl lg:text-3xl font-bold mb-5 text-gray-800 relative inline-block" :class="[langStore.langClass]">
-                {{ $t('about.best_selling.title') }}
-            </h2>
-            <p class="text-gray-700 text-sm md:text-lg text-center">
-                {{bestSelling.map(item => `${item.name}`.trim()).join(' | ')}}
-            </p>
-        </div>
-
     </section>
 </template>
 
@@ -85,13 +74,8 @@ import { useI18n } from "vue-i18n";
 import { useLanguageStore } from "@/stores/language";
 import { useProducts } from "@/composables/useProducts";
 import { computed, onMounted } from "vue";
-const { bestSelling, fetchBestSellingProducts, loading } = useProducts();
 const { t, tm } = useI18n();
 const langStore = useLanguageStore();
-
-onMounted(async () => {
-    await fetchBestSellingProducts();
-});
 </script>
 
 <style scoped>

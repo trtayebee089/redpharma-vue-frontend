@@ -68,19 +68,19 @@
                         <h3 class="text-2xl font-semibold text-gray-800 mb-6">Contact Information</h3>
                         <p class="flex items-center space-x-3 text-gray-700 mb-3">
                             <i class="pi pi-map-marker text-green-500 text-lg"></i>
-                            <span>123 Main Street, City, Country</span>
+                            <span>303, Rajshahi 6000</span>
                         </p>
                         <p class="flex items-center space-x-3 text-gray-700 mb-3">
                             <i class="pi pi-phone text-green-500 text-lg"></i>
-                            <span>+1 234 567 890</span>
+                            <span>+8801997202010</span>
                         </p>
                         <p class="flex items-center space-x-3 text-gray-700 mb-3">
                             <i class="pi pi-envelope text-green-500 text-lg"></i>
-                            <span>support@zonhack.com</span>
+                            <span>support@redpharmabd.com</span>
                         </p>
                         <p class="flex items-center space-x-3 text-gray-700">
                             <i class="pi pi-globe text-green-500 text-lg"></i>
-                            <span>www.zonhack.com</span>
+                            <span>www.redpharmabd.com</span>
                         </p>
                     </div>
                 </div>
@@ -111,7 +111,7 @@
 
     // Replace with your Google Maps embed link
     const googleMapUrl =
-        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.123456789!2d-122.41941508468237!3d37.77492927975909!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80858064b9f12345%3A0xabcdef1234567890!2sYour%20Company!5e0!3m2!1sen!2sus!4v1692936723456!5m2!1sen!2sus"
+        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3634.2641650271953!2d88.57891957591089!3d24.372112164623783!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39fbefbdead95ef9%3A0xc10466dbf1d1af45!2sRed%20Pharma!5e0!3m2!1sen!2sbd!4v1760179152447!5m2!1sen!2sbd"
 
     const submitForm = () => {
         alert(

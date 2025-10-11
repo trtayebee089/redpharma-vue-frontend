@@ -114,6 +114,7 @@ const messages = {
             },
             product_categories: "Product Categories",
             featured_products: "Featured Products",
+            best_selling: "Best Selling Products",
             health_articles: "Health Articles",
         },
         about: {
@@ -217,6 +218,10 @@ const messages = {
                 contact: "Get in Touch",
                 newsletter: "Subscribe to Our Newsletter",
             }
+        },
+        redundreturn: {
+            title: "Refund & Returns Policy",
+            description: "Last updated: October 2025"
         },
         add_to_cart: "Add to Cart",
         read_more: "Read More",

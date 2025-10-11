@@ -33,8 +33,6 @@ export function useCategories() {
                 },
             });
 
-            console.log(res)
-
             category.value = res.data.data;
             products.value = res.data.products?.data || res.data.products || [];
             pagination.value = res.data.products || null;

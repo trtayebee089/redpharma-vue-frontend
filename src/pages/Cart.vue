@@ -73,19 +73,23 @@
 
                                     <!-- Quantity -->
                                     <td class="px-4 py-3 text-center">
-                                        <div class="inline-flex items-center space-x-2 bg-gray-50 px-2 py-1 rounded-md">
-                                            <button @click="decreaseQty(item)" :disabled="item.quantity <= 1"
-                                                class="w-6 h-6 flex items-center justify-center text-gray-700 bg-gray-200 hover:bg-green-400 hover:text-white rounded border border-gray-300 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition">
-                                                -
+                                        <div
+                                            class="inline-flex items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-sm">
+                                            <!-- Decrease -->
+                                            <button @click="decreaseQty" :disabled="quantity <= 1 || isStockOut"
+                                                class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
+                                                <i class="pi pi-minus"></i>
                                             </button>
 
-                                            <input type="number" v-model.number="item.quantity" min="1"
-                                                @change="updateQty(item)"
-                                                class="w-12 text-center text-gray-800 font-medium bg-white border border-gray-300 rounded focus:ring-2 focus:ring-green-400 focus:outline-none" />
+                                            <!-- Quantity Input -->
+                                            <input type="number" v-model.number="item.
+                                                quantity" min="1"
+                                                class="w-16 text-center text-gray-800 font-medium bg-white border-l border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all rounded-none" />
 
-                                            <button @click="increaseQty(item)"
-                                                class="w-6 h-6 flex items-center justify-center text-gray-700 bg-gray-200 hover:bg-green-400 hover:text-white rounded border border-gray-300 transition">
-                                                +
+                                            <!-- Increase -->
+                                            <button @click="increaseQty" :disabled="isStockOut"
+                                                class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-green-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
+                                                <i class="pi pi-plus"></i>
                                             </button>
                                         </div>
                                     </td>
@@ -167,7 +171,7 @@
 
                             <!-- Quantity Controls -->
                             <div class="flex items-center justify-between mt-4">
-                                <div
+                                <!-- <div
                                     class="inline-flex items-center space-x-2 bg-gray-50 px-3 py-1 rounded-md border border-gray-200">
                                     <button @click="decreaseQty(item)" :disabled="item.quantity <= 1"
                                         class="w-8 h-8 flex items-center justify-center text-gray-700 bg-gray-200 hover:bg-green-400 hover:text-white rounded border border-gray-300 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition">-</button>
@@ -176,6 +180,25 @@
                                             quantity }}</span>
                                     <button @click="increaseQty(item)"
                                         class="w-8 h-8 flex items-center justify-center text-gray-700 bg-gray-200 hover:bg-green-400 hover:text-white rounded border border-gray-300 transition">+</button>
+                                </div> -->
+                                <div
+                                    class="inline-flex items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-sm">
+                                    <!-- Decrease -->
+                                    <button @click="decreaseQty" :disabled="quantity <= 1 || isStockOut"
+                                        class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
+                                        <i class="pi pi-minus"></i>
+                                    </button>
+
+                                    <!-- Quantity Input -->
+                                    <input type="number" v-model.number="item.
+                                        quantity" min="1"
+                                        class="w-16 text-center text-gray-800 font-medium bg-white border-l border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all rounded-none" />
+
+                                    <!-- Increase -->
+                                    <button @click="increaseQty" :disabled="isStockOut"
+                                        class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-green-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
+                                        <i class="pi pi-plus"></i>
+                                    </button>
                                 </div>
                                 <span class="text-gray-700 font-medium">{{ (Number(item.offerPrice ?? item.price) || 0)
                                     *

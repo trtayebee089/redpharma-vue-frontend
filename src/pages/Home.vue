@@ -39,7 +39,8 @@
                             class="overflow-visible">
                             <router-link v-if="!loading" :to="`/category/${category.slug}`"
                                 class="bg-white rounded-lg p-4 text-center flex flex-col items-center hover:shadow-lg transition border-gray-300 border">
-                                <img :src="category.image" alt="" class="h-16 mx-auto mb-2 object-contain" loading="lazy"/>
+                                <img :src="category.image" alt="" class="h-16 mx-auto mb-2 object-contain"
+                                    loading="lazy" />
                                 <p class="text-sm font-medium text-gray-800">{{ category.name }}</p>
                             </router-link>
 
@@ -117,43 +118,6 @@
             </a>
         </section>
 
-        <!-- How to Order Medicines Section -->
-        <section class="mt-10 relative overflow-hidden rounded-xl fade-up">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center shadow-lg bg-red-50 p-6 rounded-xl">
-                <div class="absolute inset-0 opacity-10 pointer-events-none">
-                    <svg class="w-full h-full" preserveAspectRatio="none">
-                        <defs>
-                            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                                <path d="M20 0 L0 0 0 20" fill="none" stroke="#FF0B55" stroke-width="0.5" />
-                            </pattern>
-                        </defs>
-                        <rect width="100%" height="100%" fill="url(#grid)"></rect>
-                    </svg>
-                </div>
-                <!-- Left Column: Steps -->
-                <div class="md:col-span-8 flex flex-col justify-center">
-                    <h2 class="text-2xl md:text-3xl font-bold mb-5 text-gray-800 relative inline-block"
-                        :class="[langStore.langClass]">{{ t('home.how_to_order.title') }}</h2>
-                    <div class="space-y-4 text-gray-700">
-                        <p v-for="(step, index) in tm('home.how_to_order.steps')" :key="index"
-                            class="flex items-start gap-3 font-ws" :class="[langStore.langClass]">
-                            <span
-                                class="bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold">{{
-                                    index + 1 }}</span>
-                            {{ step }}
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Right Column: Image -->
-                <div class="md:col-span-4 flex items-center justify-center">
-                    <img :src="orderMedicineImg" alt="Order Medicines"
-                        class="rounded-lg shadow-lg w-full h-full object-cover">
-                </div>
-
-            </div>
-        </section>
-
         <!-- Products Slider -->
         <section class="mt-10 relative featured-product-slider fade-up">
             <div class="category-slider">
@@ -180,6 +144,99 @@
 
             </div>
         </section>
+
+        <!-- How to Order Medicines Section -->
+        <section class="mt-10 relative overflow-hidden rounded-xl fade-up">
+            <div
+                class="grid grid-cols-1 md:grid-cols-12 gap-6 shadow-lg bg-red-50 pb-0 p-6 py-4 rounded-xl relative items-center">
+                <div class="absolute inset-0 opacity-10 pointer-events-none">
+                    <svg class="w-full h-full" preserveAspectRatio="none">
+                        <defs>
+                            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                                <path d="M20 0 L0 0 0 20" fill="none" stroke="#FF0B55" stroke-width="0.5" />
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#grid)"></rect>
+                    </svg>
+                </div>
+
+                <!-- Left Column: Steps -->
+                <div class="md:col-span-8 flex flex-col justify-center">
+                    <h2 class="text-2xl md:text-3xl font-bold mb-4 text-gray-800 relative inline-block"
+                        :class="[langStore.langClass]">
+                        {{ t('home.how_to_order.title') }}
+                    </h2>
+                    <div class="space-y-3 text-gray-700">
+                        <p v-for="(step, index) in tm('home.how_to_order.steps')" :key="index"
+                            class="flex items-start gap-3 font-ws text-base leading-relaxed"
+                            :class="[langStore.langClass]">
+                            <span
+                                class="bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-semibold shrink-0">
+                                {{ index + 1 }}
+                            </span>
+                            {{ step }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right Column: Image -->
+                <div class="md:col-span-4 flex items-center justify-center">
+                    <img :src="orderMedicineImg" alt="Order Medicines" class="max-h-[320px] w-auto object-contain"
+                        loading="lazy" />
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Slider -->
+        <section class="mt-10 relative featured-product-slider fade-up">
+            <div class="category-slider">
+                <h2 class="text-2xl md:text-3xl font-bold mb-5 text-gray-800 relative inline-block"
+                    :class="[langStore.langClass]">{{ $t('home.best_selling') }}<span
+                        class="absolute left-0 bottom-0 w-16 h-1 bg-green-500 rounded-full"></span></h2>
+
+                <Swiper :modules="[Navigation, Pagination, Autoplay]" :slides-per-view="2" :space-between="16"
+                    :breakpoints="{
+                        0: { slidesPerView: 1, spaceBetween: 16 },
+                        640: { slidesPerView: 2, spaceBetween: 16 },
+                        768: { slidesPerView: 3, spaceBetween: 20 },
+                        1024: { slidesPerView: 3, spaceBetween: 24 },
+                        1280: { slidesPerView: 5, spaceBetween: 24 }
+                    }" :loop="true" :autoplay="{
+                        delay: 2500,
+                        disableOnInteraction: false,
+                    }" :navigation="{ prevEl: '.swiper-button-prev', nextEl: '.swiper-button-next' }"
+                    class="pb-4 pt-5">
+                    <SwiperSlide v-for="product in bestSelling" :key="product.id" class="overflow-visible">
+                        <ProductGridItem :product="product" />
+                    </SwiperSlide>
+                </Swiper>
+
+            </div>
+        </section>
+
+        <!-- Featured Products Section -->
+        <!-- <section class="mt-10 relative fade-up">
+            <div v-if="!loading && categories.length" v-for="(category, index) in categories" :key="index" class="mb-12 category-slider">
+                <h2 class="text-2xl md:text-3xl font-bold mb-5 text-gray-800 relative inline-block">
+                    {{ category.title }}
+                    <span class="absolute left-0 bottom-0 w-16 h-1 bg-green-500 rounded-full"></span>
+                </h2>
+
+                <Swiper :modules="[Navigation, Pagination, Autoplay]" :slides-per-view="2" :space-between="16"
+                    :breakpoints="{
+                        0: { slidesPerView: 1, spaceBetween: 16 },
+                        640: { slidesPerView: 2, spaceBetween: 16 },
+                        768: { slidesPerView: 3, spaceBetween: 20 },
+                        1024: { slidesPerView: 3, spaceBetween: 24 },
+                        1280: { slidesPerView: 5, spaceBetween: 24 }
+                    }" :loop="true" :autoplay="{ delay: 2500, disableOnInteraction: false }" class="pb-4 pt-5">
+                    <SwiperSlide v-for="product in categoryProducts[category.slug]" :key="product.id"
+                        class="overflow-visible">
+                        <ProductGridItem :product="product" />
+                    </SwiperSlide>
+                </Swiper>
+            </div>
+        </section> -->
 
         <!-- Health Articles Section -->
         <section class="my-12   fade-up hidden">
@@ -270,7 +327,7 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 import 'swiper/css/autoplay';
-import orderMedicineImg from '../assets/images/order-medicine.png'
+import orderMedicineImg from '../assets/images/4307049.png'
 import BlogGridItem from "../components/blog/BlogGridItem.vue";
 import {
     Pagination,
@@ -299,11 +356,14 @@ const {
     categories,
     loading,
     error,
-    fetchCategories
+    fetchCategories,
+    fetchCategoryDetails
 } = useCategories();
 const {
     featured,
-    fetchFeaturedProducts
+    bestSelling,
+    fetchFeaturedProducts,
+    fetchBestSellingProducts
 } = useProducts();
 
 const {
@@ -317,7 +377,6 @@ const backgrounds = [
     slider2,
     slider3,
 ];
-
 
 const articles = [{
     title: "5 Tips for a Healthy Lifestyle",
@@ -366,7 +425,9 @@ const testimonials = [{
 ];
 
 onMounted(async () => {
+    // await fetchCategories();
     await fetchFeaturedProducts();
+    await fetchBestSellingProducts();
 });
 </script>
 

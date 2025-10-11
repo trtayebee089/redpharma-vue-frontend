@@ -8,6 +8,7 @@ import RequestOrder from '../pages/RequestOrder.vue'
 import Contact from '../pages/Contact.vue'
 import Category from '../pages/shop/Category.vue'
 import PrivacyPolicy from '../pages/PrivacyPolicy.vue'
+import RefundReturn from '../pages/RefundReturn.vue'
 import DeliveryCoverage from '../pages/DeliveryCoverage.vue'
 import OrderTracking from '../pages/OrderTracking.vue'
 import Profile from '../pages/account/Profile.vue'
@@ -29,6 +30,7 @@ const routes = [
     { path: '/categories', name: 'CategoryList', component: CategoryGrid, meta: { title: 'Categories - RedPharma BD' } }, 
     { path: '/category/:slug', name: 'Category', component: Category, meta: { title: 'Category - RedPharma BD' } }, 
     { path: '/privacy-and-policy', name: 'Privacy & Policy', component: PrivacyPolicy, meta: { title: 'Privacy & Policy - RedPharma BD' } }, //✅
+    { path: '/refund-and-returns', name: 'RefundReturn', component: RefundReturn, meta: { title: 'Refund & Returns - RedPharma BD' } }, //✅
     { path: '/delivery-coverage', name: 'Delivery Coverage', component: DeliveryCoverage, meta: { title: 'Delivery Coverage - RedPharma BD' } }, //✅
     { path: '/order-tracking', name: 'Order Tracking', component: OrderTracking, meta: { title: 'Track Order - RedPharma BD' } }, //✅
     { path: '/upload-prescription', name: 'Upload Prescription', component: OrderTracking, meta: { title: 'Upload Prescription - RedPharma BD' } }, //✅

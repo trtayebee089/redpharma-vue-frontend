@@ -75,8 +75,8 @@
                 <ul class="list-disc list-inside text-gray-700 mt-2">
                     <li>Email: <a href="mailto:support@redpharma.com"
                             class="text-red-500 hover:underline">support@redpharma.com</a></li>
-                    <li>Phone: +880 123 456 7890</li>
-                    <li>Address: 123 Main Street, Dhaka, Bangladesh</li>
+                    <li>Phone: +8801997202010</li>
+                    <li>Address: Rajshahi, Bangladesh</li>
                 </ul>
             </section>
 

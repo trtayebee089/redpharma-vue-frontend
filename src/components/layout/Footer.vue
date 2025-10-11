@@ -48,12 +48,15 @@ const langStore = useLanguageStore();
                             class="hover:text-green-400 transition text-md font-normal">{{ $t('header.menu.contact')
                             }}</router-link>
                     </li>
-                    <li><router-link :class="[langStore.langClass]" to="/privacy-and-policy"
-                            class="hover:text-green-400 transition text-md font-normal">{{ $t('header.menu.privacy')
-                            }}</router-link>
+                    <li>
+                        <router-link :class="[langStore.langClass]" to="/refund-and-returns"
+                            class="hover:text-green-400 transition text-md font-normal">
+                            {{ $t('header.menu.returns') }}
+                        </router-link>
                     </li>
-                    <li><router-link :class="[langStore.langClass]" to="/delivery-coverage"
-                            class="hover:text-green-400 transition text-md font-normal">{{ $t('header.menu.coverage')
+                    <li>
+                        <router-link :class="[langStore.langClass]" to="/privacy-and-policy"
+                            class="hover:text-green-400 transition text-md font-normal">{{ $t('header.menu.privacy')
                             }}</router-link>
                     </li>
                 </ul>
@@ -67,31 +70,35 @@ const langStore = useLanguageStore();
                     <li><router-link to="/cart" class="hover:text-green-400 transition text-md font-normal">{{
                         $t('header.menu.cart') }}</router-link>
                     </li>
-                    <li><router-link to="/request-order" class="hover:text-green-400 transition text-md font-normal">{{
+                    <!-- <li><router-link to="/request-order" class="hover:text-green-400 transition text-md font-normal">{{
                         $t('header.menu.request') }}</router-link>
-                    </li>
+                    </li> -->
                     <li><a href="#" class="hover:text-green-400 transition text-md font-normal">{{
                         $t('header.menu.help') }}</a>
                     </li>
-                    <li><a href="#" class="hover:text-green-400 transition text-md font-normal">{{
-                        $t('header.menu.returns') }}</a>
+                    <li><router-link :class="[langStore.langClass]" to="/delivery-coverage"
+                            class="hover:text-green-400 transition text-md font-normal">{{ $t('header.menu.coverage')
+                            }}</router-link>
                     </li>
                 </ul>
             </div>
 
             <!-- Column 4: Contact & Newsletter -->
             <div class="md:col-span-3 lg:col-span-1">
-                <h3 class="text-xl font-semibold mb-4 text-white font-wb" :class="[langStore.langClass]">{{ $t('footer.headings.contact') }}</h3>
+                <h3 class="text-xl font-semibold mb-4 text-white font-wb" :class="[langStore.langClass]">{{
+                    $t('footer.headings.contact') }}</h3>
                 <ul class="space-y-3 text-sm text-gray-600">
                     <li class="flex items-center space-x-3">
-                        <div class="w-6 h-6 flex items-center justify-center rounded-full bg-green-100 text-green-600 shadow-sm">
+                        <div
+                            class="w-6 h-6 flex items-center justify-center rounded-full bg-green-100 text-green-600 shadow-sm">
                             <i class="pi pi-map-marker"></i>
                         </div>
                         <span class="text-gray-200">123 Main Street, City</span>
                     </li>
 
                     <li class="flex items-center space-x-3">
-                        <div class="w-6 h-6 flex items-center justify-center rounded-full bg-green-100 text-green-600 shadow-sm">
+                        <div
+                            class="w-6 h-6 flex items-center justify-center rounded-full bg-green-100 text-green-600 shadow-sm">
                             <i class="pi pi-phone"></i>
                         </div>
                         <a href="tel:+1234567890" class="text-gray-200 hover:text-green-600 transition font-medium">
@@ -100,7 +107,8 @@ const langStore = useLanguageStore();
                     </li>
 
                     <li class="flex items-center space-x-3">
-                        <div class="w-6 h-6 flex items-center justify-center rounded-full bg-green-100 text-green-600 shadow-sm">
+                        <div
+                            class="w-6 h-6 flex items-center justify-center rounded-full bg-green-100 text-green-600 shadow-sm">
                             <i class="pi pi-envelope"></i>
                         </div>
                         <a href="mailto:support@redpharma.com"
@@ -113,37 +121,38 @@ const langStore = useLanguageStore();
 
                 <!-- Social Links -->
                 <div class="flex items-center space-x-4 mt-6">
-                    <a href="#"
-                        class="group relative w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 shadow-sm hover:bg-blue-700 hover:text-white transition-all duration-300"
+                    <a href="https://www.facebook.com/redpharmabd" target="_blank"
+                        class="group relative flex items-center justify-center gap-2 px-4 h-10 rounded-full bg-gray-100 text-gray-600 shadow-sm hover:bg-blue-700 hover:text-white transition-all duration-300"
                         title="Facebook">
                         <i class="pi pi-facebook text-lg"></i>
-                        <span
-                            class="absolute bottom-[-28px] text-xs opacity-0 group-hover:opacity-100 group-hover:translate-y-1 transition-all text-gray-500">Facebook</span>
+                        <span class="font-medium text-sm tracking-wide">FOLLOW US</span>
+                        <!-- <span
+                            class="absolute bottom-[-28px] text-xs opacity-0 group-hover:opacity-100 group-hover:translate-y-1 transition-all text-gray-500">Facebook</span> -->
                     </a>
 
-                    <a href="#"
+                    <!-- <a href="#"
                         class="group relative w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 shadow-sm hover:bg-sky-400 hover:text-white transition-all duration-300"
                         title="Twitter">
                         <i class="pi pi-twitter text-lg"></i>
                         <span
                             class="absolute bottom-[-28px] text-xs opacity-0 group-hover:opacity-100 group-hover:translate-y-1 transition-all text-gray-500">Twitter</span>
-                    </a>
+                    </a> -->
 
-                    <a href="#"
+                    <!-- <a href="#"
                         class="group relative w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 shadow-sm hover:bg-blue-600 hover:text-white transition-all duration-300"
                         title="LinkedIn">
                         <i class="pi pi-linkedin text-lg"></i>
                         <span
                             class="absolute bottom-[-28px] text-xs opacity-0 group-hover:opacity-100 group-hover:translate-y-1 transition-all text-gray-500">LinkedIn</span>
-                    </a>
+                    </a> -->
 
-                    <a href="#"
+                    <!-- <a href="#"
                         class="group relative w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 shadow-sm hover:bg-pink-500 hover:text-white transition-all duration-300"
                         title="Instagram">
                         <i class="pi pi-instagram text-lg"></i>
                         <span
                             class="absolute bottom-[-28px] text-xs opacity-0 group-hover:opacity-100 group-hover:translate-y-1 transition-all text-gray-500">Instagram</span>
-                    </a>
+                    </a> -->
                 </div>
 
 
@@ -166,7 +175,8 @@ const langStore = useLanguageStore();
         </div>
 
         <!-- Bottom Bar -->
-        <div class="bg-gray-800 text-gray-400 py-4 px-6 flex flex-col md:flex-row items-center justify-between text-sm border-t border-gray-700">
+        <div
+            class="bg-gray-800 text-gray-400 py-4 px-6 flex flex-col md:flex-row items-center justify-between text-sm border-t border-gray-700">
             <!-- Left: Copyright Text -->
             <div class="mb-2 md:mb-0">
                 © {{ year }} <strong>RedPharma BD</strong>. All rights reserved.

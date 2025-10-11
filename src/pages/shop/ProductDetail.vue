@@ -146,11 +146,9 @@ const defaultImagePlaceHolder = computed(() => {
     const catImage = product.value.category?.image?.trim();
 
     if (prodImage && !prodImage.includes("https://placehold.co") && !prodImage.includes("no-image.png")) {
-        console.log("Product Image: " + prodImage)
         return { url: prodImage, type: 'product' };
     }
     else if (catImage && !catImage.includes("https://placehold.co") && !catImage.includes("no-image.png")) {
-        console.log("Category Image: " + catImage)
         return { url: catImage, type: 'category' };
     }
     else {
@@ -163,15 +161,9 @@ const isStockOut = computed(() => {
     return !productDetail.value.qty || productDetail.value.qty <= 0 || productDetail.value.price <= 0;
 });
 
-const increaseQty = () => {
-    quantity.value += 1;
-    console.log("QTY+ : " + quantity.value);
-};
+const increaseQty = () => { quantity.value += 1; };
 
-const decreaseQty = () => {
-    if (quantity.value > 1) quantity.value -= 1;
-    console.log("QTY- : " + quantity.value);
-};
+const decreaseQty = () => { if (quantity.value > 1) quantity.value -= 1; };
 
 const addToCart = (prod) => {
     cartStore.addToCart({

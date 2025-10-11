@@ -3,7 +3,7 @@
         <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center">
             <div class="absolute inset-0 bg-black/50" @click="close"></div>
             <div class="relative bg-white rounded-lg shadow-lg w-11/12 max-w-4xl overflow-hidden z-10">
-                <button @click="$emit('close'); console.log('Modal.vue emitted close')"
+                <button @click="$emit('close');"
                     class="absolute top-3 right-3 z-20 text-gray-500 hover:text-gray-800 text-xl font-bold">
                     &times;
                 </button>
