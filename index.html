@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RedPharma BD</title>
+
+    <!-- SEO / Social -->
+    <meta name="description" content="Online medicine store - order medicines easily with home delivery." />
+    <meta property="og:title" content="RedPharma BD" />
+    <meta property="og:description" content="Shop medicines and health products online with fast delivery." />
+    <meta property="og:type" content="website" />
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYknK7zJ415TC2hQYZZoP0h42s6cNlvRI"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-gray-50">
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+    <script type="module">
+      import favicon from '/src/assets/favicon.png'
+      const link = document.createElement('link')
+      link.rel = 'icon'
+      link.type = 'image/png'
+      link.href = favicon
+      document.head.appendChild(link)
+    </script>
+  </body>
+</html>
