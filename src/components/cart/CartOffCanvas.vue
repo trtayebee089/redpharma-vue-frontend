@@ -31,57 +31,61 @@
             </div>
 
             <template v-for="item in cartStore.items" :key="item.id">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white border border-gray-200 rounded-xl p-4 shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 gap-4">
-                    <div class="flex items-center gap-3 flex-1 min-w-0 w-full sm:w-auto relative">
+                <div
+                    class="flex flex-col sm:flex-row justify-between bg-white border border-gray-200 rounded-xl p-3 sm:p-4 shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 gap-3 sm:gap-4">
+                    <!-- Left: Image -->
+                    <div class="sm:w-15 flex-shrink-0">
                         <img v-if="getImageUrl(item)" :src="getImageUrl(item).url" alt="product"
-                            class="w-16 h-16 object-cover rounded-xl border border-gray-300 shadow-sm" />
+                            class="hidden sm:block w-20 h-20 object-cover rounded-xl border border-gray-300 shadow-sm" />
+                    </div>
 
-                        <div class="flex-1 min-w-0">
-                            <p class="font-medium text-gray-800 text-sm truncate">{{ item.name }}</p>
-                            <p class="text-sm text-gray-500 truncate" v-if="item.brand">{{ item.brand.title }}</p>
+                    <!-- Right: Details -->
+                    <div class="flex-1 flex flex-col justify-between relative">
+                        <!-- Row 1: Name, brand, unit price + remove button -->
+                        <div class="flex justify-between items-start relative">
+                            <div class="flex flex-col pr-10">
+                                <p class="font-medium text-gray-800 text-sm truncate">{{ item.name }}</p>
+                                <p class="text-sm text-gray-500 truncate" v-if="item.brand">{{ item.brand.title }}</p>
+                                <p class="text-gray-600 text-sm mt-1">
+                                    <span class="font-semibold text-gray-800">{{ (item.offerPrice ??
+                                        item.price).toFixed(2) }} Tk</span>
+                                    <span v-if="item.offerPrice" class="text-gray-400 line-through ml-1 text-xs">{{
+                                        item.price.toFixed(2) }} Tk</span>
+                                </p>
+                            </div>
 
-                            <p class="text-green-700 font-semibold text-base mt-1 sm:hidden">
-                                {{ ((Number(item.offerPrice ?? item.price) || 0) * (Number(item.quantity) ||
-                                    1)).toFixed(2) }} Tk
-                            </p>
-
+                            <!-- Remove Button -->
                             <button @click="cartStore.removeFromCart(item.id)"
-                                class="absolute top-2 right-2 text-red-500 hover:text-red-700 sm:hidden transition font-medium">
+                                class="absolute top-0 right-0 text-red-500 hover:text-red-700 transition font-medium">
                                 <i class="pi pi-times"></i>
                             </button>
+                        </div>
 
-                            <div
-                                class="inline-flex items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-inner mt-2">
+                        <!-- Row 2: Quantity controls + total price -->
+                        <div
+                            class="flex justify-between items-center mt-3 ">
+                            <!-- Quantity Controls -->
+                            <div class="inline-flex items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-inner">
                                 <button @click="decreaseQty(item)" :disabled="item.quantity <= 1 || item.isStockOut"
-                                    class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition-all rounded-l-full disabled:text-gray-400 disabled:bg-gray-200">
-                                    <i class="pi pi-minus"></i>
+                                    class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition-all rounded-l-full disabled:text-gray-400 disabled:bg-gray-200">
+                                    <i class="pi pi-minus text-xs"></i>
                                 </button>
 
                                 <input type="number" v-model.number="item.quantity" min="1"
-                                    class="w-12 text-center text-gray-800 font-medium bg-white border-l border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 transition-all rounded-none" />
+                                    class="w-12 text-center text-gray-800 font-medium bg-white border-l border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 transition-all rounded-none text-xs sm:text-sm" />
 
                                 <button @click="increaseQty(item)" :disabled="item.isStockOut"
-                                    class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-green-500 hover:text-white transition-all rounded-r-full disabled:text-gray-400 disabled:bg-gray-200">
-                                    <i class="pi pi-plus"></i>
+                                    class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-green-500 hover:text-white transition-all rounded-r-full disabled:text-gray-400 disabled:bg-gray-200">
+                                    <i class="pi pi-plus text-xs"></i>
                                 </button>
                             </div>
+
+                            <!-- Total Price -->
+                            <p class="text-green-700 font-semibold text-sm px-3">
+                                {{ ((Number(item.offerPrice ?? item.price) || 0) * (Number(item.quantity) ||
+                                1)).toFixed(2) }} Tk
+                            </p>
                         </div>
-                    </div>
-
-                    <div class="hidden sm:flex flex-col items-end justify-between text-right min-w-[80px]">
-                        <p v-if="item.offerPrice" class="text-gray-400 text-sm line-through">
-                            {{ (item.price * item.quantity).toFixed(2) }} Tk
-                        </p>
-
-                        <p class="text-green-700 font-semibold text-lg whitespace-nowrap">
-                            {{ ((Number(item.offerPrice ?? item.price) || 0) * (Number(item.quantity) || 1)).toFixed(2)
-                            }} Tk
-                        </p>
-
-                        <button @click="cartStore.removeFromCart(item.id)"
-                            class="text-red-500 hover:text-red-700 mt-2 transition font-medium">
-                            <i class="pi pi-times"></i>
-                        </button>
                     </div>
                 </div>
             </template>
