@@ -281,6 +281,30 @@
                             </div>
 
                             <div>
+                                <label class="block text-gray-700 mb-1">Division</label>
+                                <select v-model="checkoutForm.division" @change="onDivisionChange"
+                                    class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 border-gray-300 bg-white"
+                                    required>
+                                    <option value="" disabled>Select Division</option>
+                                    <option v-for="(districts, division) in bdData" :key="division" :value="division">
+                                        {{ division }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-gray-700 mb-1 mt-3">District</label>
+                                <select v-model="checkoutForm.district" :disabled="!checkoutForm.division"
+                                    class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 border-gray-300 bg-white"
+                                    required>
+                                    <option value="" disabled>Select District</option>
+                                    <option v-for="district in availableDistricts" :key="district" :value="district">
+                                        {{ district }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div>
                                 <label class="block text-gray-700 mb-1">Address</label>
                                 <textarea v-model="checkoutForm.address"
                                     class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 border-gray-300 bg-white"
@@ -302,7 +326,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, onMounted } from "vue";
+import { computed, reactive, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 
@@ -323,7 +347,51 @@ const checkoutForm = reactive({
     fullName: authStore.user?.name || '',
     phone: authStore.user?.phone_number || '',
     address: authStore.user?.address || '',
+    division: authStore.user?.division || '',
+    district: authStore.user?.district || '',
 });
+
+const bdData = {
+    "Dhaka": [
+        "Dhaka", "Gazipur", "Kishoreganj", "Manikganj", "Munshiganj",
+        "Narayanganj", "Narsingdi", "Tangail", "Faridpur", "Gopalganj", "Madaripur", "Rajbari", "Shariatpur"
+    ],
+    "Chittagong": [
+        "Chattogram", "Cox’s Bazar", "Cumilla", "Brahmanbaria", "Feni",
+        "Khagrachhari", "Lakshmipur", "Noakhali", "Rangamati", "Bandarban"
+    ],
+    "Rajshahi": [
+        "Rajshahi", "Natore", "Naogaon", "Pabna", "Bogra", "Joypurhat", "Sirajganj", "Chapainawabganj"
+    ],
+    "Khulna": [
+        "Khulna", "Bagerhat", "Chuadanga", "Jashore", "Jhenaidah",
+        "Kushtia", "Magura", "Meherpur", "Narail", "Satkhira"
+    ],
+    "Barishal": [
+        "Barishal", "Bhola", "Jhalokathi", "Patuakhali", "Pirojpur", "Barguna"
+    ],
+    "Sylhet": [
+        "Sylhet", "Habiganj", "Moulvibazar", "Sunamganj"
+    ],
+    "Rangpur": [
+        "Rangpur", "Dinajpur", "Gaibandha", "Kurigram", "Lalmonirhat", "Nilphamari", "Panchagarh", "Thakurgaon"
+    ],
+    "Mymensingh": [
+        "Mymensingh", "Jamalpur", "Netrokona", "Sherpur"
+    ]
+};
+
+const currentValidZone = {
+    Rajshahi: ["Rajshahi"],
+};
+
+const availableDistricts = computed(() => {
+    return bdData[checkoutForm.division] || [];
+});
+
+function onDivisionChange() {
+    checkoutForm.district = "";
+}
 
 const cartItems = computed(() => cartStore.items);
 
@@ -378,6 +446,32 @@ const submitCheckout = async () => {
         alert("Failed to place order. Please try again.");
     }
 };
+
+watch(
+    () => checkoutForm.division,
+    (newDivision) => {
+        if (newDivision && !currentValidZone[newDivision]) {
+            alert("❌ Sorry, we currently only deliver in the Rajshahi division.");
+            checkoutForm.division = "";
+            checkoutForm.district = "";
+        }
+    }
+);
+
+watch(
+    () => checkoutForm.district,
+    (newDistrict) => {
+        const validDistricts = currentValidZone[checkoutForm.division];
+        if (
+            checkoutForm.division &&
+            validDistricts &&
+            !validDistricts.includes(newDistrict)
+        ) {
+            alert("❌ Sorry, we currently only deliver in Rajshahi district.");
+            checkoutForm.district = "";
+        }
+    }
+);
 
 onMounted(async () => {
     if (!authStore.rewardPointTiers.length) {

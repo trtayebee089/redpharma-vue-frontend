@@ -1,5 +1,6 @@
 <template>
-    <div class="bg-white rounded-lg shadow hover:shadow-lg transition flex flex-col h-full relative border border-gray-200">
+    <div
+        class="bg-white rounded-lg shadow hover:shadow-lg transition flex flex-col h-full relative border border-gray-200">
         <!-- Offer Badge -->
         <div v-if="product.offers && !isStockOut"
             class="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full font-semibold z-10">
@@ -14,18 +15,11 @@
         </div>
 
         <!-- Product Image -->
-        <router-link :to="`/products/${product.slug}`" :class="[
-            'hover:underline block',
-            defaultImagePlaceHolder.type === 'category'
-                ? 'min-h-[142px] overflow-hidden bg-[#f1f1f1] rounded-t-lg flex items-center justify-center text-center'
-                : ''
-        ]">
-            <img :src="defaultImagePlaceHolder.url" :alt="product.name" loading="lazy" :class="[
-                'w-full rounded-t-lg',
-                defaultImagePlaceHolder.type === 'category'
-                    ? 'h-20 object-contain'
-                    : 'h-32 sm:h-36 md:h-40 object-contain'
-            ]" />
+        <router-link :to="`/products/${product.slug}`" class="block relative bg-[#f9f9f9] rounded-t-lg overflow-hidden">
+            <div class="h-40 sm:h-44 md:h-48 flex items-center justify-center">
+                <img :src="defaultImagePlaceHolder.url" :alt="product.name" loading="lazy"
+                    class="max-h-full max-w-full object-contain transition-transform duration-300 hover:scale-105" />
+            </div>
         </router-link>
 
 
@@ -48,29 +42,32 @@
             <p class="text-xs sm:text-sm text-gray-600 mt-1" v-if="product.strength && product.packSize">
                 {{ product.strength }} | Pack: {{ product.packSize }}
             </p>
+            
+            <div class="mt-2 flex items-center justify-between">
+                <div>
+                    <span v-if="product.promotion_price" class="text-green-700 font-semibold text-lg">
+                        {{ product.promotion_price.toFixed(2) }} Tk
+                        <span v-if="product.unit" class="text-gray-500 text-[13px] font-normal align-baseline">/ {{
+                            product.unit.unit_code }}</span>
+                    </span>
+                    <span v-if="product.promotion_price" class="text-red-500 line-through ml-2 text-sm">
+                        {{ product.price.toFixed(2) }} Tk
+                    </span>
+                    <p v-else class="text-gray-800 font-semibold text-lg m-0">
+                        {{ product.price.toFixed(2) }} Tk
+                        <span v-if="product.unit" class="text-gray-500 text-[13px] font-normal align-baseline">/ {{
+                            product.unit.unit_code }}</span>
+                    </p>
+                </div>
 
-            <!-- Price -->
-            <div class="mt-2">
-                <span v-if="product.offerPrice" class="text-green-700 font-semibold text-lg">
-                    {{ product.offerPrice.toFixed(2) }} Tk
-                </span>
-                <span v-if="product.offerPrice" class="text-red-500 line-through ml-2">
-                    {{ product.price.toFixed(2) }} Tk
-                </span>
-                <span v-else class="text-gray-800 font-semibold text-lg">
-                    {{ product.price.toFixed(2) }} Tk
-                </span>
+                <!-- Circular Add to Cart Button -->
+                <button @click="addToCart(product)" :disabled="isStockOut" :class="[
+                    'ml-2 flex items-center justify-center w-9 h-9 rounded-full transition text-white shadow-md',
+                    isStockOut ? 'bg-gray-400 cursor-not-allowed opacity-60' : 'bg-green-600 hover:bg-green-700'
+                ]">
+                    <i class="pi pi-plus"></i>
+                </button>
             </div>
-
-            <!-- Add to Cart -->
-            <button @click="addToCart(product)" :disabled="isStockOut" :class="[
-                'btn-add-to-cart w-full sm:w-auto mt-4 flex items-center justify-center ',
-                isStockOut ? 'opacity-50 cursor-not-allowed stock-out' : ''
-            ]">
-                <span class="hidden md:inline">Add to Cart</span> <!-- visible ≥768px -->
-                <span class="inline md:hidden">Add</span> <!-- visible <768px -->
-            </button>
-
         </div>
     </div>
 </template>
@@ -101,7 +98,7 @@ const props = defineProps({
 const defaultImagePlaceHolder = computed(() => {
     const prodImage = props.product.image?.trim();
     const catImage = props.product.category?.image?.trim();
-
+    console.log("P IMAGE: " + prodImage)
     if (prodImage && !prodImage.includes("https://placehold.co") && !prodImage.includes("no-image.png")) {
         return { url: prodImage, type: 'product' };
     }

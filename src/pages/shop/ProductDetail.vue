@@ -74,7 +74,7 @@
 
                         <!-- Add to Cart -->
                         <button @click="addToCart(productDetail)" :disabled="isStockOut"
-                            class="flex-1 md:flex-none flex items-center justify-center whitespace-nowrap px-6 py-3 rounded-md font-semibold text-white shadow-md transition-all duration-200 focus:ring-2 focus:ring-offset-1 bg-green-600 hover:bg-green-700 focus:ring-green-400 disabled:bg-red-600 disabled:cursor-not-allowed disabled:hover:bg-red-700">
+                            class="flex-1 md:flex-none flex items-center justify-center whitespace-nowrap px-6 py-2 font-semibold text-white shadow-md transition-all duration-200 focus:ring-2 focus:ring-offset-1 rounded-full bg-green-600 hover:bg-green-700 focus:ring-green-400 disabled:bg-red-600 disabled:cursor-not-allowed disabled:hover:bg-red-700">
                             <span v-if="!isStockOut">Add to Cart</span>
                             <span v-else>❌ Unavailable</span>
                         </button>
@@ -132,6 +132,7 @@ import { usePush } from "notivue";
 import { useProducts } from "@/composables/useProducts";
 import ProductGridItem from "../../components/products/ProductGridItem.vue";
 
+const BASE_URL = "http://127.0.0.1:8000";
 const route = useRoute();
 const { product, fetchProductDetails } = useProducts();
 const productDetail = ref(null);
@@ -144,6 +145,11 @@ const quantity = ref(1);
 const defaultImagePlaceHolder = computed(() => {
     const prodImage = product.value.image?.trim();
     const catImage = product.value.category?.image?.trim();
+
+    const normalizeUrl = (url) => {
+        if (url.startsWith('http')) return url;
+        return BASE_URL + url;
+    }
 
     if (prodImage && !prodImage.includes("https://placehold.co") && !prodImage.includes("no-image.png")) {
         return { url: prodImage, type: 'product' };

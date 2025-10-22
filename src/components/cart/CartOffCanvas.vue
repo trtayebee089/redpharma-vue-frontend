@@ -4,22 +4,21 @@
            w-[90vw] sm:w-[400px] md:w-[450px] lg:w-[480px] xl:w-[400px] rounded-l-2xl overflow-hidden"
         :class="cartStore.isCartOpen ? 'translate-x-0' : 'translate-x-full'">
         <!-- Header -->
-        <div
-            class="flex justify-between items-center p-4 border-b border-gray-200 bg-gradient-to-r from-green-50 to-green-100 shadow-sm">
+        <div class="flex justify-between items-center p-3 border-b border-gray-200 bg-gradient-to-r from-green-50 to-green-100 shadow-sm">
             <h3 class="text-lg font-semibold text-gray-800 tracking-wide">
                 Cart ({{ cartStore.items.length }} items)
             </h3>
             <div class="flex flex-1 justify-end space-x-2">
                 <!-- Clear Cart -->
                 <button @click="cartStore.clearCart()"
-                    class="text-red-500 hover:text-red-700 px-3 py-1 rounded-full transition-all hover:shadow-sm">
+                    class="text-red-500 bg-red-50 hover:text-red-700 px-3 py-1 rounded-full transition-all hover:shadow-sm hover:bg-red-200">
                     Clear Cart
                 </button>
 
                 <!-- Close Offcanvas -->
                 <button @click="cartStore.toggleCart(false)"
-                    class="text-gray-500 hover:text-gray-700 p-1 rounded-full transition-all hover:shadow-sm">
-                    <i class="pi pi-times text-xl"></i>
+                    class="text-white bg-red-500 hover:text-red-50 px-3 py-1 rounded-full transition-all hover:shadow-sm hover:bg-red-700">
+                    <i class="pi pi-times text-md"></i>
                 </button>
             </div>
         </div>
@@ -92,22 +91,13 @@
         </div>
 
         <!-- Footer Summary -->
-        <div class="p-4 border-t border-gray-200 bg-white rounded-t-xl shadow-inner space-y-3">
-            <div class="flex justify-between text-gray-600 font-semibold">
-                <span>Total MRP:</span>
-                <span class="font-medium">{{ totalMRP.toFixed(2) }} Tk</span>
+        <div class="p-4 border-t border-gray-200 bg-white rounded-t-xl shadow-inner space-y-3 flex justify-between items-center">
+            <div class="text-gray-600 font-semibold m-0">
+                <span class="block">Cart Total</span>
+                <span class="block font-bold text-xl text-green-600">{{ totalMRP.toFixed(2) }} Tk</span>
             </div>
-            <div class="flex justify-between text-red-600 font-semibold">
-                <span>Discount:</span>
-                <span>{{ totalDiscount.toFixed(2) }} Tk</span>
-            </div>
-            <div class="flex justify-between text-green-700 font-semibold">
-                <span>Total Payment:</span>
-                <span>{{ totalPayment.toFixed(2) }} Tk</span>
-            </div>
-
             <router-link to="/cart"
-                class="block w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-xl text-center font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                class="block w-50 bg-gradient-to-r from-green-500 to-green-600 text-white py-3 text-center font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all rounded-full"
                 :class="{ 'opacity-50 cursor-not-allowed': !cartStore.items.length }" @click.prevent="goToCart">
                 Checkout
             </router-link>
@@ -115,8 +105,7 @@
     </div>
 
     <!-- Backdrop -->
-    <div v-if="cartStore.isCartOpen" @click="cartStore.toggleCart(false)"
-        class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 transition-opacity"></div>
+    <div v-if="cartStore.isCartOpen" @click="cartStore.toggleCart(false)" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 transition-opacity"></div>
 </template>
 
 <script setup>

@@ -14,7 +14,7 @@
         </div>
 
         <!-- WHY US -->
-        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-start px-6">
+        <div class="grid md:grid-cols-2 gap-12 items-start container mx-auto px-4 md:px-6">
             <div v-for="(section, index) in tm('about.why_us')" :key="index"
                 class="bg-white/70 rounded-2xl border border-green-100 p-8 shadow-sm hover:shadow-md transition-all duration-300 backdrop-blur-sm">
                 <div class="flex items-center gap-3 mb-4">
@@ -39,7 +39,7 @@
         </div>
 
         <!-- SERVICES -->
-        <div class="max-w-6xl mx-auto px-6">
+        <div class="container mx-auto px-4 md:px-6">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-10 font-wb relative"
                 :class="[langStore.langClass]">
                 {{ $t('about.services.title') }}
@@ -51,17 +51,21 @@
                     class="group relative bg-white border border-green-100 rounded-2xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                     <div class="absolute top-0 right-0 w-16 h-16 bg-green-50 rounded-bl-2xl -z-10"></div>
 
-                    <div
-                        class="flex items-center justify-center w-14 h-14 mb-4 bg-green-100 text-green-600 rounded-full group-hover:bg-green-600 group-hover:text-white transition">
-                        <i class="pi pi-bolt text-2xl"></i>
-                    </div>
+                    <div class="flex items-center justify-start">
+                        <div
+                            class="flex items-center justify-center w-14 h-14 mr-4 bg-green-100 text-green-600 rounded-full group-hover:bg-green-600 group-hover:text-white transition">
+                            <i class="pi pi-bolt text-2xl"></i>
+                        </div>
 
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2 font-wb" :class="[langStore.langClass]">
-                        {{ service.title }}
-                    </h3>
-                    <p class="text-gray-600 text-sm leading-relaxed font-ws" :class="[langStore.langClass]">
-                        {{ service.description }}
-                    </p>
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2 font-wb" :class="[langStore.langClass]">
+                                {{ service.title }}
+                            </h3>
+                            <p class="text-gray-600 text-sm leading-relaxed font-ws m-0" :class="[langStore.langClass]">
+                                {{ service.description }}
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

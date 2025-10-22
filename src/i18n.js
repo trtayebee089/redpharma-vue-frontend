@@ -116,6 +116,8 @@ const messages = {
             featured_products: "Featured Products",
             best_selling: "Best Selling Products",
             health_articles: "Health Articles",
+            view_all: "View All",
+            impact_counter: 'Our Impact in Numbers'
         },
         about: {
             about_us: "About Us",
@@ -131,10 +133,6 @@ const messages = {
                         "24/7 customer support for all your needs.",
                         "Secure and easy-to-use platform.",
                         "Regular discounts and special deals to save money.",
-                        "Access to health records, prescriptions, and medical advice.",
-                        "Fast and reliable delivery of medicines.",
-                        "Services delivered by professional and experienced healthcare providers.",
-                        "Accurate and reliable information on health and wellness."
                     ]
                 },
                 {
@@ -152,7 +150,7 @@ const messages = {
                     { title: "Medicine Delivery", description: "Fast and reliable delivery to your doorstep." },
                     { title: "Doctor Consultation", description: "Access qualified medical professionals online." },
                     { title: "Lab Tests", description: "Order lab tests online and receive results quickly." },
-                    { title: "Health Records", description: "Manage medical history, lab results, and prescriptions securely." },
+                    { title: "Health Records", description: "Manage medical history and prescriptions securely." },
                     { title: "Medical Advice & Support", description: "Get expert guidance from healthcare professionals." },
                     { title: "Healthcare Provider Database", description: "Find and compare doctors and clinics in your area." },
                     // { title: "Discounts & Deals", description: "Save on medicine delivery, consultations, and lab tests." }
@@ -342,6 +340,7 @@ const messages = {
             product_categories: "পণ্যের বিভাগসমূহ",
             featured_products: "বৈশিষ্ট্যযুক্ত পণ্যসমূহ",
             health_articles: "স্বাস্থ্য সম্পর্কিত নিবন্ধসমূহ",
+            impact_counter: 'পরিসংখ্যানের আলোকে আমাদের অর্জন'
         },
         about: {
             about_us: "আমাদের সম্পর্কে",

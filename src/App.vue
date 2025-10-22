@@ -7,18 +7,16 @@ import CartOffCanvas from './components/cart/CartOffCanvas.vue'
 import PrimeVue from 'primevue/config'
 import { useI18n } from "vue-i18n";
 import { Notivue, Notification, push } from 'notivue'
-import {
-    useLanguageStore
-} from "@/stores/language";
-import {
-    watch
-} from "vue";
+import { useLanguageStore } from "@/stores/language";
+import { watch } from "vue";
 import FloatingCartButton from './components/cart/FloatingCartButton.vue'
 import MobileFooter from './components/layout/MobileFooter.vue'
 import FloatingChat from './components/common/FloatingChat.vue'
+import { useRoute } from 'vue-router'
 
 const { locale } = useI18n();
 const langStore = useLanguageStore();
+const route = useRoute()
 
 watch(
     () => langStore.lang,
@@ -37,7 +35,10 @@ watch(
         <div class="flex flex-1 relative">
             <CategorySidebar class="hidden md:block" />
 
-            <main class="container mx-auto flex-1 p-4 md:p-6 mb-18 mt-28 md:mt-16 relative fade-up main-content">
+            <main :class="[
+                route.name !== 'Home' ? 'container mx-auto flex-1 p-4 md:p-6' : '',
+                'mb-18 mt-28 md:mt-16 lg:mt-22 relative fade-up main-content'
+            ]">
                 <router-view />
             </main>
         </div>
@@ -45,7 +46,7 @@ watch(
         <Footer />
 
         <CartOffCanvas />
-        
+
         <MobileFooter />
 
         <FloatingChat />
