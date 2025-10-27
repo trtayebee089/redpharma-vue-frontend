@@ -230,9 +230,12 @@
                         <img v-if="item.category.image" :src="item.category.image" :alt="item.category.name"
                             class="w-8 h-8 object-cover rounded-sm border border-gray-200 shadow-sm p-1 bg-white" />
                         <h2 class="text-xl md:text-2xl font-bold text-gray-800 relative inline-block">
-                            {{ item.category.name }}
-                            <span class="absolute left-0 bottom-0 w-16 h-1 rounded-full"
-                                :style="{ backgroundColor: '#' + item.category.bg_color.replace('#', '') }"></span>
+                            {{ item.category?.name }}
+                            <span class="absolute left-0 bottom-0 w-16 h-1 rounded-full" :style="{
+                                backgroundColor: item.category?.bg_color
+                                    ? '#' + item.category.bg_color.replace('#', '')
+                                    : '#16a34a' // default color (green)
+                            }"></span>
                         </h2>
                     </div>
                     <router-link :to="`/category/${item.category.slug}`"
@@ -260,7 +263,8 @@
     </section>
 
 
-    <section class="bg-gradient-to-br from-green-100 to-white py-12 relative overflow-hidden container mx-auto px-4 md:px-6 rounded-xl">
+    <section
+        class="bg-gradient-to-br from-green-100 to-white py-12 relative overflow-hidden container mx-auto px-4 md:px-6 rounded-xl">
         <!-- Decorative pattern (optional subtle diagonal lines) -->
         <div class="absolute inset-0 opacity-5 pointer-events-none">
             <svg class="w-full h-full" preserveAspectRatio="none">
@@ -496,10 +500,9 @@ const testimonials = [{
 ];
 
 function hexToRgba(hex, opacity = 1) {
+    if (!hex || typeof hex !== 'string') return `rgba(22, 163, 74, ${opacity})`;
     hex = hex.replace('#', '');
-    if (hex.length === 3) {
-        hex = hex.split('').map(h => h + h).join('');
-    }
+    if (hex.length === 3) hex = hex.split('').map(h => h + h).join('');
     const r = parseInt(hex.substring(0, 2), 16);
     const g = parseInt(hex.substring(2, 4), 16);
     const b = parseInt(hex.substring(4, 6), 16);
