@@ -22,8 +22,6 @@
             </div>
         </router-link>
 
-
-
         <!-- Card Content -->
         <div class="p-3 flex flex-col flex-1">
             <!-- Name -->
@@ -42,8 +40,9 @@
             <p class="text-xs sm:text-sm text-gray-600 mt-1" v-if="product.strength && product.packSize">
                 {{ product.strength }} | Pack: {{ product.packSize }}
             </p>
-            
+
             <div class="mt-2 flex items-center justify-between">
+                <!-- Price -->
                 <div>
                     <span v-if="product.promotion_price" class="text-green-700 font-semibold text-lg">
                         {{ product.promotion_price.toFixed(2) }} Tk
@@ -60,81 +59,108 @@
                     </p>
                 </div>
 
-                <!-- Circular Add to Cart Button -->
-                <button @click="addToCart(product)" :disabled="isStockOut" :class="[
-                    'ml-2 flex items-center justify-center w-9 h-9 rounded-full transition text-white shadow-md',
-                    isStockOut ? 'bg-gray-400 cursor-not-allowed opacity-60' : 'bg-green-600 hover:bg-green-700'
-                ]">
-                    <i class="pi pi-plus"></i>
-                </button>
+                <!-- Right Side: Add Button or Quantity Controls -->
+                <div class="ml-2">
+                    <!-- Add to Cart Button (first time) -->
+                    <button v-if="!showQuantityControls" @click="handleAddToCart" :disabled="isStockOut" :class="[
+                        'flex items-center justify-center w-9 h-9 rounded-full transition text-white shadow-md',
+                        isStockOut
+                            ? 'bg-gray-400 cursor-not-allowed opacity-60'
+                            : 'bg-green-600 hover:bg-green-700'
+                    ]">
+                        <i class="pi pi-plus"></i>
+                    </button>
+
+                    <!-- Quantity Controls -->
+                    <div v-else
+                        class="inline-flex items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-sm">
+                        <!-- Decrease -->
+                        <button @click="decreaseQty" :disabled="quantity <= 1 || isStockOut"
+                            class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
+                            <i class="pi pi-minus"></i>
+                        </button>
+
+                        <!-- Quantity Display -->
+                        <div
+                            class="w-10 text-center text-gray-800 font-medium bg-white border-l border-r border-gray-300">
+                            {{ quantity }}
+                        </div>
+
+                        <!-- Increase -->
+                        <button @click="increaseQty" :disabled="isStockOut"
+                            class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-green-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
+                            <i class="pi pi-plus"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
-
 <script setup>
-import {
-    ref,
-    computed
-} from "vue";
-import {
-    useCartStore
-} from "@/stores/cart";
-import {
-    categories
-} from "@/data/categories.js";
-import {
-    usePush
-} from "notivue"
+import { ref, computed } from "vue";
+import { useCartStore } from "@/stores/cart";
+import { usePush } from "notivue";
 
 const props = defineProps({
     product: {
         type: Object,
-        required: true
-    }
+        required: true,
+    },
 });
 
-const defaultImagePlaceHolder = computed(() => {
-    const prodImage = props.product.image?.trim();
-    const catImage = props.product.category?.image?.trim();
-    console.log("P IMAGE: " + prodImage)
-    if (prodImage && !prodImage.includes("https://placehold.co") && !prodImage.includes("no-image.png")) {
-        return { url: prodImage, type: 'product' };
-    }
-    else if (catImage && !catImage.includes("https://placehold.co") && !catImage.includes("no-image.png")) {
-        return { url: catImage, type: 'category' };
-    }
-    else {
-        return { url: "https://placehold.co/1920x1080", type: 'placeholder' };
-    }
-});
+const cartStore = useCartStore();
+const push = usePush();
 
 const quantity = ref(1);
-const cartStore = useCartStore();
-const push = usePush()
+const showQuantityControls = ref(false);
 
 const isStockOut = computed(() => {
     return !props.product?.qty || props.product.qty <= 0 || props.product.price <= 0;
 });
 
-const addToCart = () => {
-    cartStore.addToCart({
-        ...props.product,
-        quantity: quantity.value
-    });
-    quantity.value = 1;
-    push.success(`${props.product.name} added to cart!`)
+const defaultImagePlaceHolder = computed(() => {
+    const prodImage = props.product.image?.trim();
+    const catImage = props.product.category?.image?.trim();
+    if (prodImage && !prodImage.includes("https://placehold.co") && !prodImage.includes("no-image.png")) {
+        return { url: prodImage, type: "product" };
+    } else if (catImage && !catImage.includes("https://placehold.co") && !catImage.includes("no-image.png")) {
+        return { url: catImage, type: "category" };
+    } else {
+        return { url: "https://placehold.co/1920x1080", type: "placeholder" };
+    }
+});
+
+const handleAddToCart = () => {
+    cartStore.addToCart({ ...props.product, quantity: quantity.value });
+    showQuantityControls.value = true;
+    push.success(`${props.product.name} added to cart!`);
+};
+
+// Increase & decrease handlers
+const increaseQty = () => {
+    quantity.value++;
+    cartStore.updateQuantity(props.product.id, quantity.value);
+};
+
+const decreaseQty = () => {
+    if (quantity.value > 1) {
+        quantity.value--;
+        cartStore.updateQuantity(props.product.id, quantity.value);
+    } else {
+        // Remove from cart when qty = 0
+        showQuantityControls.value = false;
+        cartStore.removeFromCart(props.product.id);
+        push.info(`${props.product.name} removed from cart.`);
+    }
 };
 
 function capitalizeWords(string) {
     if (!string) return "Unknown";
-    return string.split(' ').map(word => {
-        if (!word) return ""; // Handle potential empty strings from multiple spaces
-        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-    }).join(' ');
+    return string
+        .split(" ")
+        .map((word) => (word ? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() : ""))
+        .join(" ");
 }
 </script>
-
-
-<style scoped></style>

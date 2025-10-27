@@ -32,7 +32,8 @@
                         <ul>
                             <li v-for="product in filteredProducts" :key="product.id"
                                 class="px-4 py-3 hover:bg-red-100 flex justify-between items-center gap-3">
-                                <router-link :to="`/products/${product.slug}`" class="flex-1 flex flex-col gap-1">
+                                <router-link :to="`/products/${product.slug}`" class="flex-1 flex flex-col gap-1"
+                                    @click="clearSearch">
                                     <p class="font-medium text-gray-800">{{ capitalizeWords(product.name) }}</p>
                                     <p class="text-sm text-gray-600">
                                         Brand: {{ product.brand.title }} | Category:
@@ -57,25 +58,12 @@
 
                 <!-- Desktop Buttons -->
                 <div class="hidden md:flex items-center space-x-4 h-full relative">
-                    <!-- <router-link to="/delivery-coverage"
-                        class="hidden 2xl:flex space-x-2 h-12 bg-green-100 text-green-600 items-center justify-center rounded-md hover:border-red-300 hover:bg-gradient-to-b hover:from-red-500 hover:to-red-800 hover:text-white transition border border-green-300 shadow-sm px-3">
-                        <img :src="deliveryImg" alt="flag" class="w-6 h-6 rounded-sm" />
-                        <span class="font-semibold" :class="[langStore.langClass]">{{ $t('header.buttons.coverage')
-                        }}</span>
-                    </router-link> -->
-
                     <router-link to="/order-tracking"
                         class="hidden 2xl:flex space-x-2 h-12 bg-green-100 text-green-600 items-center justify-center rounded-md hover:border-red-300 hover:bg-gradient-to-b hover:from-red-500 hover:to-red-800 hover:text-white transition border border-green-300 shadow-sm px-3">
                         <img :src="trackingImg" alt="flag" class="w-6 h-6 rounded-sm" />
                         <span class="font-semibold" :class="[langStore.langClass]">{{ $t('header.buttons.track')
-                            }}</span>
+                        }}</span>
                     </router-link>
-
-                    <!-- <button @click="toggleLanguage"
-                        class="hidden xl:flex space-x-2 w-20 h-12 bg-green-100 text-green-600 items-center justify-center rounded-md hover:border-red-300 hover:bg-gradient-to-b hover:from-red-500 hover:to-red-800 hover:text-white transition border border-green-300 shadow-sm">
-                        <img :src="currentFlag" alt="flag" class="w-6 h-6 rounded-sm" />
-                        <span class="font-semibold">{{ currentLanguage }}</span>
-                    </button> -->
 
                     <button @click="toggleLanguage" class="
                             flex items-center justify-center space-x-2
@@ -222,7 +210,7 @@
                     <!-- <li><router-link @click.native="closeMenu" to="/delivery-coverage">{{ $t('header.menu.coverage')
                     }}</router-link></li> -->
                     <li><router-link @click.native="closeMenu" to="/order-tracking">{{ $t('header.buttons.track')
-                            }}</router-link></li>
+                    }}</router-link></li>
                     <li v-if="authStore.isAuthenticated"><router-link @click.native="closeMenu" to="/orders">{{
                         $t('header.menu.orders') }}</router-link></li>
                     <li v-if="authStore.isAuthenticated"><router-link @click.native="closeMenu" to="/membership">{{
@@ -298,6 +286,11 @@ let index = 0;
 let charIndex = 0;
 let isDeleting = false;
 let typingInterval;
+
+const clearSearch = () => {
+    searchQuery.value = "";
+    searchResults.value = [];
+};
 
 function capitalizeWords(text) {
     if (!text) return '';
