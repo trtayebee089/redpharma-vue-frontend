@@ -120,7 +120,6 @@
                     <div v-else>
                         <div
                             class="max-w-5xl mx-auto text-center leading-relaxed bg-green-100 rounded-lg p-6 relative overflow-hidden mb-6 border border-green-100">
-                            <!-- Decorative background pattern -->
                             <div class="absolute inset-0 opacity-10 pointer-events-none">
                                 <svg class="w-full h-full" preserveAspectRatio="none">
                                     <defs>
@@ -172,7 +171,7 @@
                                 <div
                                     class="inline-flex items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-sm">
                                     <!-- Decrease -->
-                                    <button @click="decreaseQty" :disabled="quantity <= 1 || isStockOut"
+                                    <button @click="decreaseQty(item)" :disabled="quantity <= 1 || isStockOut"
                                         class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
                                         <i class="pi pi-minus"></i>
                                     </button>
@@ -183,7 +182,7 @@
                                         class="w-16 text-center text-gray-800 font-medium bg-white border-l border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all rounded-none" />
 
                                     <!-- Increase -->
-                                    <button @click="increaseQty" :disabled="isStockOut"
+                                    <button @click="increaseQty(item)" :disabled="isStockOut"
                                         class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-green-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
                                         <i class="pi pi-plus"></i>
                                     </button>
