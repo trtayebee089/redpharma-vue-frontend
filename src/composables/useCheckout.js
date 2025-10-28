@@ -143,8 +143,8 @@ export function useCheckout() {
         getTrackingDetails,
         order,
         tracking,
+        shippingZones,
         getShippingZones,
-        getShippingRate,
-        shippingZones
+        getShippingRate
     };
 }
