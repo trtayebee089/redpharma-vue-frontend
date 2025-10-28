@@ -224,30 +224,33 @@
                             </div>
 
                             <div class="grid grid-cols-2 gap-3">
+                                <!-- Division -->
                                 <div>
                                     <label class="block text-gray-700">Division <span class="required">*</span></label>
                                     <select v-model="checkoutForm.division" @change="onDivisionChange"
                                         class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 border-gray-300 bg-white"
                                         required>
                                         <option value="" disabled>Select Division</option>
-                                        <option v-for="zone in shippingZones" :key="zone.id" :value="zone.division">
-                                            {{ zone.division }}
+                                        <option v-for="division in uniqueDivisions" :key="division" :value="division">
+                                            {{ division }}
                                         </option>
                                     </select>
                                 </div>
 
+                                <!-- District -->
                                 <div>
                                     <label class="block text-gray-700">District <span class="required">*</span></label>
                                     <select v-model="checkoutForm.district" :disabled="!checkoutForm.division"
                                         class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 border-gray-300 bg-white"
                                         required>
                                         <option value="" disabled>Select District</option>
-                                        <option v-for="zone in shippingZones" :key="district" :value="zone.district">
+                                        <option v-for="zone in filteredDistricts" :key="zone.id" :value="zone.district">
                                             {{ zone.district }}
                                         </option>
                                     </select>
                                 </div>
                             </div>
+
 
                             <div>
                                 <label class="block text-gray-700 mb-1">Address <span class="required">*</span></label>
@@ -349,6 +352,20 @@ const checkoutForm = reactive({
     address: authStore.user?.address || '',
     division: authStore.user?.division || '',
     district: authStore.user?.district || '',
+});
+
+const uniqueDivisions = computed(() => {
+    const divisions = shippingZones.value
+        .filter(z => z.is_active)
+        .map(z => z.division);
+    return [...new Set(divisions)];
+});
+
+const filteredDistricts = computed(() => {
+    if (!checkoutForm.division) return [];
+    return shippingZones.value.filter(
+        z => z.is_active && z.division === checkoutForm.division
+    );
 });
 
 function onDivisionChange() {
