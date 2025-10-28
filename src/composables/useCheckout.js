@@ -9,8 +9,9 @@ export function useCheckout() {
     const loading = ref(false);
     const error = ref(null);
     const successMessage = ref(null);
-    const order = ref({});      // not null
-    const tracking = ref({});   // not null
+    const order = ref({});   
+    const tracking = ref({});
+    const shippingZones = ref([]);
 
     const getOrderDetails = async (order_id) => {
         if (!order_id) return;
@@ -27,6 +28,32 @@ export function useCheckout() {
         } catch (error) {
             console.error("Error fetching order details:", error);
         }
+    };
+
+    const getShippingZones = async () => {
+        try {
+            const response = await api.get(`/shipping-zones`);
+            if (response.data.success) {
+                shippingZones.value = response.data.data;
+            }
+        } catch (err) {
+            console.error("Error fetching zones:", err);
+        }
+    };
+
+    const getShippingRate = (division, district) => {
+        if (!division) return 0;
+
+        const zones = shippingZones.value.filter(z => z.division === division);
+        if (!zones.length) return null; // no service in this division
+
+        if (!district) {
+            const defaultZone = zones.find(z => !z.district || z.district === '');
+            return defaultZone ? Number(defaultZone.rate) : 0;
+        }
+
+        const districtZone = zones.find(z => z.district === district);
+        return districtZone ? Number(districtZone.rate) : null; // null if district not serviced
     };
 
     const submitOrder = async (checkoutForm) => {
@@ -115,6 +142,9 @@ export function useCheckout() {
         getOrderDetails,
         getTrackingDetails,
         order,
-        tracking
+        tracking,
+        getShippingZones,
+        getShippingRate,
+        shippingZones
     };
 }

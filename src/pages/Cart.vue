@@ -211,14 +211,16 @@
                         <!-- Checkout Form -->
                         <form @submit.prevent="submitCheckout" class="mt-0 space-y-4">
                             <div>
-                                <label class="block text-gray-700 mb-1">Full Name <span class="required">*</span></label>
+                                <label class="block text-gray-700 mb-1">Full Name <span
+                                        class="required">*</span></label>
                                 <input type="text" v-model="checkoutForm.fullName"
                                     class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 border-gray-300 bg-white"
                                     required />
                             </div>
 
                             <div>
-                                <label class="block text-gray-700 mb-1">Phone Number <span class="required">*</span></label>
+                                <label class="block text-gray-700 mb-1">Phone Number <span
+                                        class="required">*</span></label>
                                 <input type="tel" v-model="checkoutForm.phone"
                                     class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 border-gray-300 bg-white"
                                     required />
@@ -231,9 +233,8 @@
                                         class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 border-gray-300 bg-white"
                                         required>
                                         <option value="" disabled>Select Division</option>
-                                        <option v-for="(districts, division) in bdData" :key="division"
-                                            :value="division">
-                                            {{ division }}
+                                        <option v-for="zone in shippingZones" :key="zone.id" :value="zone.division">
+                                            {{ zone.division }}
                                         </option>
                                     </select>
                                 </div>
@@ -244,9 +245,9 @@
                                         class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 border-gray-300 bg-white"
                                         required>
                                         <option value="" disabled>Select District</option>
-                                        <option v-for="district in availableDistricts" :key="district"
-                                            :value="district">
-                                            {{ district }}
+                                        <option v-for="zone in shippingZones" :key="district"
+                                            :value="zone.district">
+                                            {{ zone.district }}
                                         </option>
                                     </select>
                                 </div>
@@ -268,6 +269,7 @@
                                 <span>Shipping</span>
                                 <span class="text-green-600 font-medium">{{ cartStore.shippingRate }} Tk</span>
                             </div>
+
                             <template
                                 v-if="authStore.isAuthenticated && authStore.membershipInfo && authStore.rewardPointSettings.minimum_amount <= cartStore.cartSubtotal && authStore.membershipInfo?.discount > 0">
                                 <!-- Apply Discount Toggle -->
@@ -343,7 +345,7 @@ const cartStore = useCartStore();
 const langStore = useLanguageStore();
 const router = useRouter();
 const { t } = useI18n();
-const { submitOrder } = useCheckout();
+const { submitOrder, shippingZones, getShippingZones, getShippingRate } = useCheckout();
 
 const checkoutForm = reactive({
     fullName: authStore.user?.name || '',
@@ -351,44 +353,6 @@ const checkoutForm = reactive({
     address: authStore.user?.address || '',
     division: authStore.user?.division || '',
     district: authStore.user?.district || '',
-});
-
-const bdData = {
-    "Dhaka": [
-        "Dhaka", "Gazipur", "Kishoreganj", "Manikganj", "Munshiganj",
-        "Narayanganj", "Narsingdi", "Tangail", "Faridpur", "Gopalganj", "Madaripur", "Rajbari", "Shariatpur"
-    ],
-    "Chittagong": [
-        "Chattogram", "Cox’s Bazar", "Cumilla", "Brahmanbaria", "Feni",
-        "Khagrachhari", "Lakshmipur", "Noakhali", "Rangamati", "Bandarban"
-    ],
-    "Rajshahi": [
-        "Rajshahi", "Natore", "Naogaon", "Pabna", "Bogra", "Joypurhat", "Sirajganj", "Chapainawabganj"
-    ],
-    "Khulna": [
-        "Khulna", "Bagerhat", "Chuadanga", "Jashore", "Jhenaidah",
-        "Kushtia", "Magura", "Meherpur", "Narail", "Satkhira"
-    ],
-    "Barishal": [
-        "Barishal", "Bhola", "Jhalokathi", "Patuakhali", "Pirojpur", "Barguna"
-    ],
-    "Sylhet": [
-        "Sylhet", "Habiganj", "Moulvibazar", "Sunamganj"
-    ],
-    "Rangpur": [
-        "Rangpur", "Dinajpur", "Gaibandha", "Kurigram", "Lalmonirhat", "Nilphamari", "Panchagarh", "Thakurgaon"
-    ],
-    "Mymensingh": [
-        "Mymensingh", "Jamalpur", "Netrokona", "Sherpur"
-    ]
-};
-
-const currentValidZone = {
-    Rajshahi: ["Rajshahi"],
-};
-
-const availableDistricts = computed(() => {
-    return bdData[checkoutForm.division] || [];
 });
 
 function onDivisionChange() {
@@ -412,14 +376,12 @@ const getImageUrl = (product) => {
     }
 };
 
-// Quantity actions
 const increaseQty = (item) => cartStore.updateQuantity(item.id, item.quantity + 1);
 const decreaseQty = (item) => {
     if (item.quantity > 1) cartStore.updateQuantity(item.id, item.quantity - 1);
 };
 const removeItem = (item) => cartStore.removeFromCart(item.id);
 
-// Checkout submission
 const submitCheckout = async () => {
     if (!cartStore.items.length) {
         alert("Your cart is empty!");
@@ -451,26 +413,30 @@ const submitCheckout = async () => {
 
 watch(
     () => checkoutForm.division,
-    (newDivision) => {
-        if (newDivision && !currentValidZone[newDivision]) {
-            alert("❌ Sorry, we currently only deliver in the Rajshahi division.");
+    (division) => {
+        checkoutForm.district = "";
+
+        const rate = getShippingRate(division, null);
+        if (rate === null) {
+            alert(`❌ Sorry, we currently do not deliver to ${division}.`);
             checkoutForm.division = "";
-            checkoutForm.district = "";
+            cartStore.shippingRate = 0;
+        } else {
+            cartStore.shippingRate = rate; // use default rate for the division
         }
     }
 );
 
 watch(
     () => checkoutForm.district,
-    (newDistrict) => {
-        const validDistricts = currentValidZone[checkoutForm.division];
-        if (
-            checkoutForm.division &&
-            validDistricts &&
-            !validDistricts.includes(newDistrict)
-        ) {
-            alert("❌ Sorry, we currently only deliver in Rajshahi district.");
+    (district) => {
+        const rate = getShippingRate(checkoutForm.division, district);
+        if (rate === null) {
+            alert(`❌ Sorry, we currently do not deliver to ${district}.`);
             checkoutForm.district = "";
+            cartStore.shippingRate = getShippingRate(checkoutForm.division, null);
+        } else {
+            cartStore.shippingRate = rate;
         }
     }
 );
@@ -479,11 +445,13 @@ onMounted(async () => {
     if (!authStore.rewardPointTiers.length) {
         await authStore.fetchRewardPointTiers();
     }
+    await getShippingZones();
+    console.log(shippingZones.value);
 });
 </script>
 
 <style scoped>
-.required{
+.required {
     color: red;
     font-size: 18px;
 }

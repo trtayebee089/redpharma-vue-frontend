@@ -5,10 +5,13 @@ export const useCartStore = defineStore('cart', {
   state: () => ({
     items: JSON.parse(localStorage.getItem('cartItems') || '[]'),
     isCartOpen: false,
-    shippingRate: 50,
+    shippingRate: 0,
     applyDiscount: false,
   }),
   actions: {
+    setShippingRate(rate) {
+      this.shippingRate = rate;
+    },
     getQuantity(productId) {
         const item = this.items.find(i => i.id === productId);
         return item ? item.quantity : 0;
