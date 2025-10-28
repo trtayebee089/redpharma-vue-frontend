@@ -1,29 +1,25 @@
 <template>
-    <!-- Offcanvas Drawer -->
     <div class="fixed top-0 right-0 h-full bg-white shadow-2xl z-[101] transform transition-transform duration-300 flex flex-col
            w-[90vw] sm:w-[400px] md:w-[450px] lg:w-[480px] xl:w-[400px] rounded-l-2xl overflow-hidden"
         :class="cartStore.isCartOpen ? 'translate-x-0' : 'translate-x-full'">
-        <!-- Header -->
-        <div class="flex justify-between items-center p-3 border-b border-gray-200 bg-gradient-to-r from-green-50 to-green-100 shadow-sm">
+        
+        <div
+            class="flex justify-between items-center p-3 border-b border-gray-200 bg-gradient-to-r from-green-50 to-green-100 shadow-sm">
             <h3 class="text-lg font-semibold text-gray-800 tracking-wide">
                 Cart ({{ cartStore.items.length }} items)
             </h3>
             <div class="flex flex-1 justify-end space-x-2">
-                <!-- Clear Cart -->
                 <button @click="cartStore.clearCart()"
                     class="text-red-500 bg-red-50 hover:text-red-700 px-3 py-1 rounded-full transition-all hover:shadow-sm hover:bg-red-200">
                     Clear Cart
                 </button>
 
-                <!-- Close Offcanvas -->
                 <button @click="cartStore.toggleCart(false)"
                     class="text-white bg-red-500 hover:text-red-50 px-3 py-1 rounded-full transition-all hover:shadow-sm hover:bg-red-700">
                     <i class="pi pi-times text-md"></i>
                 </button>
             </div>
         </div>
-
-        <!-- Cart Items -->
         <div class="flex-1 overflow-y-auto p-4 space-y-4">
             <div v-if="!cartStore.items.length" class="text-gray-500 text-center mt-10">
                 Your cart is empty
@@ -32,15 +28,12 @@
             <template v-for="item in cartStore.items" :key="item.id">
                 <div
                     class="flex flex-col sm:flex-row justify-between bg-white border border-gray-200 rounded-xl p-3 sm:p-4 shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 gap-3 sm:gap-4">
-                    <!-- Left: Image -->
                     <div class="sm:w-15 flex-shrink-0">
                         <img v-if="getImageUrl(item)" :src="getImageUrl(item).url" alt="product"
                             class="hidden sm:block w-20 h-20 object-cover rounded-xl border border-gray-300 shadow-sm" />
                     </div>
 
-                    <!-- Right: Details -->
                     <div class="flex-1 flex flex-col justify-between relative">
-                        <!-- Row 1: Name, brand, unit price + remove button -->
                         <div class="flex justify-between items-start relative">
                             <div class="flex flex-col pr-10">
                                 <p class="font-medium text-gray-800 text-sm truncate">{{ item.name }}</p>
@@ -53,18 +46,15 @@
                                 </p>
                             </div>
 
-                            <!-- Remove Button -->
                             <button @click="cartStore.removeFromCart(item.id)"
                                 class="absolute top-0 right-0 text-red-500 hover:text-red-700 transition font-medium">
                                 <i class="pi pi-times"></i>
                             </button>
                         </div>
 
-                        <!-- Row 2: Quantity controls + total price -->
-                        <div
-                            class="flex justify-between items-center mt-3 ">
-                            <!-- Quantity Controls -->
-                            <div class="inline-flex items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-inner">
+                        <div class="flex justify-between items-center mt-3 ">
+                            <div
+                                class="inline-flex items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-inner">
                                 <button @click="decreaseQty(item)" :disabled="item.quantity <= 1 || item.isStockOut"
                                     class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition-all rounded-l-full disabled:text-gray-400 disabled:bg-gray-200">
                                     <i class="pi pi-minus text-xs"></i>
@@ -79,10 +69,9 @@
                                 </button>
                             </div>
 
-                            <!-- Total Price -->
                             <p class="text-green-700 font-semibold text-sm px-3">
                                 {{ ((Number(item.offerPrice ?? item.price) || 0) * (Number(item.quantity) ||
-                                1)).toFixed(2) }} Tk
+                                    1)).toFixed(2) }} Tk
                             </p>
                         </div>
                     </div>
@@ -90,8 +79,8 @@
             </template>
         </div>
 
-        <!-- Footer Summary -->
-        <div class="p-4 border-t border-gray-200 bg-white rounded-t-xl shadow-inner space-y-3 flex justify-between items-center">
+        <div
+            class="p-4 border-t border-gray-200 bg-white rounded-t-xl shadow-inner space-y-3 flex justify-between items-center">
             <div class="text-gray-600 font-semibold m-0">
                 <span class="block">Cart Total</span>
                 <span class="block font-bold text-xl text-green-600">{{ totalMRP.toFixed(2) }} Tk</span>
@@ -104,8 +93,8 @@
         </div>
     </div>
 
-    <!-- Backdrop -->
-    <div v-if="cartStore.isCartOpen" @click="cartStore.toggleCart(false)" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 transition-opacity"></div>
+    <div v-if="cartStore.isCartOpen" @click="cartStore.toggleCart(false)"
+        class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 transition-opacity"></div>
 </template>
 
 <script setup>

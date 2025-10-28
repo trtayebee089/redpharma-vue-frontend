@@ -1,6 +1,5 @@
 <template>
     <div class="relative dropdown-wrapper" @click.outside="open = false">
-        <!-- Button -->
         <button @click.stop="toggle"
             class="flex items-center space-x-2 px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg shadow-md">
             <img :src="user.avator" alt="User Avatar" class="w-8 h-8 rounded-full border" />
@@ -72,8 +71,7 @@
         open.value = false;
         router.push('/');
     };
-
-    // close on outside click
+    
     const handleClickOutside = (e) => {
         if (!e.target.closest(".dropdown-wrapper")) {
             open.value = false;

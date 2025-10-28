@@ -2,7 +2,6 @@
     <div class="p-6 font-sans text-gray-800 pt-6">
         <BreadCrumb :crumbs="crumbs" :title="title" subtitle="Manage your orders and track their status" />
 
-        <!-- Tabs -->
         <div class="flex space-x-4 border-b border-gray-200 mb-4 mt-10">
             <button v-for="tab in tabs" :key="tab.value" @click="activeTab = tab.value" :class="[
                 'py-2 px-4 font-medium transition',
@@ -14,7 +13,6 @@
             </button>
         </div>
 
-        <!-- Orders Table -->
         <div class="overflow-x-auto">
             <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
                 <thead class="bg-gray-50 text-gray-700 font-medium">
@@ -28,12 +26,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Loading State -->
                     <tr v-if="loading">
                         <td colspan="6" class="text-center py-6">Loading orders...</td>
                     </tr>
 
-                    <!-- Orders List -->
                     <tr v-else-if="filteredOrders.length > 0" v-for="order in filteredOrders" :key="order.id"
                         class="border-b border-gray-200 hover:bg-gray-50 transition">
                         <td class="px-4 py-3 text-gray-700">{{ order.id }}</td>
@@ -60,7 +56,6 @@
                         </td>
                     </tr>
 
-                    <!-- No Orders -->
                     <tr v-else>
                         <td colspan="6" class="text-center py-6 text-gray-500">
                             No orders found for this tab.

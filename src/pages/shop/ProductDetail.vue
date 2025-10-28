@@ -1,9 +1,8 @@
 <template>
     <section v-if="productDetail" class="bg-gray-50 text-gray-800 space-y-12 px-0 md:px-8 lg:px-16 pt-6">
 
-        <!-- Section 1: Product Info -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-4 rounded-lg shadow border border-gray-200 lg:p-6">
-            <!-- Left: Product Image -->
+            
             <div class="relative w-full max-w-md aspect-[16/9] rounded-lg overflow-hidden flex items-center justify-center bg-gradient-to-br from-gray-200 via-gray-300 to-gray-200 md:from-gray-200 md:via-gray-300 md:to-gray-200">
                 <img :src="defaultImagePlaceHolder.url" :alt="productDetail.name" loading="lazy" :class="[
                     'object-contain',
@@ -13,17 +12,13 @@
                 ]" />
             </div>
 
-            <!-- Right: Product Details -->
             <div class="flex flex-col justify-between space-y-6">
-                <!-- Product Info -->
                 <div>
-                    <!-- Name -->
                     <h1
                         class="text-xl md:text-xl lg:text-2xl xl:text-4xl font-extrabold text-gray-900 leading-tight tracking-tight">
                         {{ productDetail.name }}
                     </h1>
 
-                    <!-- Brand & Category -->
                     <div class="mt-2 space-y-1">
                         <p v-if="productDetail.brand" class="text-sm text-gray-600">
                             <span class="font-medium text-gray-800">Brand:</span>
@@ -35,7 +30,6 @@
                         </p>
                     </div>
 
-                    <!-- Price Section -->
                     <div class="flex items-center flex-wrap gap-3 mt-5">
                         <p class="text-2xl font-bold text-green-600" v-if="product.offerPrice">
                             ${{ product.offerPrice.toFixed(2) }}
@@ -52,27 +46,23 @@
                     </div>
 
                     <div class="flex flex-wrap items-center gap-4 mt-6">
-                        <!-- Quantity Controls -->
                         <div
                             class="inline-flex items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-sm">
-                            <!-- Decrease -->
+                            
                             <button @click="decreaseQty" :disabled="quantity <= 1 || isStockOut"
                                 class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
                                 <i class="pi pi-minus"></i>
                             </button>
 
-                            <!-- Quantity Input -->
                             <input type="number" v-model.number="quantity" min="1"
                                 class="w-16 text-center text-gray-800 font-medium bg-white border-l border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all rounded-none" />
 
-                            <!-- Increase -->
                             <button @click="increaseQty" :disabled="isStockOut"
                                 class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-green-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
                                 <i class="pi pi-plus"></i>
                             </button>
                         </div>
 
-                        <!-- Add to Cart -->
                         <button @click="addToCart(productDetail)" :disabled="isStockOut"
                             class="flex-1 md:flex-none flex items-center justify-center whitespace-nowrap px-6 py-2 font-semibold text-white shadow-md transition-all duration-200 focus:ring-2 focus:ring-offset-1 rounded-full bg-green-600 hover:bg-green-700 focus:ring-green-400 disabled:bg-red-600 disabled:cursor-not-allowed disabled:hover:bg-red-700">
                             <span v-if="!isStockOut">Add to Cart</span>
@@ -84,7 +74,6 @@
             </div>
         </div>
 
-        <!-- Section 2: Product Description & Dose -->
         <div v-if="product.description || product.doses" class="bg-white p-6 rounded-lg shadow border border-gray-200">
             <h2 class="text-xl font-semibold mb-4">Product Description</h2>
             <p class="text-gray-700 mb-4">{{ product.description }}</p>
@@ -95,7 +84,6 @@
             </ul>
         </div>
 
-        <!-- Section 3: Alternative Products -->
         <div>
             <h2 v-if="alternativeProducts.length" class="text-xl font-semibold mb-4">
                 Related Medicines ({{ alternativeProducts.length }})

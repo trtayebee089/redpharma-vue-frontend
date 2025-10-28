@@ -1,8 +1,7 @@
 <template>
     <div class="mx-auto p-6 font-sans text-gray-800 space-y-6 relative leading-relaxed fade-up mb-16">
-        <!-- Page Header -->
         <div class="mx-auto text-center leading-relaxed bg-green-100 rounded-lg p-6 relative overflow-hidden mb-6">
-            <!-- Decorative background pattern -->
+            
             <div class="absolute inset-0 opacity-10 pointer-events-none">
                 <svg class="w-full h-full" preserveAspectRatio="none">
                     <defs>
@@ -63,7 +62,6 @@
             <MembershipCard :currentTier="currentTier" :type="currentTier.name" :locked="false"/>
         </div>
 
-        <!-- Page Header -->
         <div class="mx-auto text-left leading-relaxed rounded-lg relative overflow-hidden mb-6 bg-green-100 p-2">
             <div class="absolute inset-0 opacity-10 pointer-events-none">
                 <svg class="w-full h-full" preserveAspectRatio="none">
@@ -89,7 +87,6 @@
             </div>
         </div>
 
-        <!-- Transaction Info -->
         <div class="mt-8 bg-white shadow rounded-lg p-6 border border-green-200"
             v-if="authStore.rewardPointUsages.length > 0">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('membership.recent_usage') }}</h3>

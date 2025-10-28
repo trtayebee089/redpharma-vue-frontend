@@ -27,7 +27,6 @@
 
 
 <style scoped>
-    /* Only modal animation */
     .modal-enter-active,
     .modal-leave-active {
         transition: all 0.35s ease;

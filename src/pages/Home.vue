@@ -1,19 +1,6 @@
 <template>
     <!-- Banner Slider -->
-    <section class="relative pt-6 container mx-auto px-4 md:px-6">
-        <div class="rounded-xl overflow-hidden border border-red-100">
-            <Swiper :modules="[Pagination, Navigation, Autoplay]" :slides-per-view="1" :loop="true"
-                :autoplay="{ delay: 4500, disableOnInteraction: false }"
-                class="swiper-container w-full relative rounded-xl overflow-hidden shadow-xl"
-                style="aspect-ratio: 1400/480;">
-                <SwiperSlide v-for="(slide, index) in backgrounds" :key="index"
-                    class="relative w-full h-full shine-effect">
-                    <img :src="slide" alt="slide image" class="w-full h-full object-contain "
-                        style="object-position: center;" />
-                </SwiperSlide>
-            </Swiper>
-        </div>
-    </section>
+    <HeroSlider />
 
     <!-- Categories Slider -->
     <section class="mt-4 md:mt-10 relative fade-up container mx-auto px-4 md:px-6">
@@ -25,16 +12,16 @@
             </h2>
 
             <div v-if="!loading && categories.length">
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
-
-                <Swiper :modules="[Navigation, Pagination]" :slides-per-view="2" :space-between="16" :breakpoints="{
-                    640: { slidesPerView: 3, spaceBetween: 16 },
-                    768: { slidesPerView: 4, spaceBetween: 20 },
-                    1024: { slidesPerView: 4, spaceBetween: 24 },
-                    1280: { slidesPerView: 6, spaceBetween: 24 }
-                }" :loop="true" :navigation="{ prevEl: '.swiper-button-prev', nextEl: '.swiper-button-next' }"
-                    class="pt-5 pb-5">
+                <Swiper :modules="[Pagination, Autoplay]" :slides-per-view="2" :space-between="16" :loop="true"
+                    :autoplay="{
+                        delay: 3000,
+                        disableOnInteraction: false
+                    }" :breakpoints="{
+                        640: { slidesPerView: 3, spaceBetween: 16 },
+                        768: { slidesPerView: 4, spaceBetween: 20 },
+                        1024: { slidesPerView: 4, spaceBetween: 24 },
+                        1280: { slidesPerView: 6, spaceBetween: 24 }
+                    }" class="pt-5 pb-10">
                     <SwiperSlide v-for="(category, index) in loading ? Array(6) : categories" :key="index"
                         class="overflow-visible">
                         <router-link v-if="!loading" :to="`/category/${category.slug}`"
@@ -43,7 +30,6 @@
                             <p class="text-sm font-medium text-gray-800">{{ category.name }}</p>
                         </router-link>
 
-                        <!-- Placeholder / Skeleton -->
                         <div v-else
                             class="bg-gray-200 rounded-lg p-4 h-32 animate-pulse flex items-center justify-center">
                             <div class="w-16 h-16 bg-gray-300 rounded-full"></div>
@@ -56,10 +42,8 @@
             <div v-else class="text-center py-10 text-gray-500">
                 <svg class="animate-spin h-10 w-10 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                    </circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z">
-                    </path>
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
                 </svg>
             </div>
         </div>
@@ -133,7 +117,7 @@
     </section>
 
     <!-- Quick Action Buttons CTA -->
-    <section
+    <!-- <section
         class="bg-white relative flex flex-wrap items-center justify-center gap-4 sm:gap-5 md:gap-8 my-10 fade-up transition container mx-auto px-4 md:px-6">
         <a v-for="(btn, index) in tm('home.quick_actions')" :key="index" :href="btn.link" :class="`
       ${btn.bg} ${btn.textColor} ${langStore.langClass}
@@ -148,7 +132,7 @@
             <i :class="btn.icon + ' mr-2 text-lg sm:text-xl'"></i>
             {{ btn.text }}
         </a>
-    </section>
+    </section> -->
 
     <!-- Products Slider -->
     <section class="mt-10 relative featured-product-slider fade-up container mx-auto px-4 md:px-6">
@@ -219,7 +203,7 @@
     <!-- Top Products By Category Section -->
     <section class="mt-10 relative fade-up">
         <div v-for="(item, index) in layoutItems" :key="index" :class="[
-            'mb-12 transition-all duration-300',
+            'transition-all duration-300',
             index % 2 === 0
                 ? ''
                 : 'bg-white'
@@ -260,76 +244,6 @@
                 </Swiper>
             </div>
         </div>
-    </section>
-
-
-    <section
-        class="bg-gradient-to-br from-green-100 to-white py-12 relative overflow-hidden container mx-auto px-4 md:px-6 rounded-xl">
-        <!-- Decorative pattern (optional subtle diagonal lines) -->
-        <div class="absolute inset-0 opacity-5 pointer-events-none">
-            <svg class="w-full h-full" preserveAspectRatio="none">
-                <defs>
-                    <pattern id="dots" width="10" height="10" patternUnits="userSpaceOnUse">
-                        <circle cx="1" cy="1" r="1" fill="#f87171"></circle>
-                    </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#dots)"></rect>
-            </svg>
-        </div>
-
-        <div class="mx-auto px-4 text-center">
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-10">
-                {{ t('home.impact_counter') }}
-            </h2>
-
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
-                <div v-for="(stat, index) in stats" :key="index" ref="statRefs"
-                    class="bg-white rounded-xl shadow-md p-6 border border-gray-100 hover:shadow-lg transition-all">
-                    <p class="text-3xl md:text-4xl font-bold text-green-600 mb-2">
-
-                    </p>
-                    <p class="text-gray-700 font-medium"></p>
-                    <div class="flex items-center justify-start">
-                        <div
-                            class="flex items-center justify-center w-14 h-14 mr-4 bg-green-100 text-green-600 rounded-full group-hover:bg-green-600 group-hover:text-white transition">
-                            <i class="pi pi-bolt text-2xl"></i>
-                        </div>
-
-                        <div class="text-left">
-                            <h3 class="text-xl font-semibold text-gray-800 mb-2 font-wb" :class="[langStore.langClass]">
-                                {{ stat.displayValue }}
-                            </h3>
-                            <p class="text-gray-600 text-sm leading-relaxed font-ws m-0" :class="[langStore.langClass]">
-                                {{ stat.label }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- optional floating gradient animation overlay -->
-        <div class="absolute inset-0 bg-gradient-to-r from-green-100/0 via-green-100/30 to-green-100/0 animate-shine">
-        </div>
-    </section>
-
-    <!-- Health Articles Section -->
-    <section class="my-12 fade-up hidden container mx-auto px-4 md:px-6">
-        <h2 class="text-2xl md:text-3xl font-bold mb-5 text-gray-800 relative inline-block"
-            :class="[langStore.langClass]">
-            {{ $t('home.health_articles') }}
-        </h2>
-
-        <Swiper :slides-per-view="1" :space-between="20" :breakpoints="{
-            0: { slidesPerView: 1, spaceBetween: 16 }, // mobile <640px
-            768: { slidesPerView: 2, spaceBetween: 20 }, // md >=768px
-            1280: { slidesPerView: 3, spaceBetween: 24 } // xl >=1280px
-        }" :loop="true" :pagination="{ clickable: true }" :navigation="true" class="pb-10">
-            <!-- Loop through your blog posts -->
-            <SwiperSlide v-for="(article, index) in articles" :key="index">
-                <BlogGridItem :article="article" />
-            </SwiperSlide>
-        </Swiper>
     </section>
 
     <!-- Testimonials -->
@@ -388,6 +302,56 @@
         </div>
     </section>
 
+    <section
+        class="bg-gradient-to-br from-green-100 to-white py-12 relative overflow-hidden container mx-auto px-4 md:px-6 rounded-xl">
+        <!-- Decorative pattern (optional subtle diagonal lines) -->
+        <div class="absolute inset-0 opacity-5 pointer-events-none">
+            <svg class="w-full h-full" preserveAspectRatio="none">
+                <defs>
+                    <pattern id="dots" width="10" height="10" patternUnits="userSpaceOnUse">
+                        <circle cx="1" cy="1" r="1" fill="#f87171"></circle>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#dots)"></rect>
+            </svg>
+        </div>
+
+        <div class="mx-auto px-4 text-center">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-10">
+                {{ t('home.impact_counter') }}
+            </h2>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                <div v-for="(stat, index) in stats" :key="index" ref="statRefs"
+                    class="bg-white rounded-xl shadow-md p-6 border border-gray-100 hover:shadow-lg transition-all">
+                    <p class="text-3xl md:text-4xl font-bold text-green-600 mb-2">
+
+                    </p>
+                    <p class="text-gray-700 font-medium"></p>
+                    <div class="flex items-center justify-start">
+                        <div
+                            class="flex items-center justify-center w-14 h-14 mr-4 bg-green-100 text-green-600 rounded-full group-hover:bg-green-600 group-hover:text-white transition">
+                            <i class="pi pi-bolt text-2xl"></i>
+                        </div>
+
+                        <div class="text-left">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2 font-wb" :class="[langStore.langClass]">
+                                {{ stat.displayValue }}
+                            </h3>
+                            <p class="text-gray-600 text-sm leading-relaxed font-ws m-0" :class="[langStore.langClass]">
+                                {{ stat.label }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- optional floating gradient animation overlay -->
+        <div class="absolute inset-0 bg-gradient-to-r from-green-100/0 via-green-100/30 to-green-100/0 animate-shine">
+        </div>
+    </section>
+
     <About />
 </template>
 
@@ -425,6 +389,7 @@ import slider1 from "@/assets/images/slide-1.jpg"
 import slider2 from "@/assets/images/slide-2.jpg"
 import slider3 from "@/assets/images/slide-3.jpg"
 import PrescriptionUpload from '../components/common/PrescriptionUpload.vue'
+import HeroSlider from '@/components/layout/HeroSlider.vue'
 
 const {
     categories,
@@ -446,12 +411,6 @@ const {
     tm
 } = useI18n();
 const langStore = useLanguageStore();
-
-const backgrounds = [
-    slider1,
-    slider2,
-    slider3,
-];
 
 const articles = [{
     title: "5 Tips for a Healthy Lifestyle",
@@ -660,78 +619,6 @@ onMounted(async () => {
 
 .swiper-container {
     aspect-ratio: 1400 / 480;
-}
-
-/* Custom Swiper Navigation Buttons */
-.swiper-button-prev,
-.swiper-button-next {
-    position: absolute;
-    top: 75%;
-    transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
-    background-color: #1cb94b;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    z-index: 30;
-    transition: all 0.3s ease;
-}
-
-@media (max-width: 768px) {
-
-    .swiper-button-prev,
-    .swiper-button-next {
-        width: 30px;
-        height: 30px;
-        top: 70%;
-    }
-
-    .swiper-button-prev::after,
-    .swiper-button-next::after {
-        font-size: 14px;
-        /* optional: smaller arrow icons */
-    }
-
-    .swiper-button-prev {
-        left: -10px !important;
-    }
-
-    .swiper-button-next {
-        right: -10px !important;
-    }
-}
-
-.swiper-button-prev:hover,
-.swiper-button-next:hover {
-    background-color: #1cb94b;
-}
-
-.swiper-button-prev {
-    left: 8px;
-}
-
-.swiper-button-next {
-    right: 8px;
-}
-
-.swiper-button-prev::after,
-.swiper-button-next::after {
-    font-family: 'PrimeIcons';
-    font-size: 1.2rem;
-    color: white;
-}
-
-.swiper-button-prev::after {
-    content: "\e900";
-}
-
-.swiper-button-next::after {
-    content: "\e901";
 }
 
 /* Ripple effect */

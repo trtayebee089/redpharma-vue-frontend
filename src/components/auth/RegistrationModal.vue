@@ -2,7 +2,6 @@
     <Modal v-if="show" :isOpen="show" @close="() => emit('close')">
         <div class="flex items-center justify-center h-auto min-h-[500px]">
             <transition name="fade" mode="out-in">
-                <!-- Already logged in -->
                 <div v-if="authStore.isAuthenticated" class="text-center">
                     <h2 class="text-3xl font-bold text-green-600 mb-2">
                         Welcome, {{ authStore.user?.name || "Customer" }}!
@@ -10,15 +9,12 @@
                     <p class="text-gray-700 text-lg">You have successfully registered.</p>
                 </div>
 
-                <!-- Registration Form -->
                 <div v-else class="flex flex-col md:flex-row w-full">
-                    <!-- Left Banner -->
                     <div class="hidden md:flex w-1/2 bg-green-100 items-center justify-center">
                         <img src="https://img.freepik.com/premium-vector/online-registration-sign-up-login-account-mobile-app_530733-1649.jpg"
                             alt="Register Banner" class="rounded-lg shadow-md object-cover h-full w-full" />
                     </div>
 
-                    <!-- Right Content -->
                     <div class="w-full md:w-1/2 p-8 flex flex-col justify-center relative">
                         <div class="flex justify-center mb-6">
                             <img :src="mainLogo" alt="Brand Logo" class="h-12" />
@@ -29,11 +25,9 @@
                                 Create Your Account
                             </h2>
 
-                            <!-- Name -->
                             <input type="text" v-model="name" placeholder="Full Name"
                                 class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
 
-                            <!-- Mobile -->
                             <div class="flex border rounded overflow-hidden">
                                 <span
                                     class="flex items-center px-3 bg-gray-100 text-gray-600 text-sm border-r">+880</span>
@@ -41,15 +35,12 @@
                                     class="w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
                             </div>
 
-                            <!-- Password -->
                             <input type="password" v-model="password" placeholder="Password"
                                 class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
 
-                            <!-- Confirm Password -->
                             <input type="password" v-model="confirmPassword" placeholder="Confirm Password"
                                 class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
 
-                            <!-- T&C -->
                             <p class="text-xs text-gray-500 text-center">
                                 By registering, you agree to our
                                 <router-link to="/terms" class="text-green-500 hover:underline">Terms &
@@ -68,7 +59,6 @@
                                 </button>
                             </p>
 
-                            <!-- Submit -->
                             <button @click="submitRegister" :disabled="authStore.loading"
                                 class="bg-green-500 hover:bg-green-600 text-white py-2 rounded font-semibold w-full transition disabled:opacity-50">
                                 <span v-if="authStore.loading">Registering...</span>

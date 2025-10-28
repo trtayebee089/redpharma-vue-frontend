@@ -1,5 +1,4 @@
 <template>
-    <!-- Loading Spinner -->
     <div v-if="isLoading" class="flex justify-center items-center min-h-[300px] ">
         <svg class="animate-spin h-10 w-10 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none"
             viewBox="0 0 24 24">
@@ -10,7 +9,6 @@
     </div>
 
     <div v-else class="pt-6">
-        <!-- Breadcrumb & Header -->
         <BreadCrumb :crumbs="[
             { label: 'Home', to: '/' }, { label: 'Category', to: '/categories' }, { label: category?.name }
         ]" :title="category?.name" :subtitle="`Showing ${filteredProducts.length} products in ${category?.name}`"
@@ -19,9 +17,7 @@
         <section
             class="relative fade-up flex flex-col md:flex-row gap-6 mt-10 transform transition-transform duration-300"
             v-if="category">
-            <!-- Main Content -->
             <div class="flex-1">
-                <!-- Products Grid -->
                 <div
                     class="grid grid-cols-1 min-[321px]:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                     <ProductGridItem v-for="product in filteredProducts" :key="product.id" :product="product" />
@@ -29,13 +25,11 @@
 
 
                 <div class="flex justify-center mt-6 space-x-2" v-if="pagination && pagination.last_page > 1">
-                    <!-- Prev button -->
                     <button @click="changePage(pagination.current_page - 1)" :disabled="pagination.current_page === 1"
                         class="px-3 py-1 rounded border bg-white text-gray-700 disabled:opacity-50">
                         Prev
                     </button>
 
-                    <!-- Page numbers -->
                     <template v-for="page in pageNumbersToShow" :key="page">
                         <span v-if="page === '...'">...</span>
                         <button v-else @click="changePage(page)" :class="page === pagination.current_page ?
@@ -45,7 +39,6 @@
                         </button>
                     </template>
 
-                    <!-- Next button -->
                     <button @click="changePage(pagination.current_page + 1)"
                         :disabled="pagination.current_page === pagination.last_page"
                         class="px-3 py-1 rounded border bg-white text-gray-700 disabled:opacity-50">
@@ -59,7 +52,6 @@
             </div>
         </section>
 
-        <!-- Mobile Filter Modal -->
         <transition name="slide-fade">
             <div v-if="showFilters" class="fixed inset-0 z-50 bg-black/60 flex justify-start"
                 @click.self="showFilters = false">

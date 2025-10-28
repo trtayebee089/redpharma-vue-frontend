@@ -1,7 +1,6 @@
 <template>
     <main id="app">
         <div class="card-wrapper">
-            <!-- Front Side -->
             <aside class="card card-front" :style="cardStyle">
                 <label class="number" v-html="formattedCardNumber"></label>
 
@@ -27,13 +26,11 @@
                     </svg>
                 </div>
 
-                <!-- FROZEN overlay -->
                 <div v-if="locked" class="card-overlay">
                     <span class="frozen-tag">FROZEN</span>
                 </div>
             </aside>
 
-            <!-- Back Side -->
             <aside class="card card-back" :style="cardBackStyle">
                 <div class="magnetic-strip"></div>
 
@@ -52,7 +49,6 @@
             </aside>
         </div>
 
-        <!-- Hidden SVGs -->
         <svg id="chip" style="display: none" aria-hidden="true">
             <g id="chip-lines">
                 <polyline points="0,50 35,50"></polyline>

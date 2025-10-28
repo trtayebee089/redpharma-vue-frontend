@@ -10,16 +10,13 @@
                 <!-- Desktop Search -->
                 <div class="hidden md:flex flex-1 justify-center px-4 relative">
                     <div class="relative w-full max-w-full md:max-w-xl lg:max-w-2xl">
-                        <!-- Search Input -->
                         <input type="text" v-model="searchQuery" :placeholder="placeholderText"
                             :class="[langStore.langClass]" class="w-full transition bg-white search-input" />
 
-                        <!-- Clear Icon -->
                         <span v-if="searchQuery" @click="searchQuery = ''"
                             class="absolute right-12 top-0 h-full w-10 flex items-center justify-center text-gray-500 hover:text-red-500 cursor-pointer transition">
                             <i class="pi pi-times text-lg"></i>
                         </span>
-                        <!-- Search Icon (Right) -->
                         <span
                             class="absolute right-0 top-0 h-full w-12 flex items-center justify-center bg-gradient-to-bl from-green-400 to-green-600 text-white rounded-r-lg cursor-pointer">
                             <i class="pi pi-search text-lg"></i>
@@ -62,7 +59,7 @@
                         class="hidden 2xl:flex space-x-2 h-12 bg-green-100 text-green-600 items-center justify-center rounded-md hover:border-red-300 hover:bg-gradient-to-b hover:from-red-500 hover:to-red-800 hover:text-white transition border border-green-300 shadow-sm px-3">
                         <img :src="trackingImg" alt="flag" class="w-6 h-6 rounded-sm" />
                         <span class="font-semibold" :class="[langStore.langClass]">{{ $t('header.buttons.track')
-                        }}</span>
+                            }}</span>
                     </router-link>
 
                     <button @click="toggleLanguage" class="
@@ -79,8 +76,6 @@
                         <span class="font-semibold hidden sm:inline">{{ currentLanguage }}</span>
                     </button>
 
-
-                    <!-- Cart Button -->
                     <div class="relative hidden xl:inline-block">
                         <button @click="cartStore.toggleCart(true)" class="w-12 h-12 flex items-center justify-center rounded-md border border-green-300 shadow-sm text-green-600
                                 bg-green-100
@@ -97,7 +92,6 @@
                         </span>
                     </div>
 
-                    <!-- Login Button with User Icon -->
                     <button v-if="!authStore.isAuthenticated" @click="showLoginModal = true"
                         class="flex items-center justify-center space-x-2 px-4 rounded-lg bg-green-500 hover:border-red-300 hover:bg-gradient-to-b hover:from-red-500 hover:to-red-800 text-white shadow-sm h-12">
                         <span class="w-8 h-8 bg-white text-green-600 flex items-center justify-center rounded-full">
@@ -106,11 +100,9 @@
                         <span class="font-semibold">Login</span>
                     </button>
 
-                    <!-- If logged in -->
                     <UserDropdown v-else />
                 </div>
 
-                <!-- Mobile Hamburger -->
                 <div class="flex flex-1 justify-end md:hidden">
                     <button @click="toggleLanguage" class="
                             flex items-center justify-center space-x-2
@@ -155,12 +147,10 @@
 
             <!-- Mobile Search -->
             <div class="flex-1 relative flex md:hidden">
-                <!-- Input Wrapper -->
                 <div class="relative w-full max-w-full">
                     <input type="text" v-model="searchQuery" :placeholder="placeholderText"
                         :class="[langStore.langClass]"
                         class="w-full transition bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-700" />
-                    <!-- Clear Icon -->
                     <span v-if="searchQuery" @click="searchQuery = ''"
                         class="absolute right-12 top-0 h-full w-10 flex items-center justify-center text-gray-500 hover:text-red-500 cursor-pointer transition">
                         <i class="pi pi-times text-lg"></i>
@@ -171,7 +161,6 @@
                     </span>
                 </div>
 
-                <!-- Mobile Live Search Results -->
                 <div v-if="searchQuery && filteredProducts.length"
                     class="absolute top-full mt-1 w-full bg-white border border-gray-200 rounded shadow-lg z-50 max-h-[60vh] overflow-y-auto">
                     <ul>
@@ -207,10 +196,8 @@
                     <li><router-link @click.native="closeMenu" to="/">{{ $t('header.menu.home') }}</router-link></li>
                     <li><router-link @click.native="closeMenu" to="/about">{{ $t('header.menu.about') }}</router-link>
                     </li>
-                    <!-- <li><router-link @click.native="closeMenu" to="/delivery-coverage">{{ $t('header.menu.coverage')
-                    }}</router-link></li> -->
                     <li><router-link @click.native="closeMenu" to="/order-tracking">{{ $t('header.buttons.track')
-                    }}</router-link></li>
+                            }}</router-link></li>
                     <li v-if="authStore.isAuthenticated"><router-link @click.native="closeMenu" to="/orders">{{
                         $t('header.menu.orders') }}</router-link></li>
                     <li v-if="authStore.isAuthenticated"><router-link @click.native="closeMenu" to="/membership">{{
@@ -452,31 +439,23 @@ onUnmounted(() => {
     font-size: 1.1rem;
     font-weight: 600;
     color: #374151;
-    /* text-gray-700 */
     outline: none;
 }
 
 .search-input:focus {
     border-color: #16a34a;
-    /* Tailwind green-600 */
     box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3);
 }
 
-/* Placeholder styles */
 .search-input::placeholder {
     font-weight: 700;
-    /* bold */
     font-size: 1.1rem;
-    /* slightly bigger */
     color: #16a34a;
-    /* green */
     opacity: 0.9;
     transition: color 0.3s ease;
 }
 
-/* On focus, placeholder fades */
 .search-input:focus::placeholder {
     color: #9ca3af;
-    /* gray-400 */
 }
 </style>

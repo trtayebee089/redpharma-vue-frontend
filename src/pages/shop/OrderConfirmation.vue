@@ -1,6 +1,5 @@
 <template>
     <div class="order-confirmation max-w-4xl mx-auto pt-6 p-6 bg-white">
-        <!-- Hero Section -->
         <div
             class="max-w-5xl mx-auto space-y-4 text-center leading-relaxed bg-green-50 rounded-lg p-6 relative overflow-hidden mb-6">
             <div class="absolute inset-0 opacity-10 pointer-events-none">
@@ -52,7 +51,6 @@
 
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm  ">
-                <!-- Left Column -->
                 <div class="space-y-2">
                     <div class="flex justify-between">
                         <span class="font-medium text-gray-700">Order #:</span>
@@ -67,8 +65,6 @@
                         <span class="text-gray-900">{{ formatCurrency(order.total_price) }}</span>
                     </div>
                 </div>
-
-                <!-- Right Column -->
                 <div class="space-y-2">
                     <div class="flex justify-between">
                         <span class="font-medium text-gray-700">Shipping:</span>
@@ -106,7 +102,6 @@
             </h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                <!-- Name -->
                 <div class="flex items-center space-x-2 group transition-colors duration-300">
                     <i class="pi pi-id-card text-gray-400 group-hover:text-blue-500"></i>
                     <div>
@@ -115,7 +110,6 @@
                     </div>
                 </div>
 
-                <!-- Phone -->
                 <div class="flex items-center space-x-2 group transition-colors duration-300">
                     <i class="pi pi-phone text-gray-400 group-hover:text-green-500"></i>
                     <div>
@@ -124,7 +118,6 @@
                     </div>
                 </div>
 
-                <!-- Address -->
                 <div class="col-span-1 md:col-span-2 flex items-start space-x-2 group transition-colors duration-300">
                     <i class="pi pi-map-marker text-gray-400 mt-1 group-hover:text-red-500"></i>
                     <div>

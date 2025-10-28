@@ -1,9 +1,8 @@
 <template>
     <div class="max-w-4xl mx-auto p-6 font-sans text-gray-800 space-y-6 relative leading-relaxed fade-up mb-16">
-        <!-- Page Header -->
         <div
             class="max-w-5xl mx-auto text-center leading-relaxed bg-green-100 rounded-lg p-6 relative overflow-hidden mb-6">
-            <!-- Decorative background pattern -->
+            
             <div class="absolute inset-0 opacity-10 pointer-events-none">
                 <svg class="w-full h-full" preserveAspectRatio="none">
                     <defs>
@@ -15,20 +14,17 @@
                 </svg>
             </div>
 
-            <!-- Title -->
             <h1 class="text-3xl md:text-4xl font-bold text-green-600 leading-relaxed mb-2 relative z-10"
                 :class="langStore.langClass">
                 Settings
             </h1>
 
-            <!-- Subtitle -->
             <p class="text-gray-700 text-lg md:text-xl leading-relaxed relative z-10 max-w-2xl mx-auto"
                 :class="langStore.langClass">
                 Manage your account preferences and security settings.
             </p>
         </div>
 
-        <!-- Language Change -->
         <div class="bg-white shadow rounded-lg p-6">
             <h2 class="text-lg font-semibold text-gray-800 mb-3">Language</h2>
             <select v-model="langStore.lang" @change="langStore.setLanguage(langStore.lang)"
@@ -38,7 +34,6 @@
             </select>
         </div>
 
-        <!-- Password Change -->
         <div class="bg-white shadow rounded-lg p-6 space-y-3 fade-up">
             <h2 class="text-lg font-semibold text-gray-800 mb-3">Change Password</h2>
             <div class="flex flex-col md:flex-row gap-3">
@@ -56,7 +51,6 @@
                 {{ passwordMsg }}</p>
         </div>
 
-        <!-- Policy Links -->
         <div class="bg-white shadow rounded-lg p-6 space-y-2 fade-up">
             <h2 class="text-lg font-semibold text-gray-800 mb-3">Policies</h2>
             <router-link to="/privacy-and-policy" class="block text-green-600 hover:underline">Privacy
@@ -65,7 +59,6 @@
                 Conditions</router-link>
         </div>
 
-        <!-- Logout -->
         <div class="bg-white shadow rounded-lg p-6 fade-up">
             <button @click="logout"
                 class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded font-semibold transition w-full">
@@ -92,8 +85,6 @@
     const authStore = useAuthStore();
     const langStore = useLanguageStore();
     const router = useRouter();
-
-    // Password change
     const currentPassword = ref("");
     const newPassword = ref("");
     const passwordMsg = ref("");
@@ -130,7 +121,6 @@
         }
     };
 
-    // Logout
     const logout = () => {
         authStore.logout();
         router.push('/');

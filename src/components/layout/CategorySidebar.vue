@@ -42,8 +42,6 @@
         z-index: 10;
         width: 16rem;
     }
-
-    /* Optional: force hide below 1024px if any override */
     @media (max-width: 1023px) {
         .category-sidebar {
             display: none !important;

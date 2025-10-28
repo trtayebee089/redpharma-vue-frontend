@@ -3,7 +3,6 @@
         <input v-bind="$attrs" v-model="inputValue" :type="type" :placeholder="placeholder"
             :class="inputClass" @input="$emit('update:modelValue', inputValue)" @focus="$emit('focus')"
             @blur="$emit('blur')" />
-        <!-- Optional slot for button or icon -->
         <slot name="append"></slot>
         <slot name="prepend"></slot>
     </div>

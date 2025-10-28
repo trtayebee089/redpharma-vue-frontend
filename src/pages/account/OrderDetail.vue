@@ -1,6 +1,5 @@
 <template>
     <div class="max-w-4xl mx-auto p-6 font-sans text-gray-800 space-y-6">
-        <!-- Breadcrumb -->
         <nav class="text-sm mb-6" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3 text-gray-500">
                 <li>
@@ -27,7 +26,6 @@
         </div>
         <div v-else-if="error" class="text-center py-6 text-red-600">{{ error }}</div>
         <div v-else-if="order">
-            <!-- Header / Order Info -->
             <div
                 class="bg-white shadow rounded-lg p-6 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 border border-green-200">
                 <div>
@@ -52,7 +50,6 @@
                 </div>
             </div>
 
-            <!-- Medicines List -->
             <div class="bg-white shadow rounded-lg p-6 mb-6 border border-green-200">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4 border-b border-green-200 pb-2">Medicines Ordered
                 </h3>
@@ -97,7 +94,6 @@
                 </div>
             </div>
 
-            <!-- Payment Method -->
             <div class="bg-white shadow rounded-lg p-6 border border-green-200">
                 <h3 class="text-lg font-semibold text-gray-900 mb-3 border-b border-green-200 pb-2">Tracking History</h3>
                 <TimeLine :tracking="order.tracking.histories" :formatDate="formatDate" />

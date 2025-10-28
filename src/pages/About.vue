@@ -1,10 +1,9 @@
 <template>
     <section class="bg-gradient-to-b from-white via-red-100 to-white text-gray-800 space-y-20 py-12 overflow-hidden">
-
-        <!-- HERO / INTRO -->
         <div class="mx-auto text-center relative px-6">
-            <h1 class="max-w-4xl text-3xl md:text-5xl font-extrabold text-green-600 tracking-tight font-wb mb-4 m-auto"
-                :class="[langStore.langClass]">
+            <h1 class="max-w-4xl text-3xl md:text-5xl font-extrabold tracking-tight font-wb mb-4 m-auto 
+                    bg-gradient-to-l from-red-700 via-red-500 to-red-700 
+                    text-transparent bg-clip-text" :class="[langStore.langClass]">
                 {{ $t('about.title') }}
             </h1>
             <p class="text-gray-600 text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-ws"
@@ -13,7 +12,6 @@
             </p>
         </div>
 
-        <!-- WHY US -->
         <div class="grid md:grid-cols-2 gap-12 items-start container mx-auto px-4 md:px-6">
             <div v-for="(section, index) in tm('about.why_us')" :key="index"
                 class="bg-white/70 rounded-2xl border border-green-100 p-8 shadow-sm hover:shadow-md transition-all duration-300 backdrop-blur-sm">
@@ -38,7 +36,6 @@
             </div>
         </div>
 
-        <!-- SERVICES -->
         <div class="container mx-auto px-4 md:px-6">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-10 font-wb relative"
                 :class="[langStore.langClass]">

@@ -2,24 +2,21 @@
     <div class="relative border-l-0 pl-6">
         <div v-for="(history, index) in tracking" :key="history.id ?? index"
             class="relative flex justify-center items-center">
-            <!-- Left content -->
+            
             <div class="bg-gray-50 p-4 w-[45%] text-right ">
                 <p class="text-sm text-gray-500">
                     {{ formatDate(history . changed_at) }}
                 </p>
             </div>
 
-            <!-- Marker with line -->
             <div class="relative flex items-center justify-center w-[10%]">
                 <div class="w-8 h-8 rounded-full text-white flex items-center justify-center z-10" :style="{ backgroundColor: getStatusColor(history.status) }">
                     <i class="pi text-xs" :class="getStatusIcon(history.status)"></i>
                 </div>
-                <!-- vertical line -->
                 <div v-if="index < tracking.length - 1"
                     class="absolute top-10 left-1/2 transform -translate-x-1/2 w-px h-full bg-gray-400"></div>
             </div>
 
-            <!-- Right content -->
             <div class="bg-gray-50 p-4 w-[45%] ">
                 <p class="font-semibold capitalize">
                     {{ history . status }}

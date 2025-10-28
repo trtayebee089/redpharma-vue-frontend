@@ -11,7 +11,6 @@
             </svg>
         </div>
         <div class="p-5">
-            <!-- Breadcrumb -->
             <nav class="text-sm text-gray-500 mb-2" aria-label="Breadcrumb">
                 <ol class="list-reset flex space-x-2">
                     <li v-for="(crumb, index) in crumbs" :key="index" class="flex items-center">
@@ -30,8 +29,7 @@
                     </li>
                 </ol>
             </nav>
-
-            <!-- Title and Description -->
+            
             <div class="flex flex-col md:flex-row md:justify-between md:items-center">
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2 md:mb-0">
                     {{ title }}

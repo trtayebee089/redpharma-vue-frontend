@@ -1,9 +1,7 @@
 <template>
     <div class="max-w-4xl mx-auto p-8 font-sans text-gray-800 space-y-8 relative fade-up pt-6">
-        <!-- Header -->
         <div
             class="max-w-5xl mx-auto text-center leading-relaxed bg-green-100 rounded-lg p-6 relative overflow-hidden mb-6">
-            <!-- Decorative background pattern -->
             <div class="absolute inset-0 opacity-10 pointer-events-none">
                 <svg class="w-full h-full" preserveAspectRatio="none">
                     <defs>
@@ -14,21 +12,17 @@
                     <rect width="100%" height="100%" fill="url(#grid)"></rect>
                 </svg>
             </div>
-
-            <!-- Title -->
             <h1 class="text-3xl md:text-4xl font-bold text-green-600 leading-relaxed mb-2 relative z-10"
                 :class="langStore.langClass">
                 Edit Profile
             </h1>
 
-            <!-- Subtitle -->
             <p class="text-gray-700 text-lg md:text-xl leading-relaxed relative z-10 max-w-2xl mx-auto"
                 :class="langStore.langClass">
                 Manage your personal information and account settings
             </p>
         </div>
 
-        <!-- Profile Image -->
         <div class="flex items-center space-x-6">
             <div class="relative">
                 <img :src="preview || user.avator || defaultAvatar" alt="Profile Image"
@@ -42,7 +36,6 @@
             </div>
         </div>
 
-        <!-- Form -->
         <form @submit.prevent="saveProfile" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -81,7 +74,6 @@
                 </div>
             </div>
 
-            <!-- Save Button -->
             <div class="pt-6 flex justify-center">
                 <button type="submit"
                     class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2.5 rounded-lg shadow-sm transition">

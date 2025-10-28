@@ -8,8 +8,7 @@ import PrimeVue from 'primevue/config'
 import { useI18n } from "vue-i18n";
 import { Notivue, Notification, push } from 'notivue'
 import { useLanguageStore } from "@/stores/language";
-import { watch } from "vue";
-import FloatingCartButton from './components/cart/FloatingCartButton.vue'
+import { watch, ref, onMounted, onUnmounted } from "vue";
 import MobileFooter from './components/layout/MobileFooter.vue'
 import FloatingChat from './components/common/FloatingChat.vue'
 import { useRoute } from 'vue-router'
@@ -26,6 +25,20 @@ watch(
     immediate: true
 }
 );
+
+const windowWidth = ref(window.innerWidth)
+
+onMounted(() => {
+    window.addEventListener('resize', () => {
+        windowWidth.value = window.innerWidth
+    })
+})
+
+onUnmounted(() => {
+    window.removeEventListener('resize', () => {
+        windowWidth.value = window.innerWidth
+    })
+})
 </script>
 
 <template>
@@ -33,15 +46,20 @@ watch(
         <Header />
 
         <div class="flex flex-1 relative">
-            <CategorySidebar class="hidden md:block" />
+            <!-- Sidebar -->
+            <CategorySidebar class="hidden lg:block" />
 
+            <!-- Main Content -->
             <main :class="[
-                route.name !== 'Home' ? 'container mx-auto flex-1 p-4 md:p-6' : '',
+                route.name !== 'Home'
+                    ? (windowWidth >= 1024 ? 'container mx-auto flex-1 p-4 md:p-6' : 'w-full p-4 md:p-6')
+                    : '',
                 'mb-18 mt-28 md:mt-16 lg:mt-22 relative fade-up main-content'
             ]">
                 <router-view />
             </main>
         </div>
+
 
         <Footer />
 
@@ -72,8 +90,13 @@ watch(
 }
 
 .main-content {
-    /* padding-top: 70px; */
     min-height: calc(100vh - 70px);
     width: calc(100% - 16rem);
+}
+
+@media (max-width: 1024px) {
+    .main-content {
+        width: 100%;
+    }
 }
 </style>
