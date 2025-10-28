@@ -21,13 +21,11 @@
                             </svg>
                         </div>
 
-                        <!-- Title -->
                         <h1 class="text-3xl md:text-4xl font-bold text-green-600 leading-relaxed mb-2 relative z-10"
                             :class="langStore.langClass">
                             {{ $t('cart.title') }}
                         </h1>
 
-                        <!-- Subtitle -->
                         <p class="text-gray-700 text-lg md:text-xl leading-relaxed relative z-10 max-w-2xl mx-auto"
                             :class="langStore.langClass">
                             {{ $t('cart.description') }}
@@ -134,13 +132,11 @@
                                 </svg>
                             </div>
 
-                            <!-- Title -->
                             <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-green-600 leading-relaxed mb-2 relative z-10"
                                 :class="langStore.langClass">
                                 {{ $t('cart.title') }}
                             </h1>
 
-                            <!-- Subtitle -->
                             <p class="text-gray-700 text-md md:text-lg lg:text-lg leading-relaxed relative z-10 max-w-2xl mx-auto"
                                 :class="langStore.langClass">
                                 {{ $t('cart.description') }}
@@ -158,7 +154,9 @@
                                 </template>
                                 <div class="flex-1">
                                     <h3 class="font-medium text-gray-800">{{ item.name }}</h3>
-                                    <p class="text-sm text-gray-600 mt-1">Brand: {{ item.brand.title }}</p>
+                                    <p class="text-sm text-gray-600 mt-1">
+                                        Brand: {{ item.brand?.title || 'N/A' }}
+                                    </p>
                                     <p class="text-sm font-semibold text-green-600 mt-1">
                                         {{ (Number(item.promotion_price ?? item.price) || 0).toFixed(2) }} Tk
                                     </p>
@@ -245,8 +243,7 @@
                                         class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 border-gray-300 bg-white"
                                         required>
                                         <option value="" disabled>Select District</option>
-                                        <option v-for="zone in shippingZones" :key="district"
-                                            :value="zone.district">
+                                        <option v-for="zone in shippingZones" :key="district" :value="zone.district">
                                             {{ zone.district }}
                                         </option>
                                     </select>
