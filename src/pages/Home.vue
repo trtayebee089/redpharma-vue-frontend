@@ -23,28 +23,38 @@
                         1280: { slidesPerView: 6, spaceBetween: 24 }
                     }" class="pt-5 pb-10">
                     <SwiperSlide v-for="(category, index) in loading ? Array(6) : categories" :key="index"
-                        class="overflow-visible">
+                        class="overflow-visible flex justify-center">
+                        <!-- Loaded Category -->
                         <router-link v-if="!loading" :to="`/category/${category.slug}`"
-                            class="bg-white rounded-lg p-4 text-center flex flex-col items-center hover:shadow-lg transition border-gray-300 border">
-                            <img :src="category.image" alt="" class="h-16 mx-auto mb-2 object-contain" loading="lazy" />
-                            <p class="text-sm font-medium text-gray-800">{{ category.name }}</p>
+                            class="group block bg-white rounded-xl overflow-hidden hover:shadow-lg transition border border-gray-200">
+                            <div class="w-full aspect-square bg-gray-50">
+                                <img :src="category.image" alt=""
+                                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                    loading="lazy" /> 
+                            </div>
                         </router-link>
-
-                        <div v-else
-                            class="bg-gray-200 rounded-lg p-4 h-32 animate-pulse flex items-center justify-center">
-                            <div class="w-16 h-16 bg-gray-300 rounded-full"></div>
-                        </div>
                     </SwiperSlide>
                 </Swiper>
             </div>
 
             <!-- Loading placeholder -->
-            <div v-else class="text-center py-10 text-gray-500">
-                <svg class="animate-spin h-10 w-10 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                </svg>
+            <div v-else class="text-center text-gray-300">
+                <Swiper :modules="[Pagination, Autoplay]" :slides-per-view="2" :space-between="16" :loop="true"
+                    :autoplay="{
+                        delay: 3000,
+                        disableOnInteraction: false
+                    }" :breakpoints="{
+                        640: { slidesPerView: 3, spaceBetween: 16 },
+                        768: { slidesPerView: 4, spaceBetween: 20 },
+                        1024: { slidesPerView: 4, spaceBetween: 24 },
+                        1280: { slidesPerView: 6, spaceBetween: 24 }
+                    }" class="pt-5 pb-10">
+                    <SwiperSlide v-for="(category, index) in Array(6)" :key="index" class="overflow-visible flex justify-center">
+                        <div class="w-full aspect-square bg-gray-200 rounded-xl overflow-hidden relative">
+                            <div class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
+                        </div>
+                    </SwiperSlide>
+                </Swiper>
             </div>
         </div>
     </section>
@@ -500,7 +510,8 @@ onMounted(async () => {
             });
         });
     } finally {
-        loading.value = false;
+        // loading.value = false;
+        loading.value = true;
     }
 
     stats.value.forEach((stat) => {
@@ -546,6 +557,23 @@ onMounted(async () => {
     to {
         transform: rotate(360deg);
     }
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.animate-shimmer {
+    background: linear-gradient(90deg, rgba(229, 229, 229, 1) 0%, rgba(209, 209, 209, 1) 50%, rgba(229, 229, 229, 1) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
 }
 
 .animate-spin-slow {
