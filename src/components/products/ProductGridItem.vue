@@ -27,8 +27,10 @@
                 </h5>
             </router-link>
 
-            <p class="text-xs sm:text-sm text-gray-500 mt-1">
-                <span class="font-medium">{{ capitalizeWords(product?.brand?.title) }}</span>
+            <p class="text-xs sm:text-sm text-gray-500 mt-1 truncate w-full">
+                <span class="font-medium whitespace-nowrap">
+                    {{ capitalizeWords(product?.brand?.title) }}
+                </span>
             </p>
 
             <p class="text-xs sm:text-sm text-gray-600 mt-1" v-if="product.strength && product.packSize">

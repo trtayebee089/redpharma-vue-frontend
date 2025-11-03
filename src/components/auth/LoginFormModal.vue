@@ -11,8 +11,7 @@
 
                 <div v-else class="flex flex-col md:flex-row w-full">
                     <div class="hidden md:flex w-1/2 bg-green-100 items-center justify-center">
-                        <img src="https://img.pikbest.com/templates/20240729/health-and-medical-promotion-website-banner-design_10686814.jpg!sw800"
-                            alt="Promo Banner" class="rounded-lg shadow-md object-cover h-full w-full" />
+                        <img :src="loginBg" alt="Promo Banner" class="rounded-lg shadow-md object-cover w-full" />
                     </div>
 
                     <div class="w-full md:w-1/2 p-8 flex flex-col justify-center relative">
@@ -76,6 +75,7 @@
 import { ref, watch } from "vue";
 import Modal from "../common/Modal.vue";
 import mainLogo from "@/assets/logo.png";
+import loginBg from "@/assets/images/login-bg1.jpg";
 import { useAuthStore } from "@/stores/auth";
 
 const props = defineProps({
