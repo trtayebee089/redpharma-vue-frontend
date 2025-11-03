@@ -375,7 +375,7 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 import 'swiper/css/autoplay';
-import orderMedicineImg from '../assets/images/4307049.png'
+import orderMedicineImg from '../assets/images/app-mockuo.png'
 import BlogGridItem from "../components/blog/BlogGridItem.vue";
 import {
     Pagination,
