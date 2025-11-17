@@ -32,11 +32,11 @@
 
                     <div class="flex items-center flex-wrap gap-3 mt-5">
                         <p class="text-2xl font-bold text-green-600" v-if="product.promotion_price < product.price && product.promotion_price !== null">
-                            ${{ product.promotion_price.toFixed(2) }}
+                            {{ product.promotion_price.toFixed(2) }} Tk
                         </p>
 
                         <p v-if="product.promotion_price < product.price" class="text-red-800 text-3xl font-bold" :class="product.promotion_price !== null ? 'line-through' : ''">
-                            ${{ product.price.toFixed(2) }}
+                            {{ product.price.toFixed(2) }} Tk
                         </p>
 
                         <span v-if="product.promotion_price < product.price && product.promotion_price !== null"
