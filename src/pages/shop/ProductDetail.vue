@@ -31,15 +31,15 @@
                     </div>
 
                     <div class="flex items-center flex-wrap gap-3 mt-5">
-                        <p class="text-2xl font-bold text-green-600" v-if="product.offerPrice">
-                            ${{ product.offerPrice.toFixed(2) }}
+                        <p class="text-2xl font-bold text-green-600" v-if="product.promotion_price < product.price && product.promotion_price !== null">
+                            ${{ product.promotion_price.toFixed(2) }}
                         </p>
 
-                        <p v-if="product.offerPrice < product.regularPrice" class="text-gray-400 line-through text-lg">
-                            ${{ product.regularPrice.toFixed(2) }}
+                        <p v-if="product.promotion_price < product.price" class="text-red-800 text-3xl font-bold" :class="product.promotion_price !== null ? 'line-through' : ''">
+                            ${{ product.price.toFixed(2) }}
                         </p>
 
-                        <span v-if="product.offerPrice < product.regularPrice"
+                        <span v-if="product.promotion_price < product.price && product.promotion_price !== null"
                             class="bg-green-50 text-green-700 font-semibold text-xs px-3 py-1 rounded-full shadow-sm border border-green-200">
                             -{{ product.discountPercentage }}%
                         </span>
