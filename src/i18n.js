@@ -27,6 +27,7 @@ const messages = {
                 privacy: "Privacy Policy",
                 terms: "Terms of Service",
                 coverage: "Coverage Area",
+                remove_account: "Remove Account",
                 request: "Request Medicines",
                 help: "Help Center",
                 returns: "Returns & Refunds",

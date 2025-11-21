@@ -20,6 +20,8 @@ import OrderDetail from '../pages/account/OrderDetail.vue'
 import ProductDetail from '../pages/shop/ProductDetail.vue';
 import CategoryGrid from '../pages/shop/CategoryGrid.vue';
 import OrderConfirmation from '../pages/shop/OrderConfirmation.vue';
+import RemoveAccount from '../pages/RemoveAccount.vue';
+import NotFound from '../pages/NotFound.vue';
 
 const routes = [
     { path: '/', name: 'Home', component: Home, meta: { title: 'Home - RedPharma BD' } }, //✅
@@ -37,6 +39,7 @@ const routes = [
     { path: '/blog', name: 'Health Articles', component: OrderTracking, meta: { title: 'Health Articles - RedPharma BD' } }, //✅
     { path: '/blog/:slug', name: 'Health Articles', component: OrderTracking, meta: { title: 'Health Articles - RedPharma BD' } }, //✅
     { path: '/products/:slug', name: 'ProductDetails', component: ProductDetail, meta: { title: 'Product Details - RedPharma BD' } },
+    { path: '/account-removal-request', name: 'RemoveAccount', component: RemoveAccount, meta: { title: 'Delete Account - RedPharma BD' } },
     { path: "/order-confirmation/:order_id", name: "OrderConfirmation", component: () => OrderConfirmation, props: true },
 
     { path: '/profile', name: 'Profile', component: Profile, meta: { title: 'Edit Profile - RedPharma BD', requiresAuth: true } }, 
@@ -45,6 +48,13 @@ const routes = [
     { path: '/membership', name: 'Membership', component: Membership, meta: { title: 'Membership - RedPharma BD', requiresAuth: true } },
     { path: '/settings', name: 'Settings', component: Settings, meta: { title: 'Settings - RedPharma BD', requiresAuth: true } }, //✅
     { path: '/help-center', name: 'HelpCenter', component: HelpCenter, meta: { title: 'Help Center (FAQ) - RedPharma BD' } },
+
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: NotFound,
+        meta: { title: '404 - Page Not Found' }
+    }
 ]
 
 const router = createRouter({

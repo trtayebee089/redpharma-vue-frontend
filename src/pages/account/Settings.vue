@@ -2,7 +2,7 @@
     <div class="max-w-4xl mx-auto p-6 font-sans text-gray-800 space-y-6 relative leading-relaxed fade-up mb-16">
         <div
             class="max-w-5xl mx-auto text-center leading-relaxed bg-green-100 rounded-lg p-6 relative overflow-hidden mb-6">
-            
+
             <div class="absolute inset-0 opacity-10 pointer-events-none">
                 <svg class="w-full h-full" preserveAspectRatio="none">
                     <defs>
@@ -59,76 +59,176 @@
                 Conditions</router-link>
         </div>
 
-        <div class="bg-white shadow rounded-lg p-6 fade-up">
+        <div class="bg-white rounded-lg p-6 fade-up grid grid-cols-2 gap-5">
+            <button @click="showModal = true" :disabled="loading"
+                class="bg-orange-500 hover:bg-orange-800 text-white px-4 py-2 rounded font-semibold transition w-full disabled:opacity-50">
+                <span v-if="loading">Processing...</span>
+                <span v-else>Delete Account</span>
+            </button>
+
             <button @click="logout"
                 class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded font-semibold transition w-full">
                 Logout
             </button>
         </div>
     </div>
+
+    <div v-if="showModal" class="fixed inset-0 bg-red-50 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded shadow-lg max-w-2xl w-full">
+            <h2 class="text-xl font-bold mb-4">Confirm Account Deletion</h2>
+            <div class="text-gray-700 mb-4 space-y-3 text-sm">
+                <p>
+                    Please review what will happen when your RedPharma account is deleted. This action is permanent and
+                    cannot be reversed.
+                </p>
+                <p>
+                    <strong>Orders & Prescriptions:</strong> Any active orders will be cancelled and your prescription
+                    history will be queued for permanent deletion after 30 days.
+                </p>
+                <p>
+                    <strong>Data:</strong> Your profile information and all associated data will be
+                    queued for permanent deletion after 30 days.
+                </p>
+            </div>
+
+            <!-- Issue selection -->
+            <div class="mb-4">
+                <p class="font-semibold mb-2">Reason for leaving:</p>
+                <div class="flex flex-col gap-2">
+                    <label v-for="option in issues" :key="option"
+                        class="relative cursor-pointer flex items-center justify-between p-3 border rounded-lg transition-colors duration-200"
+                        :class="selectedIssue === option ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white hover:bg-gray-50'">
+                        <span class="text-gray-800">{{ option }}</span>
+                        <span
+                            class="w-5 h-5 flex items-center justify-center rounded-full border-2 transition-colors duration-200"
+                            :class="selectedIssue === option ? 'border-blue-500 bg-blue-500' : 'border-gray-400 bg-white'">
+                            <span v-if="selectedIssue === option" class="block w-2 h-2 rounded-full bg-white"></span>
+                        </span>
+                        <input type="radio" :value="option" v-model="selectedIssue"
+                            class="absolute opacity-0 w-0 h-0" />
+                    </label>
+                </div>
+            </div>
+
+
+            <!-- Comment field -->
+            <div class="mb-4">
+                <label class="block font-semibold mb-1">Additional Comments (optional):</label>
+                <textarea v-model="comment" class="w-full border border-gray-300 rounded px-2 py-1" rows="3"
+                    placeholder="Your comment..."></textarea>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex justify-end gap-3">
+                <button @click="showModal = false" :disabled="loading"
+                    class="px-3 py-1 rounded border border-gray-400 hover:bg-gray-100">
+                    Cancel
+                </button>
+                <button @click="confirmDeletion" :disabled="loading || !selectedIssue"
+                    class="px-3 py-1 rounded bg-red-500 text-white hover:bg-red-600">
+                    <span v-if="loading">Deleting...</span>
+                    <span v-else>Confirm</span>
+                </button>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup>
-    import {
-        ref
-    } from "vue";
-    import {
-        useAuthStore
-    } from "@/stores/auth";
-    import {
-        useLanguageStore
-    } from "@/stores/language";
-    import {
-        useRouter
-    } from "vue-router";
+import {
+    ref
+} from "vue";
+import {
+    useAuthStore
+} from "@/stores/auth";
+import {
+    useLanguageStore
+} from "@/stores/language";
+import {
+    useRouter
+} from "vue-router";
 
-    const authStore = useAuthStore();
-    const langStore = useLanguageStore();
-    const router = useRouter();
-    const currentPassword = ref("");
-    const newPassword = ref("");
-    const passwordMsg = ref("");
-    const passwordSuccess = ref(false);
-    const loading = ref(false);
+const authStore = useAuthStore();
+const langStore = useLanguageStore();
+const router = useRouter();
+const currentPassword = ref("");
+const newPassword = ref("");
+const passwordMsg = ref("");
+const passwordSuccess = ref(false);
+const loading = ref(false);
+const showModal = ref(false);
 
-    const changePassword = async () => {
-        if (!currentPassword.value || !newPassword.value) {
-            passwordMsg.value = "Please enter both current and new passwords.";
-            passwordSuccess.value = false;
-            return;
-        }
+const issues = [
+    'I no longer need the service',
+    'Privacy concerns',
+    'Found a better alternative',
+    'Other'
+];
+const selectedIssue = ref('');
+const comment = ref('');
 
-        loading.value = true;
-        passwordMsg.value = "";
+const changePassword = async () => {
+    if (!currentPassword.value || !newPassword.value) {
+        passwordMsg.value = "Please enter both current and new passwords.";
         passwordSuccess.value = false;
+        return;
+    }
 
-        try {
-            await authStore.updatePassword({
-                currentPassword: currentPassword.value,
-                newPassword: newPassword.value,
-                confirmPassword: newPassword.value
-            });
+    loading.value = true;
+    passwordMsg.value = "";
+    passwordSuccess.value = false;
 
-            passwordMsg.value = "Password changed successfully!";
-            passwordSuccess.value = true;
-            currentPassword.value = "";
-            newPassword.value = "";
-        } catch (err) {
-            passwordMsg.value = authStore.error || "Failed to update password.";
-            passwordSuccess.value = false;
-        } finally {
-            loading.value = false;
-        }
-    };
+    try {
+        await authStore.updatePassword({
+            currentPassword: currentPassword.value,
+            newPassword: newPassword.value,
+            confirmPassword: newPassword.value
+        });
 
-    const logout = () => {
+        passwordMsg.value = "Password changed successfully!";
+        passwordSuccess.value = true;
+        currentPassword.value = "";
+        newPassword.value = "";
+    } catch (err) {
+        passwordMsg.value = authStore.error || "Failed to update password.";
+        passwordSuccess.value = false;
+    } finally {
+        loading.value = false;
+    }
+};
+
+const logout = () => {
+    authStore.logout();
+    router.push('/');
+};
+
+const confirmDeletion = async () => {
+    if (!authStore.user) return;
+
+    loading.value = true;
+
+    try {
+        await authStore.removeAccount({
+            issue: selectedIssue.value,
+            comment: comment.value,
+            phone_number: authStore.user.phone_number
+        });
+
         authStore.logout();
-        router.push('/');
-    };
+        alert('Your account deletion request has been submitted successfully.');
+        router.push('/'); // redirect to home
+        showModal.value = false;
+    } catch (err) {
+        console.error(err);
+        alert('Failed to delete account. Please try again.');
+    } finally {
+        loading.value = false;
+    }
+};
 </script>
 
 <style scoped>
-    a:hover {
-        color: #059669;
-    }
+a:hover {
+    color: #059669;
+}
 </style>

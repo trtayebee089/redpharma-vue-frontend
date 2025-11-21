@@ -14,20 +14,23 @@
 
         <div class="grid md:grid-cols-2 gap-12 items-start container mx-auto px-4 md:px-6">
             <div v-for="(section, index) in tm('about.why_us')" :key="index"
-                class="bg-white/70 rounded-2xl border border-green-100 p-8 shadow-sm hover:shadow-md transition-all duration-300 backdrop-blur-sm">
+                class="glass-card p-8 transition-all duration-300 hover:shadow-xl">
+
                 <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 bg-green-100 text-green-600 flex items-center justify-center rounded-full">
+                    <div class="w-10 h-10 bg-green-100/40 text-green-600 flex items-center justify-center rounded-full">
                         <i class="pi pi-check-circle text-xl"></i>
                     </div>
                     <h2 class="text-2xl font-bold text-gray-800 font-wb" :class="[langStore.langClass]">
                         {{ section.heading }}
                     </h2>
                 </div>
+
                 <ul v-if="section.type === 'list'" class="list-disc pl-5 space-y-2 text-gray-700 leading-relaxed">
                     <li v-for="(item, i) in section.items" :key="i" :class="[langStore.langClass, 'font-ws']">
                         {{ item }}
                     </li>
                 </ul>
+
                 <div v-else-if="section.type === 'paragraphs'" class="space-y-3 text-gray-700 leading-relaxed font-ws">
                     <p v-for="(item, i) in section.items" :key="i" :class="[langStore.langClass]">
                         {{ item }}
@@ -45,8 +48,8 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 <div v-for="(service, index) in tm('about.services.items')" :key="index"
-                    class="group relative bg-white border border-green-100 rounded-2xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                    <div class="absolute top-0 right-0 w-16 h-16 bg-green-50 rounded-bl-2xl -z-10"></div>
+                    class="glass-card group relative bg-white border border-green-100 rounded-2xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <!-- <div class="absolute top-0 right-0 w-16 h-16 bg-green-50 rounded-bl-2xl -z-10"></div> -->
 
                     <div class="flex items-center justify-start">
                         <div

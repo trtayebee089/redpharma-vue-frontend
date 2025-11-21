@@ -24,7 +24,6 @@ const langStore = useLanguageStore();
 <template>
     <footer class="bg-gray-900 text-gray-300 relative z-50  hidden lg:block">
         <div class="w-full mx-auto px-6 py-12 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 md:grid">
-            <!-- Column 1: Logo & Description -->
             <div class="md:col-span-1 lg:col-span-1">
                 <a href="/" class="flex items-center mb-4">
                     <img :src="mainLogo" alt="RedPharma Logo" class="h-12" />
@@ -75,6 +74,10 @@ const langStore = useLanguageStore();
                             class="hover:text-green-400 transition text-md font-normal">{{ $t('header.menu.coverage')
                             }}</router-link>
                     </li>
+                    <li><router-link :class="[langStore.langClass]" to="/account-removal-request"
+                            class="hover:text-green-400 transition text-md font-normal">{{ $t('header.menu.remove_account')
+                            }}</router-link>
+                    </li>
                 </ul>
             </div>
 
@@ -123,14 +126,11 @@ const langStore = useLanguageStore();
             </div>
         </div>
 
-        <div
-            class="bg-gray-800 text-gray-400 py-4 px-6 flex flex-col md:flex-row items-center justify-between text-sm border-t border-gray-700">
-            <!-- Left: Copyright Text -->
+        <div class="bg-gray-800 text-gray-400 py-4 px-6 flex flex-col md:flex-row items-center justify-between text-sm border-t border-gray-700">
             <div class="mb-2 md:mb-0">
                 © {{ year }} <strong>RedPharma BD</strong>. All rights reserved.
             </div>
 
-            <!-- Right: Payment Logos Image -->
             <div>
                 <img :src="paymentsLogo" alt="Payment Methods" class="h-6" />
             </div>

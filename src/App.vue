@@ -99,4 +99,40 @@ onUnmounted(() => {
         width: 100%;
     }
 }
+
+.glass-card {
+    position: relative;
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0.20),
+        rgba(255, 255, 255, 0.10),
+        rgba(255, 255, 255, 0.05) 
+    );
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow: 0 8px 10px rgb(0 0 0 / 4%);
+}
+
+.glass-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.7),
+        rgba(247, 0, 0, 0.144),
+        rgba(255, 255, 255, 0.8)
+    );
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: -1;
+}
 </style>

@@ -199,13 +199,13 @@ export const useAuthStore = defineStore("auth", {
             this.error = null;
 
             try {
-                const token = localStorage.getItem("token"); 
+                const token = localStorage.getItem("token");
                 const { data } = await api.get("/customer/orders", {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                
+
                 if (data.success) {
                     this.orders = data.data;
                     return this.orders;
@@ -280,6 +280,20 @@ export const useAuthStore = defineStore("auth", {
                 throw err;
             } finally {
                 this.loading = false;
+            }
+        },
+
+        async removeAccount({ issue = null, comment = null, phone_number = null } = {}) {
+            try {
+                const response = await api.post('/account-removal-request', {
+                    phone_number: phone_number ?? this.user.phone_number,
+                    issue: issue,
+                    comment: comment,
+                });
+                return response.data;
+            } catch (err) {
+                console.error("Error removing account:", err);
+                throw err;
             }
         },
 

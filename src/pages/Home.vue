@@ -30,7 +30,7 @@
                             <div class="w-full aspect-square bg-gray-50">
                                 <img :src="category.image" alt=""
                                     class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                    loading="lazy" /> 
+                                    loading="lazy" />
                             </div>
                         </router-link>
                     </SwiperSlide>
@@ -49,9 +49,12 @@
                         1024: { slidesPerView: 4, spaceBetween: 24 },
                         1280: { slidesPerView: 6, spaceBetween: 24 }
                     }" class="pt-5 pb-10">
-                    <SwiperSlide v-for="(category, index) in Array(6)" :key="index" class="overflow-visible flex justify-center">
+                    <SwiperSlide v-for="(category, index) in Array(6)" :key="index"
+                        class="overflow-visible flex justify-center">
                         <div class="w-full aspect-square bg-gray-200 rounded-xl overflow-hidden relative">
-                            <div class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
+                            <div
+                                class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer">
+                            </div>
                         </div>
                     </SwiperSlide>
                 </Swiper>
@@ -257,8 +260,8 @@
     </section>
 
     <!-- Testimonials -->
-    <section class="bg-red-50 py-12 md:py-16 rounded-lg my-10 fade-up container mx-auto px-4 md:px-6">
-        <div class="container mx-auto px-6 md:px-12">
+    <section class="my-10 relative overflow-hidden fade-up container mx-auto px-4 md:px-6">
+        <div class="shadow-lg py-12 md:py-16 bg-red-50 pb-0 p-6 rounded-xl relative items-center">
             <div class="absolute inset-0 opacity-10 pointer-events-none">
                 <svg class="w-full h-full" preserveAspectRatio="none">
                     <defs>
@@ -269,7 +272,7 @@
                     <rect width="100%" height="100%" fill="url(#grid)"></rect>
                 </svg>
             </div>
-            <!-- Heading -->
+
             <div class="text-center mb-12">
                 <h2 class="text-2xl md:text-3xl font-bold mb-2 text-gray-800 relative inline-block"
                     :class="[langStore.langClass]">
@@ -280,7 +283,6 @@
                 </p>
             </div>
 
-            <!-- Testimonials Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div v-for="(testimonial, index) in testimonials" :key="index"
                     class="bg-white shadow-lg rounded-xl p-6 flex flex-col">
@@ -312,53 +314,54 @@
         </div>
     </section>
 
-    <section
-        class="bg-gradient-to-br from-green-100 to-white py-12 relative overflow-hidden container mx-auto px-4 md:px-6 rounded-xl">
-        <!-- Decorative pattern (optional subtle diagonal lines) -->
-        <div class="absolute inset-0 opacity-5 pointer-events-none">
-            <svg class="w-full h-full" preserveAspectRatio="none">
-                <defs>
-                    <pattern id="dots" width="10" height="10" patternUnits="userSpaceOnUse">
-                        <circle cx="1" cy="1" r="1" fill="#f87171"></circle>
-                    </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#dots)"></rect>
-            </svg>
-        </div>
+    <section class="my-10 relative overflow-hidden fade-up container mx-auto px-4 md:px-6">
+        <div class="bg-gradient-to-br from-green-100 to-white py-12 md:py-16 pb-0 p-6 rounded-xl relative items-center">
+            <div class="absolute inset-0 opacity-5 pointer-events-none">
+                <svg class="w-full h-full" preserveAspectRatio="none">
+                    <defs>
+                        <pattern id="dots" width="10" height="10" patternUnits="userSpaceOnUse">
+                            <circle cx="1" cy="1" r="1" fill="#f87171"></circle>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#dots)"></rect>
+                </svg>
+            </div>
 
-        <div class="mx-auto px-4 text-center">
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-10">
-                {{ t('home.impact_counter') }}
-            </h2>
+            <div class="mx-auto px-4 text-center">
+                <h2 class="max-w-4xl text-2xl md:text-4xl font-extrabold tracking-tight font-wb mb-10 m-auto 
+                    bg-gradient-to-l from-green-700 via-green-500 to-green-700 
+                    text-transparent bg-clip-text">
+                    {{ t('home.impact_counter') }}
+                </h2>
 
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
-                <div v-for="(stat, index) in stats" :key="index" ref="statRefs"
-                    class="bg-white rounded-xl shadow-md p-6 border border-gray-100 hover:shadow-lg transition-all">
-                    <p class="text-3xl md:text-4xl font-bold text-green-600 mb-2">
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                    <div v-for="(stat, index) in stats" :key="index" ref="statRefs"
+                        class="bg-white rounded-xl shadow-md p-6 border border-gray-100 hover:shadow-lg transition-all glass-card">
+                        <p class="text-3xl md:text-4xl font-bold text-green-600 mb-2">
 
-                    </p>
-                    <p class="text-gray-700 font-medium"></p>
-                    <div class="flex items-center justify-start">
-                        <div
-                            class="flex items-center justify-center w-14 h-14 mr-4 bg-green-100 text-green-600 rounded-full group-hover:bg-green-600 group-hover:text-white transition">
-                            <i class="pi pi-bolt text-2xl"></i>
-                        </div>
+                        </p>
+                        <p class="text-gray-700 font-medium"></p>
+                        <div class="flex items-center justify-start">
+                            <div
+                                class="flex items-center justify-center w-14 h-14 mr-4 bg-green-100 text-green-600 rounded-full group-hover:bg-green-600 group-hover:text-white transition">
+                                <i class="pi pi-bolt text-2xl"></i>
+                            </div>
 
-                        <div class="text-left">
-                            <h3 class="text-xl font-semibold text-gray-800 mb-2 font-wb" :class="[langStore.langClass]">
-                                {{ stat.displayValue }}
-                            </h3>
-                            <p class="text-gray-600 text-sm leading-relaxed font-ws m-0" :class="[langStore.langClass]">
-                                {{ stat.label }}
-                            </p>
+                            <div class="text-left">
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2 font-wb" :class="[langStore.langClass]">
+                                    {{ stat.displayValue }}
+                                </h3>
+                                <p class="text-gray-600 text-sm leading-relaxed font-ws m-0" :class="[langStore.langClass]">
+                                    {{ stat.label }}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- optional floating gradient animation overlay -->
-        <div class="absolute inset-0 bg-gradient-to-r from-green-100/0 via-green-100/30 to-green-100/0 animate-shine">
+            <div class="absolute inset-0 bg-gradient-to-r from-green-100/0 via-green-100/30 to-green-100/0 animate-shine">
+            </div>
         </div>
     </section>
 
