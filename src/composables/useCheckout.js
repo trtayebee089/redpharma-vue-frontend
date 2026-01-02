@@ -103,7 +103,7 @@ export function useCheckout() {
                 total_qty: cartStore.totalQty
             };
 
-            const response = await axios.post('http://localhost:8000/api/checkout', payload);
+            const response = await api.post('/checkout', payload);
 
             successMessage.value = 'Order placed successfully!';
             cartStore.clearCart();
