@@ -221,7 +221,7 @@
                 ? ''
                 : 'bg-white'
         ]">
-            <div v-if="item.type === 'category'" class="p-5 md:p-8 rounded-xl container mx-auto px-4 md:px-6">
+            <div v-if="item.type === 'category' && categoryProducts[item.category.slug].length > 3" class="p-5 md:p-8 rounded-xl container mx-auto px-4 md:px-6">
                 <div class="flex items-center gap-3 mb-5">
                     <div class="flex items-center gap-3">
                         <img v-if="item.category.image" :src="item.category.image" :alt="item.category.name"
