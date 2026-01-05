@@ -289,18 +289,18 @@
                                         </div>
                                     </label>
                                 </div>
-
-                                <!-- Discount Amount (only visible if toggle ON) -->
-                                <div class="flex justify-between text-gray-700 pb-2"
-                                    v-if="authStore.membershipInfo?.discount > 0 && cartStore.applyDiscount">
-                                    <p>
-                                        <span>Discount</span>
-                                    </p>
-                                    <span class="text-green-600 font-medium">
-                                        {{ cartStore.membershipDiscount.toFixed(2) }} Tk
-                                    </span>
-                                </div>
                             </template>
+
+                            <!-- Discount Amount (only visible if toggle ON) -->
+                            <div class="flex justify-between text-gray-700 pb-2" v-if="cartStore.applyDiscount">
+                                <p>
+                                    <span>Discount</span>
+                                    <span class="ml-2">({{cartStore.discountRate}}%)</span>
+                                </p>
+                                <span class="text-green-600 font-medium">
+                                    {{ cartStore.membershipDiscount.toFixed(2) }} Tk
+                                </span>
+                            </div>
 
                             <!-- Payment Gateway -->
                             <div class="flex justify-between text-gray-700 pb-2">
@@ -435,7 +435,7 @@ watch(
             checkoutForm.division = "";
             cartStore.shippingRate = 0;
         } else {
-            cartStore.shippingRate = rate; // use default rate for the division
+            cartStore.shippingRate = rate;
         }
     }
 );
