@@ -166,7 +166,7 @@
                     Tracking Updates
                 </span>
             </h2>
-            <TimeLine :tracking="tracking.histories" :formatDate="formatDate" />
+            <!-- <TimeLine :tracking="tracking.histories" :formatDate="formatDate" /> -->
         </section>
     </div>
 </template>
@@ -177,7 +177,7 @@ import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useLanguageStore } from "@/stores/language";
 import { useCheckout } from "@/composables/useCheckout";
-import TimeLine from "@/components/common/TimeLine.vue";
+// import TimeLine from "@/components/common/TimeLine.vue";
 
 const route = useRoute();
 const { t } = useI18n();
@@ -194,7 +194,6 @@ const trackingx = history.state?.tracking
 const isNewCustomer = history.state?.isNewCustomer
 const temporaryPassword = history.state?.temporaryPassword
 
-// Fetch order details
 onMounted(async () => {
     if (order_id) {
         await getOrderDetails(order_id);
