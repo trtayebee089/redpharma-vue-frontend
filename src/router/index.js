@@ -40,7 +40,15 @@ const routes = [
     { path: '/blog/:slug', name: 'Health Articles', component: OrderTracking, meta: { title: 'Health Articles - RedPharma BD' } }, //✅
     { path: '/products/:slug', name: 'ProductDetails', component: ProductDetail, meta: { title: 'Product Details - RedPharma BD' } }, //✅
     { path: '/account-removal-request', name: 'RemoveAccount', component: RemoveAccount, meta: { title: 'Delete Account - RedPharma BD' } }, //✅
-    { path: "/order-confirmation/:order_id", name: "OrderConfirmation", component: () => OrderConfirmation, props: true }, //✅
+    { 
+        path: "/order-confirmation/:order_id", 
+        name: "OrderConfirmation", 
+        component: () => OrderConfirmation, 
+        props: (route) => ({
+            isNewCustomer: route.query.isNewCustomer,
+            temporaryPassword: route.query.temporaryPassword
+        })
+    }, //✅
 
     { path: '/profile', name: 'Profile', component: Profile, meta: { title: 'Edit Profile - RedPharma BD', requiresAuth: true } }, //✅
     { path: '/orders', name: 'Orders', component: Orders, meta: { title: 'My Orders - RedPharma BD', requiresAuth: true } }, //✅
