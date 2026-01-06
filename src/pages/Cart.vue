@@ -94,8 +94,7 @@
 
                                     <!-- Amount -->
                                     <td class="px-4 py-3 text-center text-gray-700">
-                                        {{ (Number(item.offerPrice ?? item.price) || 0) * (Number(item.quantity) || 1)
-                                            .toFixed(2) }} Tk
+                                        {{ ((Number(item.offerPrice ?? item.price) || 0) * (Number(item.quantity) || 1)).toFixed(2) }} Tk
                                     </td>
 
                                     <!-- Action -->
