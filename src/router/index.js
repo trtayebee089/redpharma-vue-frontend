@@ -19,7 +19,7 @@ import Settings from '../pages/account/Settings.vue'
 import OrderDetail from '../pages/account/OrderDetail.vue'
 import ProductDetail from '../pages/shop/ProductDetail.vue';
 import CategoryGrid from '../pages/shop/CategoryGrid.vue';
-import OrderConfirmation from '../pages/shop/OrderConfirmation.vue';
+import OrderConfirmation from '@/pages/shop/OrderConfirmation.vue';
 import RemoveAccount from '../pages/RemoveAccount.vue';
 import NotFound from '../pages/NotFound.vue';
 
@@ -38,9 +38,9 @@ const routes = [
     { path: '/upload-prescription', name: 'Upload Prescription', component: OrderTracking, meta: { title: 'Upload Prescription - RedPharma BD' } }, //✅
     { path: '/blog', name: 'Health Articles', component: OrderTracking, meta: { title: 'Health Articles - RedPharma BD' } }, //✅
     { path: '/blog/:slug', name: 'Health Articles', component: OrderTracking, meta: { title: 'Health Articles - RedPharma BD' } }, //✅
-    { path: '/products/:slug', name: 'ProductDetails', component: ProductDetail, meta: { title: 'Product Details - RedPharma BD' } },
-    { path: '/account-removal-request', name: 'RemoveAccount', component: RemoveAccount, meta: { title: 'Delete Account - RedPharma BD' } },
-    { path: "/order-confirmation/:order_id", name: "OrderConfirmation", component: () => OrderConfirmation, props: true },
+    { path: '/products/:slug', name: 'ProductDetails', component: ProductDetail, meta: { title: 'Product Details - RedPharma BD' } }, //✅
+    { path: '/account-removal-request', name: 'RemoveAccount', component: RemoveAccount, meta: { title: 'Delete Account - RedPharma BD' } }, //✅
+    { path: "/order-confirmation/:order_id", name: "OrderConfirmation", component: () => OrderConfirmation, props: true }, //✅
 
     { path: '/profile', name: 'Profile', component: Profile, meta: { title: 'Edit Profile - RedPharma BD', requiresAuth: true } }, 
     { path: '/orders', name: 'Orders', component: Orders, meta: { title: 'My Orders - RedPharma BD', requiresAuth: true } },
