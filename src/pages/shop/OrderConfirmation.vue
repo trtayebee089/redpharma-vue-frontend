@@ -180,7 +180,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useLanguageStore } from "@/stores/language";
@@ -192,24 +192,31 @@ const { t } = useI18n();
 const langStore = useLanguageStore();
 const { getOrderDetails, order, tracking } = useCheckout();
 
-const props = defineProps({
-    isNewCustomer: {
-        type: [Boolean, String],
-        default: false
-    },
-    temporaryPassword: {
-        type: String,
-        default: ''
-    }
-});
-
 const order_id = route.params?.order_id;
 
 const formatCurrency = (value) => (value != null ? "৳" + parseFloat(value).toFixed(2) : "-");
 const formatDate = (value) => (value ? new Date(value).toLocaleString("en-BD", { dateStyle: "medium", timeStyle: "short" }) : "-");
 
-const isNewCustomer = typeof props.isNewCustomer === 'string' ? props.isNewCustomer === 'true' : props.isNewCustomer;
-const temporaryPassword = ref(props.temporaryPassword);
+const getOrderStateData = () => {
+    const stored = sessionStorage.getItem('order_temp_data');
+    if (stored) {
+        const data = JSON.parse(stored);
+
+        if (data.order_id == order_id) {
+            sessionStorage.removeItem('order_temp_data');
+            return {
+                isNewCustomer: data.isNewCustomer,
+                temporaryPassword: data.temporaryPassword
+            };
+        }
+    }
+    
+    return { isNewCustomer: false, temporaryPassword: '' };
+};
+
+const stateData = ref(getOrderStateData());
+const isNewCustomer = computed(() => stateData.value.isNewCustomer);
+const temporaryPassword = computed(() => stateData.value.temporaryPassword);
 
 onMounted(async () => {
     if (order_id) {

@@ -413,13 +413,15 @@ const submitCheckout = async () => {
                 await authStore.fetchUser();
             }
 
+            sessionStorage.setItem('order_temp_data', JSON.stringify({
+                order_id: result.sale.id,
+                isNewCustomer: result.is_new_customer,
+                temporaryPassword: result.temporary_password
+            }));
+
             router.push({
                 name: "OrderConfirmation",
                 params: { order_id: result.sale.id },
-                query: {
-                    isNewCustomer: result.is_new_customer,
-                    temporaryPassword: result.temporary_password
-                }
             });
         }
     } catch (err) {

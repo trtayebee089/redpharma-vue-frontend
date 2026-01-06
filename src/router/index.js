@@ -44,10 +44,7 @@ const routes = [
         path: "/order-confirmation/:order_id", 
         name: "OrderConfirmation", 
         component: () => OrderConfirmation, 
-        props: (route) => ({
-            isNewCustomer: route.query.isNewCustomer,
-            temporaryPassword: route.query.temporaryPassword
-        })
+        meta: { title: 'Order Confirmation - RedPharma BD' }
     }, //✅
 
     { path: '/profile', name: 'Profile', component: Profile, meta: { title: 'Edit Profile - RedPharma BD', requiresAuth: true } }, //✅
