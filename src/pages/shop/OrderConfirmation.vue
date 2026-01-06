@@ -193,6 +193,7 @@ const langStore = useLanguageStore();
 const { getOrderDetails, order, tracking } = useCheckout();
 
 const order_id = route.params?.order_id;
+console.log("order_id: " + order_id);
 
 const formatCurrency = (value) => (value != null ? "৳" + parseFloat(value).toFixed(2) : "-");
 const formatDate = (value) => (value ? new Date(value).toLocaleString("en-BD", { dateStyle: "medium", timeStyle: "short" }) : "-");
