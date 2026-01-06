@@ -183,9 +183,9 @@
 import { onMounted, ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
-import { useLanguageStore } from "@/stores/language";
-import { useCheckout } from "@/composables/useCheckout";
-import TimeLine from "@/components/common/TimeLine.vue";
+import { useLanguageStore } from "./../../stores/language";
+import { useCheckout } from "./../../composables/useCheckout";
+import TimeLine from "./../../components/common/TimeLine.vue";
 
 const route = useRoute();
 const { t } = useI18n();
@@ -204,13 +204,14 @@ const getOrderStateData = () => {
 
         if (data.order_id == order_id) {
             sessionStorage.removeItem('order_temp_data');
+            console.log({ isNewCustomer: data.isNewCustomer, temporaryPassword: data.temporaryPassword });
             return {
                 isNewCustomer: data.isNewCustomer,
                 temporaryPassword: data.temporaryPassword
             };
         }
     }
-    
+    console.log({ isNewCustomer: false, temporaryPassword: '' });
     return { isNewCustomer: false, temporaryPassword: '' };
 };
 
@@ -220,6 +221,7 @@ const temporaryPassword = computed(() => stateData.value.temporaryPassword);
 
 onMounted(async () => {
     if (order_id) {
+        console.log("Order ID: " + order_id);
         await getOrderDetails(order_id);
     }
 });
