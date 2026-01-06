@@ -403,6 +403,7 @@ const submitCheckout = async () => {
 
     try {
         const result = await submitOrder(checkoutForm);
+        console.log(result)
         if (result?.success) {
             cartStore.clearCart();
             checkoutForm.fullName = '';
@@ -459,7 +460,6 @@ onMounted(async () => {
         await authStore.fetchRewardPointTiers();
     }
     await getShippingZones();
-    console.log(shippingZones.value);
 });
 </script>
 

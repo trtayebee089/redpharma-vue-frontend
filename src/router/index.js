@@ -42,12 +42,12 @@ const routes = [
     { path: '/account-removal-request', name: 'RemoveAccount', component: RemoveAccount, meta: { title: 'Delete Account - RedPharma BD' } }, //✅
     { path: "/order-confirmation/:order_id", name: "OrderConfirmation", component: () => OrderConfirmation, props: true }, //✅
 
-    { path: '/profile', name: 'Profile', component: Profile, meta: { title: 'Edit Profile - RedPharma BD', requiresAuth: true } }, 
-    { path: '/orders', name: 'Orders', component: Orders, meta: { title: 'My Orders - RedPharma BD', requiresAuth: true } },
-    { path: '/orders/:orderId', name: 'order-detail', component: OrderDetail, meta: { title: 'Order Detail - RedPharma BD', requiresAuth: true } },
-    { path: '/membership', name: 'Membership', component: Membership, meta: { title: 'Membership - RedPharma BD', requiresAuth: true } },
+    { path: '/profile', name: 'Profile', component: Profile, meta: { title: 'Edit Profile - RedPharma BD', requiresAuth: true } }, //✅
+    { path: '/orders', name: 'Orders', component: Orders, meta: { title: 'My Orders - RedPharma BD', requiresAuth: true } }, //✅
+    { path: '/orders/:orderId', name: 'order-detail', component: OrderDetail, meta: { title: 'Order Detail - RedPharma BD', requiresAuth: true } }, //✅
+    { path: '/membership', name: 'Membership', component: Membership, meta: { title: 'Membership - RedPharma BD', requiresAuth: true } }, //✅
     { path: '/settings', name: 'Settings', component: Settings, meta: { title: 'Settings - RedPharma BD', requiresAuth: true } }, //✅
-    { path: '/help-center', name: 'HelpCenter', component: HelpCenter, meta: { title: 'Help Center (FAQ) - RedPharma BD' } },
+    { path: '/help-center', name: 'HelpCenter', component: HelpCenter, meta: { title: 'Help Center (FAQ) - RedPharma BD' } }, //✅
 
     {
         path: '/:pathMatch(.*)*',
