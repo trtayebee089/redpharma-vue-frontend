@@ -14,19 +14,24 @@ export function useCheckout() {
     const shippingZones = ref([]);
 
     const getOrderDetails = async (order_id) => {
-        if (!order_id) return;
+        if (!order_id) {
+            return Promise.resolve(null);
+        }
 
         try {
             const response = await api.get(`/orders/${order_id}`);
-            
+
             if (response.data.success) {
                 order.value = response.data.order;
                 tracking.value = response.data.tracking || { histories: [] };
             } else {
                 console.error("Failed to fetch order details:", response.data.message);
             }
+
+            return response.data;
         } catch (error) {
             console.error("Error fetching order details:", error);
+            return Promise.reject(error); 
         }
     };
 
