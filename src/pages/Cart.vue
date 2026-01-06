@@ -416,7 +416,6 @@ const submitCheckout = async () => {
             router.push({
                 name: "OrderConfirmation",
                 params: { order_id: result.sale.id },
-                state: { order: result.sale, tracking: result.tracking, isNewCustomer: result.is_new_customer, temporaryPassword: result.temporary_password },
                 query: {
                     isNewCustomer: result.is_new_customer,
                     temporaryPassword: result.temporary_password

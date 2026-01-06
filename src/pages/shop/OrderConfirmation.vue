@@ -193,10 +193,6 @@ const langStore = useLanguageStore();
 const { getOrderDetails, order, tracking } = useCheckout();
 
 const props = defineProps({
-    order_id: {
-        type: [String, Number],
-        required: true
-    },
     isNewCustomer: {
         type: [Boolean, String],
         default: false
@@ -211,11 +207,6 @@ const order_id = route.params?.order_id;
 
 const formatCurrency = (value) => (value != null ? "৳" + parseFloat(value).toFixed(2) : "-");
 const formatDate = (value) => (value ? new Date(value).toLocaleString("en-BD", { dateStyle: "medium", timeStyle: "short" }) : "-");
-
-// const orderx = history.state?.order
-// const trackingx = history.state?.tracking
-// const isNewCustomer = history.state?.isNewCustomer
-// const temporaryPassword = history.state?.temporaryPassword
 
 const isNewCustomer = typeof props.isNewCustomer === 'string' ? props.isNewCustomer === 'true' : props.isNewCustomer;
 const temporaryPassword = ref(props.temporaryPassword);
