@@ -43,7 +43,7 @@ const routes = [
     { 
         path: "/order-confirmation/:order_id", 
         name: "OrderConfirmation", 
-        component: () => OrderConfirmation, 
+        component: OrderConfirmation,
         meta: { title: 'Order Confirmation - RedPharma BD' }
     }, //✅
 
