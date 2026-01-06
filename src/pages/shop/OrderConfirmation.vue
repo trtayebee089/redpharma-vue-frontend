@@ -128,7 +128,8 @@
             </div>
         </section>
 
-        <section class="mb-8 bg-white shadow rounded-lg p-6 transition-all duration-500 hover:shadow-lg border border-green-200">
+        <section
+            class="mb-8 bg-white shadow rounded-lg p-6 transition-all duration-500 hover:shadow-lg border border-green-200">
             <h2 class="text-2xl font-bold mb-6 flex items-center justify-center space-x-3 text-gray-800 relative">
                 <i class="pi pi-box text-green-500 text-xl"></i>
                 <span class="bg-clip-text text-transparent bg-gradient-to-b from-green-400 to-green-700">
@@ -139,19 +140,25 @@
                 <table class="min-w-full border-collapse text-sm">
                     <thead class="bg-green-100 rounded">
                         <tr>
-                            <th class="p-3 border-b border-green-300 rounded text-left text-gray-800 font-medium">Medicine</th>
+                            <th class="p-3 border-b border-green-300 rounded text-left text-gray-800 font-medium">
+                                Medicine</th>
                             <th class="p-3 border-b border-green-300  text-left text-gray-800 font-medium">Qty</th>
-                            <th class="p-3 border-b border-green-300  text-left text-gray-800 font-medium">Unit Price</th>
-                            <th class="p-3 border-b border-green-300 rounded text-left text-gray-800 font-medium">Total</th>
+                            <th class="p-3 border-b border-green-300  text-left text-gray-800 font-medium">Unit Price
+                            </th>
+                            <th class="p-3 border-b border-green-300 rounded text-left text-gray-800 font-medium">Total
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(item, index) in order.product_sales || []" :key="index"
                             class="hover:bg-gray-50 transition-colors duration-300">
                             <td class="p-3 border-b border-green-300 text-gray-900 font-medium">{{ item.name }}</td>
-                            <td class="p-3 border-b border-green-300 text-gray-800">{{ item.pivot.qty + ' ' + item.unit.unit_name }}</td>
-                            <td class="p-3 border-b border-green-300 text-gray-800">{{ formatCurrency(item.pivot.net_unit_price) }}</td>
-                            <td class="p-3 border-b border-green-300 text-gray-900 font-semibold">{{ formatCurrency(item.pivot.total) }}
+                            <td class="p-3 border-b border-green-300 text-gray-800">{{ item.pivot.qty + ' ' +
+                                item.unit.unit_name }}</td>
+                            <td class="p-3 border-b border-green-300 text-gray-800">{{
+                                formatCurrency(item.pivot.net_unit_price) }}</td>
+                            <td class="p-3 border-b border-green-300 text-gray-900 font-semibold">{{
+                                formatCurrency(item.pivot.total) }}
                             </td>
                         </tr>
                     </tbody>
@@ -159,14 +166,15 @@
             </div>
         </section>
 
-        <section v-if="tracking && tracking.histories?.length" class="mb-8 bg-white shadow rounded-lg p-6 transition-all duration-500 hover:shadow-lg border border-green-200">
+        <section v-if="tracking && tracking.histories?.length"
+            class="mb-8 bg-white shadow rounded-lg p-6 transition-all duration-500 hover:shadow-lg border border-green-200">
             <h2 class="text-2xl font-bold mb-6 flex items-center justify-center space-x-3 text-gray-800 relative">
                 <i class="pi pi-truck text-green-500 text-xl"></i>
                 <span class="bg-clip-text text-transparent bg-gradient-to-b from-green-400 to-green-700">
                     Tracking Updates
                 </span>
             </h2>
-            <!-- <TimeLine :tracking="tracking.histories" :formatDate="formatDate" /> -->
+            <TimeLine :tracking="tracking.histories" :formatDate="formatDate" />
         </section>
     </div>
 </template>
@@ -177,22 +185,40 @@ import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useLanguageStore } from "@/stores/language";
 import { useCheckout } from "@/composables/useCheckout";
-// import TimeLine from "@/components/common/TimeLine.vue";
+import TimeLine from "@/components/common/TimeLine.vue";
 
 const route = useRoute();
 const { t } = useI18n();
 const langStore = useLanguageStore();
 const { getOrderDetails, order, tracking } = useCheckout();
 
+const props = defineProps({
+    order_id: {
+        type: [String, Number],
+        required: true
+    },
+    isNewCustomer: {
+        type: [Boolean, String],
+        default: false
+    },
+    temporaryPassword: {
+        type: String,
+        default: ''
+    }
+});
+
 const order_id = route.params?.order_id;
 
 const formatCurrency = (value) => (value != null ? "৳" + parseFloat(value).toFixed(2) : "-");
 const formatDate = (value) => (value ? new Date(value).toLocaleString("en-BD", { dateStyle: "medium", timeStyle: "short" }) : "-");
 
-const orderx = history.state?.order
-const trackingx = history.state?.tracking
-const isNewCustomer = history.state?.isNewCustomer
-const temporaryPassword = history.state?.temporaryPassword
+// const orderx = history.state?.order
+// const trackingx = history.state?.tracking
+// const isNewCustomer = history.state?.isNewCustomer
+// const temporaryPassword = history.state?.temporaryPassword
+
+const isNewCustomer = typeof props.isNewCustomer === 'string' ? props.isNewCustomer === 'true' : props.isNewCustomer;
+const temporaryPassword = ref(props.temporaryPassword);
 
 onMounted(async () => {
     if (order_id) {

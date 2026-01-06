@@ -295,7 +295,7 @@
                             <div class="flex justify-between text-gray-700 pb-2" v-if="cartStore.applyDiscount">
                                 <p>
                                     <span>Discount</span>
-                                    <span class="ml-2">({{cartStore.discountRate}}%)</span>
+                                    <span class="ml-2">({{ cartStore.discountRate }}%)</span>
                                 </p>
                                 <span class="text-green-600 font-medium">
                                     {{ cartStore.membershipDiscount.toFixed(2) }} Tk
@@ -416,7 +416,11 @@ const submitCheckout = async () => {
             router.push({
                 name: "OrderConfirmation",
                 params: { order_id: result.sale.id },
-                state: { order: result.sale, tracking: result.tracking, isNewCustomer: result.is_new_customer, temporaryPassword: result.temporary_password }
+                state: { order: result.sale, tracking: result.tracking, isNewCustomer: result.is_new_customer, temporaryPassword: result.temporary_password },
+                query: {
+                    isNewCustomer: result.is_new_customer,
+                    temporaryPassword: result.temporary_password
+                }
             });
         }
     } catch (err) {
