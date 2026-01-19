@@ -402,7 +402,7 @@ const submitCheckout = async () => {
 
     try {
         const result = await submitOrder(checkoutForm);
-        console.log(result)
+
         if (result?.success) {
             cartStore.clearCart();
             checkoutForm.fullName = '';

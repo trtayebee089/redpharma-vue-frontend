@@ -73,7 +73,7 @@ export function useCheckout() {
 
         try {
             const authStore = useAuthStore();
-            const membershipDiscountRate = authStore.membershipInfo?.discount || 0;
+            const membershipDiscountRate = authStore.membershipInfo?.discount || cartStore.discountRate;
             const discountAmount = (cartStore.cartSubtotal * membershipDiscountRate) / 100;
 
             const payload = {
@@ -85,7 +85,9 @@ export function useCheckout() {
                 customer: {
                     name: checkoutForm.fullName,
                     phone: checkoutForm.phone,
-                    address: checkoutForm.address
+                    address: checkoutForm.address,
+                    division: checkoutForm.division,
+                    district: checkoutForm.district
                 },
                 sale_type: 'website',
                 subtotal: cartStore.cartSubtotal,
