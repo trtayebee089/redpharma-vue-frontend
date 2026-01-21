@@ -133,7 +133,7 @@ export const useAuthStore = defineStore("auth", {
 
                 axios.defaults.headers.common["Authorization"] = `Bearer ${data.data.token}`;
             } catch (err) {
-                this.error = err.response?.data?.message || "Registration failed";
+                this.error = Object.values(err.response.data.errors).flat().join(", ");
                 throw err;
             } finally {
                 this.loading = false;
