@@ -27,6 +27,9 @@
 
                             <input type="text" v-model="name" placeholder="Full Name"
                                 class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                            
+                            <input type="email" v-model="email" placeholder="Email (optional)"
+                                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
 
                             <div class="flex border rounded overflow-hidden">
                                 <span
@@ -96,6 +99,7 @@ function switchToLogin() {
 const authStore = useAuthStore();
 
 const name = ref("");
+const email = ref("");
 const mobile = ref("");
 const password = ref("");
 const confirmPassword = ref("");
@@ -109,6 +113,7 @@ const submitRegister = async () => {
     try {
         await authStore.register({
             name: name.value,
+            email: email.value,
             phone_number: mobile.value,
             password: password.value,
             confirmPassword: confirmPassword.value,
