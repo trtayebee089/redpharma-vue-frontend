@@ -84,8 +84,8 @@ const props = defineProps({
 const emit = defineEmits(["close", "open-register"]);
 
 const authStore = useAuthStore();
-const mobile = ref("01688052518");
-const password = ref("12345678");
+const mobile = ref("");
+const password = ref("");
 
 function switchToRegister() {
     emit("close");

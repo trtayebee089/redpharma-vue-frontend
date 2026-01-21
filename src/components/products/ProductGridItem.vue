@@ -139,6 +139,17 @@ const handleAddToCart = () => {
     cartStore.addToCart({ ...props.product, quantity: quantity.value });
     showQuantityControls.value = true;
     push.success(`${props.product.name} added to cart!`);
+
+    // Facebook Pixel AddToCart event
+    if (window.fbq) {
+        window.fbq('track', 'AddToCart', {
+            content_name: props.product.name,
+            content_ids: [props.product.id],
+            content_type: 'product',
+            value: props.product.promotion_price || props.product.price,
+            currency: 'BDT'
+        });
+    }
 };
 
 const increaseQty = () => {

@@ -95,10 +95,10 @@ function switchToLogin() {
 
 const authStore = useAuthStore();
 
-const name = ref("Md Faisal Ahmed");
-const mobile = ref("01688052518");
-const password = ref("12345678");
-const confirmPassword = ref("12345678");
+const name = ref("");
+const mobile = ref("");
+const password = ref("");
+const confirmPassword = ref("");
 
 // Submit registration
 const submitRegister = async () => {
