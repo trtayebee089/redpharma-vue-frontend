@@ -112,13 +112,14 @@ export const useAuthStore = defineStore("auth", {
             }
         },
 
-        async register({ name, phone_number, password, confirmPassword }) {
+        async register({ name, email, phone_number, password, confirmPassword }) {
             this.loading = true;
             this.error = null;
 
             try {
                 const { data } = await api.post("/customer/register", {
                     name,
+                    email,
                     phone_number,
                     password,
                     password_confirmation: confirmPassword
