@@ -1,49 +1,57 @@
 <script setup>
-    import {
-        ref,
-        computed
-    } from "vue";
-    import {
-        categories
-    } from "@/data/categories.js";
-    import {
-        useCartStore
-    } from "@/stores/cart";
-    import {
-        useLanguageStore
-    } from "@/stores/language";
-    import {
-        useRouter
-    } from "vue-router";
-    import {
-        useAuthStore
-    } from "@/stores/auth"; // your Pinia auth store
-    import LoginFormModal from "@/components/auth/LoginFormModal.vue";
+import {
+    ref,
+    computed
+} from "vue";
+import {
+    categories
+} from "@/data/categories.js";
+import {
+    useCartStore
+} from "@/stores/cart";
+import {
+    useLanguageStore
+} from "@/stores/language";
+import {
+    useRouter
+} from "vue-router";
+import {
+    useAuthStore
+} from "@/stores/auth"; // your Pinia auth store
+import LoginFormModal from "@/components/auth/LoginFormModal.vue";
+import RegistrationModal from "@/components/auth/RegistrationModal.vue";
 
-    const isSidebarOpen = ref(false);
-    const cartStore = useCartStore();
-    const langStore = useLanguageStore();
-    const router = useRouter();
-    const authStore = useAuthStore();
-    const showLoginModal = ref(false);
+const isSidebarOpen = ref(false);
+const cartStore = useCartStore();
+const langStore = useLanguageStore();
+const router = useRouter();
+const authStore = useAuthStore();
+const showLoginModal = ref(false);
+const showRegister = ref(false);
 
-    const cartQty = computed(() => cartStore.items.length); // or sum quantities if needed
+const cartQty = computed(() => cartStore.items.length); // or sum quantities if needed
 
-    // Navigation methods
-    const goToCart = () => {
-        cartStore.toggleCart(true);
+// Navigation methods
+const goToCart = () => {
+    cartStore.toggleCart(true);
+}
+const goHome = () => {
+    router.push('/');
+}
+
+const goProfile = () => {
+    if (authStore.isAuthenticated) {
+        router.push("/profile");
+    } else {
+        showLoginModal.value = true;
     }
-    const goHome = () => {
-        router.push('/');
-    }
+};
 
-    const goProfile = () => {
-        if (authStore.isAuthenticated) {
-            router.push("/profile");
-        } else {
-            showLoginModal.value = true;
-        }
-    };
+function openRegister() {
+    showLoginModal.value = false;
+    showRegister.value = true;
+}
+
 </script>
 
 <template>
@@ -76,7 +84,7 @@
         </div>
     </nav>
 
-    <LoginFormModal :show="showLoginModal" @close="() => { showLoginModal = false }" />
+    <LoginFormModal :show="showLoginModal" @close="() => { showLoginModal = false }" @open-register="openRegister" />
 
     <transition name="slide-fade">
         <div v-if="isSidebarOpen" class="fixed inset-0 z-50 flex">
@@ -96,7 +104,7 @@
                         <router-link :to="`/category/${category.slug}`" @click="isSidebarOpen = false"
                             class="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-700 transition">
                             <img :src="category.image" alt="" class="w-6 h-6 mr-3 rounded-sm object-cover" />
-                            <span class="font-medium">{{ category . name }}</span>
+                            <span class="font-medium">{{ category.name }}</span>
                         </router-link>
                     </li>
                 </ul>
@@ -105,17 +113,19 @@
     </transition>
 
 
+    <RegistrationModal :show="showRegister" @close="showRegister = false"
+        @open-login="() => showLoginModal.value = true" />
 </template>
 
 <style scoped>
-    .slide-fade-enter-active,
-    .slide-fade-leave-active {
-        transition: transform 0.3s ease, opacity 0.3s ease;
-    }
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
 
-    .slide-fade-enter-from,
-    .slide-fade-leave-to {
-        transform: translateX(-100%);
-        opacity: 0;
-    }
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+    transform: translateX(-100%);
+    opacity: 0;
+}
 </style>

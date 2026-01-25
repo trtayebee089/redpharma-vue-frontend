@@ -217,8 +217,7 @@
 
     <LoginFormModal :show="showLoginModal" @close="() => { showLoginModal = false }" @open-register="openRegister" />
 
-    <RegistrationModal :show="showRegister" @close="showRegister = false"
-        @open-login="() => showLoginModal.value = true" />
+    <RegistrationModal :show="showRegister" @close="showRegister = false" @open-login="() => showLoginModal.value = true" />
 </template>
 
 <script setup>
