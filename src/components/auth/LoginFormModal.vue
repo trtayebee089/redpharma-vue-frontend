@@ -2,11 +2,24 @@
     <Modal v-if="show" :isOpen="show" @close="() => emit('close')">
         <div class="flex items-center justify-center h-100">
             <transition name="fade" mode="out-in">
-                <div v-if="authStore.isAuthenticated" class="text-center">
-                    <h2 class="text-3xl font-bold text-green-600 mb-2">
-                        Welcome, {{ authStore.user?.name || "Customer" }}!
+                <div v-if="authStore.isAuthenticated"
+                    class="text-center px-6 py-8 rounded-xl bg-gradient-to-br from-green-50 to-white border border-green-100 shadow-sm">
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-green-700 tracking-tight">
+                        Welcome back, {{ authStore.user?.name || "Customer" }}
                     </h2>
-                    <p class="text-gray-700 text-lg">You are logged in successfully.</p>
+
+                    <p class="mt-3 text-base sm:text-lg text-gray-700 max-w-xl mx-auto">
+                        You’ve signed in successfully. Your account is ready and you can continue where you left off.
+                    </p>
+
+                    <div class="mt-5 flex justify-center">
+                        <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
+                                bg-green-100 text-green-700 text-sm font-semibold
+                                border border-green-200">
+                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                            Login successful
+                        </span>
+                    </div>
                 </div>
 
                 <div v-else class="flex flex-col md:flex-row w-full">
@@ -46,7 +59,7 @@
                                 <router-link to="/refund" class="text-green-500 hover:underline">Refund
                                     Policy</router-link>.
                             </p>
-                            
+
                             <p class="text-xs text-gray-500 text-center">
                                 Don't Have An Account?
                                 <button @click="switchToRegister" class="text-green-500 hover:underline">
