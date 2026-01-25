@@ -176,8 +176,6 @@ export const useAuthStore = defineStore("auth", {
                     }
                 }
 
-                console.log("Avatar value:", profileData.avatar, profileData.avatar instanceof File);
-
                 const { data } = await api.post("/customer/profile/update", formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",

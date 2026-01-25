@@ -1,4 +1,17 @@
 <template>
+
+    <div v-if="authStore.loading"
+        class="absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center z-50 rounded-lg">
+        <div class="flex flex-col items-center gap-3">
+            <svg class="w-8 h-8 animate-spin text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+            </svg>
+            <p class="text-green-700 font-medium">Updating profile…</p>
+        </div>
+    </div>
+
     <div class="max-w-4xl mx-auto p-8 font-sans text-gray-800 space-y-8 relative fade-up pt-6">
         <div
             class="max-w-5xl mx-auto text-center leading-relaxed bg-green-100 rounded-lg p-6 relative overflow-hidden mb-6">
@@ -75,9 +88,18 @@
             </div>
 
             <div class="pt-6 flex justify-center">
-                <button type="submit"
-                    class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2.5 rounded-lg shadow-sm transition">
-                    Save Changes
+                <button type="submit" :disabled="authStore.loading"
+                    class="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 disabled:bg-green-400 disabled:cursor-not-allowed text-white font-semibold px-6 py-2.5 rounded-lg shadow-sm transition">
+                    <svg v-if="authStore.loading" class="w-5 h-5 animate-spin text-white"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                    </svg>
+
+
+                    <span>
+                        {{ authStore.loading ? "Saving..." : "Save Changes" }}
+                    </span>
                 </button>
             </div>
         </form>
@@ -132,8 +154,13 @@ const saveProfile = async () => {
         await authStore.updateProfile(payload);
         alert("Profile updated successfully!");
     } catch (err) {
-        alert("Failed to update profile. Check console for errors.");
-        console.error(err);
+        if (authStore.error) {
+            const message = typeof authStore.error === "string"
+                ? authStore.error
+                : Object.values(authStore.error).flat().join("\n");
+
+            alert(message);
+        }
     }
 };
 </script>
