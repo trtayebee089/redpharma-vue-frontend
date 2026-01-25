@@ -1,26 +1,16 @@
 <script setup>
-import {
-    ref,
-    computed
-} from "vue";
-import {
-    categories
-} from "@/data/categories.js";
-import {
-    useCartStore
-} from "@/stores/cart";
-import {
-    useLanguageStore
-} from "@/stores/language";
-import {
-    useRouter
-} from "vue-router";
-import {
-    useAuthStore
-} from "@/stores/auth"; // your Pinia auth store
+import { ref, computed } from "vue";
+import { useCategories } from "@/composables/useCategories.js";
+const { categories, loading, error } = useCategories();
+import { useRoute } from 'vue-router';
+import { useCartStore } from "@/stores/cart";
+import { useLanguageStore } from "@/stores/language";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/auth"; // your Pinia auth store
 import LoginFormModal from "@/components/auth/LoginFormModal.vue";
 import RegistrationModal from "@/components/auth/RegistrationModal.vue";
 
+const route = useRoute();
 const isSidebarOpen = ref(false);
 const cartStore = useCartStore();
 const langStore = useLanguageStore();
@@ -84,8 +74,6 @@ function openRegister() {
         </div>
     </nav>
 
-    <LoginFormModal :show="showLoginModal" @close="() => { showLoginModal = false }" @open-register="openRegister" />
-
     <transition name="slide-fade">
         <div v-if="isSidebarOpen" class="fixed inset-0 z-50 flex">
             <div class="fixed inset-0 bg-black/40 backdrop-blur-sm" @click="isSidebarOpen = false"></div>
@@ -101,10 +89,17 @@ function openRegister() {
                 </div>
                 <ul class="space-y-2">
                     <li v-for="category in categories" :key="category.id">
-                        <router-link :to="`/category/${category.slug}`" @click="isSidebarOpen = false"
-                            class="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-700 transition">
-                            <img :src="category.image" alt="" class="w-6 h-6 mr-3 rounded-sm object-cover" />
-                            <span class="font-medium">{{ category.name }}</span>
+                        <router-link :to="`/category/${category.slug}`"
+                            class="flex items-center justify-between px-4 py-3 text-gray-700 hover:bg-red-200 transition-colors hover:font-bold hover:text-red-950"
+                            :class="{
+                                'bg-red-200 font-bold text-red-950': route.params.slug === category.slug
+                            }">
+                            <div class="flex items-center">
+                                <img v-if="category.image" :src="category.image" alt="" class="w-6 h-6 mr-3"
+                                    loading="lazy" />
+                                <span>{{ category.name }}</span>
+                            </div>
+                            <i class="pi pi-chevron-right text-sm"></i>
                         </router-link>
                     </li>
                 </ul>
@@ -112,9 +107,9 @@ function openRegister() {
         </div>
     </transition>
 
+    <LoginFormModal :show="showLoginModal" @close="() => { showLoginModal = false }" @open-register="openRegister" />
 
-    <RegistrationModal :show="showRegister" @close="showRegister = false"
-        @open-login="() => showLoginModal.value = true" />
+    <RegistrationModal :show="showRegister" @close="showRegister = false" @open-login="() => showLoginModal.value = true" />
 </template>
 
 <style scoped>
