@@ -94,7 +94,8 @@
 
                                     <!-- Amount -->
                                     <td class="px-4 py-3 text-center text-gray-700">
-                                        {{ ((Number(item.offerPrice ?? item.price) || 0) * (Number(item.quantity) || 1)).toFixed(2) }} Tk
+                                        {{ ((Number(item.offerPrice ?? item.price) || 0) * (Number(item.quantity) ||
+                                            1)).toFixed(2) }} Tk
                                     </td>
 
                                     <!-- Action -->
@@ -343,7 +344,7 @@ const cartStore = useCartStore();
 const langStore = useLanguageStore();
 const router = useRouter();
 const { t } = useI18n();
-const { submitOrder, shippingZones, getShippingZones, getShippingRate } = useCheckout();
+const { submitOrder, shippingZones, getShippingZones, getShippingRate, error } = useCheckout();
 
 const checkoutForm = reactive({
     fullName: authStore.user?.name || '',
@@ -403,29 +404,55 @@ const submitCheckout = async () => {
     try {
         const result = await submitOrder(checkoutForm);
 
-        if (result?.success) {
-            cartStore.clearCart();
-            checkoutForm.fullName = '';
-            checkoutForm.phone = '';
-            checkoutForm.address = '';
-            if (authStore.token) {
-                await authStore.fetchUser();
-            }
+        if (!result?.success) {
+            throw new Error("Order failed");
+        }
 
-            sessionStorage.setItem('order_temp_data', JSON.stringify({
-                order_id: result.sale.id,
-                isNewCustomer: result.is_new_customer,
-                temporaryPassword: result.temporary_password
-            }));
+        checkoutForm.fullName = '';
+        checkoutForm.phone = '';
+        checkoutForm.address = '';
 
-            router.push({
-                name: "OrderConfirmation",
-                params: { order_id: result.sale.id },
+        if (authStore.token) {
+            await authStore.fetchUser();
+        }
+
+        sessionStorage.setItem('order_temp_data', JSON.stringify({
+            order_id: result.sale.id,
+            isNewCustomer: result.is_new_customer,
+            temporaryPassword: result.temporary_password
+        }));
+
+        // ✅ META PURCHASE EVENT (REAL DATA)
+        if (window.fbq) {
+            fbq('track', 'Purchase', {
+                value: result.sale.total, // or cartStore.totalAmount BEFORE clearing
+                currency: 'BDT',
+                contents: cartStore.items.map(item => ({
+                    id: item.id,
+                    quantity: item.quantity
+                })),
+                content_type: 'product'
             });
         }
+
+        cartStore.clearCart();
+
+        router.push({
+            name: "OrderConfirmation",
+            params: { order_id: result.sale.id }
+        });
     } catch (err) {
         console.error(err);
-        alert("Failed to place order. Please try again.");
+
+        if (error.value) {
+            const message = typeof error.value === 'string'
+                ? error.value
+                : Object.values(error.value).flat().join('\n');
+
+            alert(message);
+        } else {
+            alert("Failed to place order. Please try again.");
+        }
     }
 };
 
