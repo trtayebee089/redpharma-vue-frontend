@@ -4,14 +4,23 @@
             Browse Categories
         </h2>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-            <router-link v-for="category in categories" :key="category.id" :to="`/category/${category.slug}`" class="group relative block h-48 sm:h-56 md:h-64
-                       rounded-xl overflow-hidden shadow-md
-                       hover:shadow-xl transition-all duration-300">
+        <div class="grid gap-6
+                   grid-cols-1
+                   [@media(min-width:375px)]:grid-cols-2
+                   [@media(min-width:638px)]:grid-cols-2
+                   [@media(min-width:1140px)]:grid-cols-4
+                   [@media(min-width:768px)]:grid-cols-3">
+            <router-link v-for="category in categories" :key="category.id" :to="`/category/${category.slug}`" class="group relative block aspect-square
+                       rounded-xl overflow-hidden
+                       shadow-md hover:shadow-xl
+                       transition-all duration-300">
                 <!-- Image -->
                 <img :src="category.image" :alt="category.name" class="absolute inset-0 w-full h-full object-cover
                            transition-transform duration-500
                            group-hover:scale-110" />
+
+                <!-- Soft overlay -->
+                <div class="absolute inset-0 bg-black/10"></div>
 
                 <!-- Product Count Badge -->
                 <div v-if="category.total_products > 0" class="absolute top-3 left-3
