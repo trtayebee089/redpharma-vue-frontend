@@ -4,30 +4,25 @@
             Browse Categories
         </h2>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-            <router-link v-for="category in categories" :key="category.id" :to="`/category/${category.slug}`" class="group relative flex flex-col items-center p-6 bg-white rounded-2xl border border-gray-200
-                       shadow-sm transition-all duration-300
-                       hover:shadow-xl hover:-translate-y-1 hover:border-green-500
-                       hover:bg-green-50" :class="{
-                        'border-green-600 bg-green-50 shadow-lg': route.params.slug === category.slug
-                    }">
-                <div class="w-20 h-20 flex items-center justify-center rounded-full bg-gray-100
-                           transition-colors duration-300
-                           group-hover:bg-green-100">
-                    <img v-if="category.image" :src="category.image" :alt="category.name"
-                        class="w-12 h-12 object-contain" loading="lazy" />
-                    <i v-else class="fas fa-folder text-gray-400 text-3xl group-hover:text-green-600"></i>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+            <router-link v-for="category in categories" :key="category.id" :to="`/category/${category.slug}`" class="group relative block rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300">
+                <!-- Image Area -->
+                <div class="relative h-48 sm:h-56 md:h-64 bg-gray-200 overflow-hidden">
+                    <img :src="category.image" :alt="category.name" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+
+                    <!-- Overlay gradient -->
+                    <div class="absolute inset-0 bg-gradient-to-br from-green-900/70 via-green-800/40 to-transparent"></div>
+
+                    <!-- Arrow Button -->
+                    <div class="absolute top-3 right-3 w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow transition group-hover:bg-green-600 group-hover:text-white">
+                        <i class="pi pi-arrow-right text-lg"></i>
+                    </div>
                 </div>
 
-                <span class="mt-4 text-base font-semibold text-gray-700 text-center
-                           transition-colors duration-300
-                           group-hover:text-green-700">
+                <!-- Category Name -->
+                <div class="bg-white px-4 py-3 text-center font-semibold text-gray-800 transition-colors group-hover:bg-green-50">
                     {{ category.name }}
-                </span>
-
-                <i class="pi pi-arrow-right mt-2 text-sm text-gray-400
-                           opacity-0 group-hover:opacity-100
-                           transition-all duration-300"></i>
+                </div>
             </router-link>
         </div>
     </div>
