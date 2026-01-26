@@ -5,10 +5,10 @@
         </h2>
 
         <div class="grid gap-6
-                    grid-cols-1
-                    [@media(min-width:375px)]:grid-cols-2
-                    [@media(min-width:768px)]:grid-cols-3
-                    [@media(min-width:1140px)]:grid-cols-4">
+grid-cols-1
+[@media(min-width:375px)]:grid-cols-2
+[@media(min-width:638px)]:grid-cols-3
+[@media(min-width:1140px)]:grid-cols-4">
             <router-link v-for="category in categories" :key="category.id" :to="`/category/${category.slug}`"
                 class="group relative block aspect-square rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300">
                 <!-- Image -->
