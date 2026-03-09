@@ -77,7 +77,7 @@
                     </button>
 
                     <div class="relative hidden xl:inline-block">
-                        <button @click="cartStore.toggleCart(true)" class="w-12 h-12 flex items-center justify-center rounded-md border border-green-300 shadow-sm text-green-600
+                        <button @click="router.push('/cart')" class="w-12 h-12 flex items-center justify-center rounded-md border border-green-300 shadow-sm text-green-600
                                 bg-green-100
                                 hover:text-white
                                 hover:border-red-300
