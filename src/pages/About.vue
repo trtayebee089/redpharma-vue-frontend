@@ -4,7 +4,7 @@
             <h1 class="max-w-4xl text-3xl md:text-5xl font-extrabold tracking-tight font-wb mb-4 m-auto 
                     bg-gradient-to-l from-red-700 via-red-500 to-red-700 
                     text-transparent bg-clip-text" :class="[langStore.langClass]">
-                {{ $t('about.title') }} Test
+                {{ $t('about.title') }} 
             </h1>
             <p class="text-gray-600 text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-ws"
                 :class="[langStore.langClass]">
