@@ -65,8 +65,6 @@ useTawk();
 
         <Footer />
 
-        <CartOffCanvas />
-
         <MobileFooter />
 
         <!-- <FloatingChat /> -->
