@@ -123,7 +123,7 @@ const messages = {
         },
         about: {
             about_us: "About Us",
-            title: "Best Online Pharmacy and Healthcare Platform in Bangladesh",
+            title: "Best Online Pharmacy and Healthcare Platform in Bangladesh thanks",
             shortDescription: "RedPharma is Bangladesh’s most trusted online pharmacy and healthcare platform. Access medicines, doctor consultations, lab tests, and more, all from the comfort of your home.",
             why_us: [
                 {
