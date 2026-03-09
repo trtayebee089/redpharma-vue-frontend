@@ -88,10 +88,10 @@ const messages = {
                 "how_it_works": {
                     "title": "How Does Upload Work?",
                     "steps": [
-                    "Capture a clear photo of your prescription.",
-                    "Login to upload the photo.",
-                    "Our expert pharmacists will verify your prescription.",
-                    "Our customer agent will call you to confirm the order."
+                        "Capture a clear photo of your prescription.",
+                        "Login to upload the photo.",
+                        "Our expert pharmacists will verify your prescription.",
+                        "Our customer agent will call you to confirm the order."
                     ]
                 }
             },
@@ -123,7 +123,7 @@ const messages = {
         },
         about: {
             about_us: "About Us",
-            title: "Best Online Pharmacy and Healthcare Platform in Bangladesh thanks",
+            title: "Best Online Pharmacy and Healthcare Platform in Bangladesh",
             shortDescription: "RedPharma is Bangladesh’s most trusted online pharmacy and healthcare platform. Access medicines, doctor consultations, lab tests, and more, all from the comfort of your home.",
             why_us: [
                 {
@@ -314,10 +314,10 @@ const messages = {
                 "how_it_works": {
                     "title": "আপলোড কীভাবে কাজ করে?",
                     "steps": [
-                    "আপনার প্রেসক্রিপশনের একটি পরিষ্কার ছবি তুলুন।",
-                    "ছবিটি আপলোড করতে লগইন করুন।",
-                    "আমাদের ফার্মাসিস্টরা প্রেসক্রিপশন যাচাই করবেন।",
-                    "আমাদের কাস্টমার এজেন্ট অর্ডার কনফার্ম করতে কল করবেন।"
+                        "আপনার প্রেসক্রিপশনের একটি পরিষ্কার ছবি তুলুন।",
+                        "ছবিটি আপলোড করতে লগইন করুন।",
+                        "আমাদের ফার্মাসিস্টরা প্রেসক্রিপশন যাচাই করবেন।",
+                        "আমাদের কাস্টমার এজেন্ট অর্ডার কনফার্ম করতে কল করবেন।"
                     ]
                 }
             },
@@ -349,7 +349,7 @@ const messages = {
             about_us: "আমাদের সম্পর্কে",
             title: "বাংলাদেশের সেরা অনলাইন ফার্মেসি ও হেলথকেয়ার প্ল্যাটফর্ম",
             shortDescription: "রেডফার্মা বাংলাদেশের সবচেয়ে বিশ্বস্ত অনলাইন ফার্মেসি ও হেলথকেয়ার প্ল্যাটফর্ম। বাড়ির আরাম থেকে ওষুধ, ডাক্তার পরামর্শ, ল্যাব টেস্ট এবং আরও অনেক কিছু অ্যাক্সেস করুন।",
-            
+
             why_us: [
                 {
                     heading: "রেডফার্মা ব্যবহার করার সুবিধা",
@@ -375,7 +375,7 @@ const messages = {
                     ]
                 }
             ],
-            
+
             services: {
                 title: "রেডফার্মা প্রদত্ত সেবা",
                 items: [
@@ -388,7 +388,7 @@ const messages = {
                     // { title: "ডিসকাউন্ট ও ডিল", description: "ওষুধ সরবরাহ, পরামর্শ এবং ল্যাব টেস্টে সাশ্রয় করুন।" }
                 ]
             },
-            
+
             best_selling: {
                 title: "সেরা বিক্রিত ওষুধসমূহ"
             }
