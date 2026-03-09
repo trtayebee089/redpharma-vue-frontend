@@ -62,31 +62,6 @@
         </div>
     </section>
 
-    <!-- Best Selling Products Slider -->
-    <section class="mt-10 relative featured-product-slider fade-up container mx-auto px-4 md:px-6">
-        <div class="category-slider">
-            <h2 class="text-2xl md:text-3xl font-bold mb-5 text-gray-800 relative inline-block"
-                :class="[langStore.langClass]">{{ $t('home.best_selling') }}<span
-                    class="absolute left-0 bottom-0 w-16 h-1 bg-green-500 rounded-full"></span></h2>
-
-            <Swiper :modules="[Navigation, Pagination, Autoplay]" :slides-per-view="2" :space-between="16" :breakpoints="{
-                0: { slidesPerView: 2, spaceBetween: 16 },
-                640: { slidesPerView: 2, spaceBetween: 16 },
-                768: { slidesPerView: 3, spaceBetween: 20 },
-                1024: { slidesPerView: 3, spaceBetween: 24 },
-                1280: { slidesPerView: 5, spaceBetween: 24 }
-            }" :loop="true" :autoplay="{
-                delay: 2800,
-                disableOnInteraction: false,
-            }" :navigation="{ prevEl: '.swiper-button-prev', nextEl: '.swiper-button-next' }" class="pb-4 pt-5">
-                <SwiperSlide v-for="product in bestSelling" :key="product.id" class="overflow-visible">
-                    <ProductGridItem :product="product" />
-                </SwiperSlide>
-            </Swiper>
-
-        </div>
-    </section>
-
     <!-- CTA SECTION -->
     <section class="mt-10 relative fade-up container mx-auto px-4 md:px-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
@@ -128,6 +103,33 @@
 
         </div>
     </section>
+
+    <!-- Best Selling Products Slider -->
+    <section class="mt-10 relative featured-product-slider fade-up container mx-auto px-4 md:px-6">
+        <div class="category-slider">
+            <h2 class="text-2xl md:text-3xl font-bold mb-5 text-gray-800 relative inline-block"
+                :class="[langStore.langClass]">{{ $t('home.best_selling') }}<span
+                    class="absolute left-0 bottom-0 w-16 h-1 bg-green-500 rounded-full"></span></h2>
+
+            <Swiper :modules="[Navigation, Pagination, Autoplay]" :slides-per-view="2" :space-between="16" :breakpoints="{
+                0: { slidesPerView: 2, spaceBetween: 16 },
+                640: { slidesPerView: 2, spaceBetween: 16 },
+                768: { slidesPerView: 3, spaceBetween: 20 },
+                1024: { slidesPerView: 3, spaceBetween: 24 },
+                1280: { slidesPerView: 5, spaceBetween: 24 }
+            }" :loop="true" :autoplay="{
+                delay: 2800,
+                disableOnInteraction: false,
+            }" :navigation="{ prevEl: '.swiper-button-prev', nextEl: '.swiper-button-next' }" class="pb-4 pt-5">
+                <SwiperSlide v-for="product in bestSelling" :key="product.id" class="overflow-visible">
+                    <ProductGridItem :product="product" />
+                </SwiperSlide>
+            </Swiper>
+
+        </div>
+    </section>
+
+    
 
     <!-- Products Slider -->
     <section class="mt-10 relative featured-product-slider fade-up container mx-auto px-4 md:px-6">
