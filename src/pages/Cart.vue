@@ -424,7 +424,7 @@ const submitCheckout = async () => {
 
         // ✅ META PURCHASE EVENT (REAL DATA)
         if (window.fbq) {
-            fbq('track', 'Purchase', {
+            window.fbq('track', 'Purchase', {
                 value: result.sale.total, // or cartStore.totalAmount BEFORE clearing
                 currency: 'BDT',
                 contents: cartStore.items.map(item => ({
