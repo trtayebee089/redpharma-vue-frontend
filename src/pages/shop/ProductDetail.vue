@@ -35,7 +35,7 @@
                             {{ product.promotion_price.toFixed(2) }} Tk
                         </p>
 
-                        <p v-if="product.promotion_price < product.price" class="text-red-800 text-3xl font-bold" :class="product.promotion_price !== null ? 'line-through' : ''">
+                        <p v-if="product.promotion_price < product.price" class="text-black-800 text-3xl font-bold" :class="product.promotion_price !== null ? 'line-through' : ''">
                             {{ product.price.toFixed(2) }} Tk
                         </p>
 
@@ -71,6 +71,69 @@
                     </div>
 
                 </div>
+            </div>
+        </div>
+
+        <!-- Price Information Card -->
+        <div v-if="productDetail && (productDetail.box_qty || productDetail.stripe_qty || productDetail.piece_qty)" class="bg-white p-6 rounded-lg shadow border border-gray-200">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold text-lg">
+                    ৳
+                </div>
+                <h2 class="text-xl md:text-2xl font-bold text-gray-800">{{ productDetail.name }} Price Information</h2>
+            </div>
+        
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Per Piece -->
+                <div class="bg-[#eefcf2] border border-[#d1f4df] rounded-xl p-5 flex flex-col items-center justify-center text-center">
+                    <div class="w-10 h-10 rounded-full bg-[#d1f4df] flex items-center justify-center mb-3">
+                        <i class="pi pi-circle-fill text-green-600 text-sm"></i>
+                    </div>
+                    <span class="text-sm font-bold text-gray-800 mb-2">Per Piece</span>
+                    <div class="text-2xl font-bold text-green-600 flex items-baseline justify-center">
+                        ৳{{ formatPrice(piecePrice) }}<span class="text-sm font-medium text-green-700 ml-1">/unit</span>
+                    </div>
+                </div>
+        
+                <!-- Per Strip -->
+                <div class="bg-[#f0f7ff] border border-[#dbeafe] rounded-xl p-5 flex flex-col items-center justify-center text-center">
+                    <div class="w-10 h-10 rounded-full bg-[#dbeafe] flex items-center justify-center mb-3">
+                        <i class="pi pi-table text-blue-500 text-sm"></i>
+                    </div>
+                    <span class="text-sm font-bold text-gray-800 mb-2">Per Strip</span>
+                    <div class="text-2xl font-bold text-blue-500">
+                        ৳{{ formatPrice(stripPrice) }}
+                    </div>
+                </div>
+        
+                <!-- Per Pack -->
+                <div class="bg-[#fdf4ff] border border-[#fae8ff] rounded-xl p-5 flex flex-col items-center justify-center text-center">
+                    <div class="w-10 h-10 rounded-full bg-[#fae8ff] flex items-center justify-center mb-3">
+                        <i class="pi pi-box text-purple-600 text-sm"></i>
+                    </div>
+                    <span class="text-sm font-bold text-gray-800 mb-2">Per Pack</span>
+                    <div class="text-2xl font-bold text-purple-600">
+                        ৳{{ formatPrice(packPrice) }}
+                    </div>
+                </div>
+        
+                <!-- Pack Size -->
+                <div class="bg-[#fff7ed] border border-[#ffedd5] rounded-xl p-5 flex flex-col items-center justify-center text-center">
+                    <div class="w-10 h-10 rounded-full bg-[#ffedd5] flex items-center justify-center mb-3">
+                        <i class="pi pi-server text-orange-500 text-sm"></i>
+                    </div>
+                    <span class="text-sm font-bold text-gray-800 mb-2">Pack Size</span>
+                    <div class="text-lg font-bold text-orange-600 leading-tight">
+                        {{ productDetail.stripe_qty || 1 }} x {{ productDetail.piece_qty || 1 }}
+                        <span class="block text-sm font-normal text-orange-800 mt-1">units/tablets</span>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Note -->
+            <div class="mt-6 bg-[#fffbeb] border border-[#fef3c7] rounded-lg p-3 flex items-start sm:items-center flex-col sm:flex-row gap-3 text-yellow-800 text-sm">
+                <i class="pi pi-exclamation-triangle text-yellow-600 mt-1 sm:mt-0"></i>
+                <span><strong>Note:</strong> Prices may vary. Contact pharmacy for latest prices.</span>
             </div>
         </div>
 
@@ -129,6 +192,29 @@ const cartStore = useCartStore();
 const push = usePush();
 const alternativeProducts = ref([]);
 const quantity = ref(1);
+
+const formatPrice = (price) => {
+    return Number(price) % 1 === 0 ? Number(price).toFixed(0) : Number(price).toFixed(2);
+};
+
+// Assuming the base price (product.price) is for the Box/Pack.
+// If the base price is for a Piece instead, multiply instead of dividing.
+const basePrice = computed(() => {
+    if (!productDetail.value) return 0;
+    return Number(productDetail.value.promotion_price ?? productDetail.value.price) || 0;
+});
+
+const packPrice = computed(() => basePrice.value);
+
+const stripPrice = computed(() => {
+    const sQty = Number(productDetail.value?.stripe_qty) || 1;
+    return packPrice.value / sQty; 
+});
+
+const piecePrice = computed(() => {
+    const pQty = Number(productDetail.value?.piece_qty) || 1;
+    return stripPrice.value / pQty;
+});
 
 const defaultImagePlaceHolder = computed(() => {
     const prodImage = product.value.image?.trim();
@@ -190,7 +276,7 @@ async function loadProduct() {
     const slug = route.params.slug;
     const related = await fetchProductDetails(slug);
     productDetail.value = product.value;
-
+    console.log(productDetail.value);
     // Filter out the current product from related products
     alternativeProducts.value = related.filter(p => p.id !== productDetail.value.id);
 }

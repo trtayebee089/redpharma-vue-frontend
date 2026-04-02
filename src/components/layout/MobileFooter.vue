@@ -22,9 +22,6 @@ const showRegister = ref(false);
 const cartQty = computed(() => cartStore.items.length); // or sum quantities if needed
 
 // Navigation methods
-const goToCart = () => {
-    cartStore.toggleCart(true);
-}
 const goHome = () => {
     router.push('/');
 }
@@ -53,7 +50,7 @@ function openRegister() {
             </button>
 
             <!-- Cart -->
-            <button @click="goToCart" class="flex-1 flex flex-col items-center py-2 hover:bg-gray-100">
+            <button @click="router.push('/cart')" class="flex-1 flex flex-col items-center py-2 hover:bg-gray-100">
                 <div class="relative">
                     <i class="pi pi-shopping-cart text-xl"></i>
                     <span v-if="cartQty > 0"
