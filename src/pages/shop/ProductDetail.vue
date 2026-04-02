@@ -172,8 +172,7 @@ const addToCart = (prod) => {
             content_name: prod.name,
             content_ids: [String(prod.id)],
             content_type: 'product',
-            value: Number(prod.promotion_price ?? prod.price) || 0,
-            currency: 'BDT'
+            value: Number(prod.promotion_price ?? prod.price) || 0
         });
     }
 

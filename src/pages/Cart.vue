@@ -436,7 +436,6 @@ const submitCheckout = async () => {
             const eventID = 'purchase_' + result.sale.id + '_' + Date.now();
             window.fbq('track', 'Purchase', {
                 value: saleTotal,
-                currency: 'BDT',
                 content_ids: cartSnapshot.map(item => item.id),
                 contents: cartSnapshot,
                 content_type: 'product',

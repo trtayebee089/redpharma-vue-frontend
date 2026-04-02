@@ -146,8 +146,7 @@ const handleAddToCart = () => {
             content_name: props.product.name,
             content_ids: [String(props.product.id)],
             content_type: 'product',
-            value: Number(props.product.promotion_price ?? props.product.price) || 0,
-            currency: 'BDT'
+            value: Number(props.product.promotion_price ?? props.product.price) || 0
         });
     }
 };
