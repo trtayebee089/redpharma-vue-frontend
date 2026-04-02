@@ -432,16 +432,17 @@ const submitCheckout = async () => {
 
         // ✅ META PURCHASE EVENT — fire BEFORE clearCart, use snapshotted data
         if (typeof window.fbq === 'function') {
+            const saleTotal = parseFloat(result.sale?.total ?? result.sale?.grand_total ?? result.total) || totalValue;
             const eventID = 'purchase_' + result.sale.id + '_' + Date.now();
             window.fbq('track', 'Purchase', {
-                value: parseFloat(result.sale.total) || totalValue,
+                value: saleTotal,
                 currency: 'BDT',
                 content_ids: cartSnapshot.map(item => item.id),
                 contents: cartSnapshot,
                 content_type: 'product',
                 num_items: cartSnapshot.length
             }, { eventID: eventID });
-            console.log('[Meta Pixel] Purchase event fired', { eventID, value: result.sale.total });
+            console.log('[Meta Pixel] Purchase event fired', { eventID, value: saleTotal });
         } else {
             console.warn('[Meta Pixel] fbq not available — Purchase event skipped');
         }
