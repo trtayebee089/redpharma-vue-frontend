@@ -243,68 +243,68 @@
         }
     ]
 
-    function initMap() {
-        if (!document.getElementById('map')) return
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: {
-                lat: 24.3745,
-                lng: 88.6042
-            },
-            zoom: 14
-        })
-        renderZones()
-    }
+    // function initMap() {
+    //     if (!document.getElementById('map')) return
+    //     map = new google.maps.Map(document.getElementById('map'), {
+    //         center: {
+    //             lat: 24.3745,
+    //             lng: 88.6042
+    //         },
+    //         zoom: 14
+    //     })
+    //     renderZones()
+    // }
 
-    function renderZones() {
-        if (!map) return
-        coverageZones.forEach(zone => zone.setMap(null))
-        coverageZones = []
+    // function renderZones() {
+    //     if (!map) return
+    //     coverageZones.forEach(zone => zone.setMap(null))
+    //     coverageZones = []
 
-        let zonesToShow = coverageData
-        if (selectedDistrict.value) {
-            zonesToShow = coverageData.filter(z => z.districtId === Number(selectedDistrict.value))
-        }
+    //     let zonesToShow = coverageData
+    //     if (selectedDistrict.value) {
+    //         zonesToShow = coverageData.filter(z => z.districtId === Number(selectedDistrict.value))
+    //     }
 
-        zonesToShow.forEach(zone => {
-            const polygon = new google.maps.Polygon({
-                paths: zone.paths,
-                strokeColor: zone.color,
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: zone.color,
-                fillOpacity: 0.35
-            })
-            polygon.setMap(map)
-            coverageZones.push(polygon)
-        })
-    }
+    //     zonesToShow.forEach(zone => {
+    //         const polygon = new google.maps.Polygon({
+    //             paths: zone.paths,
+    //             strokeColor: zone.color,
+    //             strokeOpacity: 0.8,
+    //             strokeWeight: 2,
+    //             fillColor: zone.color,
+    //             fillOpacity: 0.35
+    //         })
+    //         polygon.setMap(map)
+    //         coverageZones.push(polygon)
+    //     })
+    // }
 
-    function onDivisionChange() {
-        selectedDistrict.value = ''
-        renderZones()
-    }
+    // function onDivisionChange() {
+    //     selectedDistrict.value = ''
+    //     renderZones()
+    // }
 
     // Watch map only for Home Delivery
-    watch([selectedDivision, selectedDeliveryType], async ([newDiv, newType]) => {
-        if (newDiv !== 4 || newType !== 'home') {
-            showMap.value = false
-            // clear polygons
-            coverageZones.forEach(z => z.setMap(null))
-            coverageZones = []
-            map = null
-        } else {
-            // Force DOM re-render
-            showMap.value = false
-            await nextTick()
-            showMap.value = true
-            await nextTick()
-            initMap()
-        }
-    })
+    // watch([selectedDivision, selectedDeliveryType], async ([newDiv, newType]) => {
+    //     if (newDiv !== 4 || newType !== 'home') {
+    //         showMap.value = false
+    //         // clear polygons
+    //         coverageZones.forEach(z => z.setMap(null))
+    //         coverageZones = []
+    //         map = null
+    //     } else {
+    //         // Force DOM re-render
+    //         showMap.value = false
+    //         await nextTick()
+    //         showMap.value = true
+    //         await nextTick()
+    //         initMap()
+    //     }
+    // })
 
 
     onMounted(() => {
-        initMap()
+        // initMap()
     })
 </script>
 

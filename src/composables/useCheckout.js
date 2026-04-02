@@ -9,7 +9,7 @@ export function useCheckout() {
     const loading = ref(false);
     const error = ref(null);
     const successMessage = ref(null);
-    const order = ref({});   
+    const order = ref({});
     const tracking = ref({});
     const shippingZones = ref([]);
 
@@ -31,7 +31,7 @@ export function useCheckout() {
             return response.data;
         } catch (error) {
             console.error("Error fetching order details:", error);
-            return Promise.reject(error); 
+            return Promise.reject(error);
         }
     };
 
@@ -73,8 +73,8 @@ export function useCheckout() {
 
         try {
             const authStore = useAuthStore();
-            const membershipDiscountRate = authStore.membershipInfo?.discount || cartStore.discountRate;
-            const discountAmount = (cartStore.cartSubtotal * membershipDiscountRate) / 100;
+            const membershipDiscountRate = cartStore.discountRate;
+            const discountAmount = cartStore.membershipDiscount;
 
             const payload = {
                 user_id: 1,
@@ -93,9 +93,9 @@ export function useCheckout() {
                 subtotal: cartStore.cartSubtotal,
                 shipping_cost: cartStore.shippingRate,
                 total: cartStore.totalAmount,
-                order_discount_type: membershipDiscountRate > 0 ? 'percentage' : null,
-                order_discount_value: membershipDiscountRate || 0,
-                discount_value: discountAmount || 0,
+                order_discount_type: membershipDiscountRate > 0 && cartStore.applyDiscount ? 'percentage' : null,
+                order_discount_value: cartStore.applyDiscount ? membershipDiscountRate : 0,
+                discount_amount: discountAmount,
                 discount_applied: cartStore.applyDiscount,
                 items: cartStore.items.map(item => ({
                     product_id: item.id,
@@ -113,7 +113,6 @@ export function useCheckout() {
             const response = await api.post('/checkout', payload);
 
             successMessage.value = 'Order placed successfully!';
-            cartStore.clearCart();
 
             return response.data;
         } catch (err) {
@@ -129,7 +128,7 @@ export function useCheckout() {
 
         try {
             const response = await api.get(`/tracking/${tracking_code}`);
-            
+
             if (response.data.success) {
                 order.value = response.data.order;
                 tracking.value = response.data.tracking || { histories: [] };

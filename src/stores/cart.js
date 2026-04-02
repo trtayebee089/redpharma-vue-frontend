@@ -63,20 +63,25 @@ export const useCartStore = defineStore('cart', {
       }, 0);
       return Number(subtotal.toFixed(2)) || 0;
     },
-    discountRate: (state) => {
+    discountRate(state) {
       const authStore = useAuthStore();
-      
-      const userDiscount = authStore.membershipInfo?.discount;
-      return Number(userDiscount || state.baseDiscountRate) || 0;
+      const meetsCriteria = authStore.isAuthenticated &&
+        authStore.membershipInfo &&
+        authStore.rewardPointSettings?.minimum_amount <= this.cartSubtotal &&
+        authStore.membershipInfo?.discount > 0;
+
+      if (!meetsCriteria) return state.baseDiscountRate;
+
+      return Number(authStore.membershipInfo?.discount) || state.baseDiscountRate;
     },
-    membershipDiscount: (state) => {
+    membershipDiscount(state) {
       if (!state.applyDiscount) return 0;
-      
-      const discount = (state.cartSubtotal * state.discountRate) / 100;
+
+      const discount = (this.cartSubtotal * this.discountRate) / 100;
       return Number(discount.toFixed(2)) || 0;
     },
-    totalAmount: (state) => {
-      const grandTotal = state.cartSubtotal - state.membershipDiscount + state.shippingRate;
+    totalAmount(state) {
+      const grandTotal = this.cartSubtotal - this.membershipDiscount + state.shippingRate;
       return Number(Math.ceil(grandTotal)) || 0;
     },
   }

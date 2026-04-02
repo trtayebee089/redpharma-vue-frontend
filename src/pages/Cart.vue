@@ -401,6 +401,14 @@ const submitCheckout = async () => {
         return;
     }
 
+    // ✅ Snapshot cart data BEFORE the API call so it survives clearCart()
+    const cartSnapshot = cartStore.items.map(item => ({
+        id: String(item.id),
+        quantity: item.quantity,
+        item_price: Number(item.offerPrice ?? item.price) || 0
+    }));
+    const totalValue = cartStore.totalAmount;
+
     try {
         const result = await submitOrder(checkoutForm);
 
@@ -411,9 +419,9 @@ const submitCheckout = async () => {
         checkoutForm.fullName = '';
         checkoutForm.phone = '';
         checkoutForm.address = '';
-
+        console.log(result)
         if (result.token && result.user) {
-            authStore.setAuth(result.user, result.token); // Auto Login after order placement
+            authStore.setAuth(result.user, result.token);
         }
 
         sessionStorage.setItem('order_temp_data', JSON.stringify({
@@ -422,17 +430,20 @@ const submitCheckout = async () => {
             temporaryPassword: result.temporary_password
         }));
 
-        // ✅ META PURCHASE EVENT (REAL DATA)
-        if (window.fbq) {
+        // ✅ META PURCHASE EVENT — fire BEFORE clearCart, use snapshotted data
+        if (typeof window.fbq === 'function') {
+            const eventID = 'purchase_' + result.sale.id + '_' + Date.now();
             window.fbq('track', 'Purchase', {
-                value: result.sale.total, // or cartStore.totalAmount BEFORE clearing
+                value: parseFloat(result.sale.total) || totalValue,
                 currency: 'BDT',
-                contents: cartStore.items.map(item => ({
-                    id: item.id,
-                    quantity: item.quantity
-                })),
-                content_type: 'product'
-            });
+                content_ids: cartSnapshot.map(item => item.id),
+                contents: cartSnapshot,
+                content_type: 'product',
+                num_items: cartSnapshot.length
+            }, { eventID: eventID });
+            console.log('[Meta Pixel] Purchase event fired', { eventID, value: result.sale.total });
+        } else {
+            console.warn('[Meta Pixel] fbq not available — Purchase event skipped');
         }
 
         cartStore.clearCart();

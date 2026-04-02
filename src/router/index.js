@@ -89,4 +89,11 @@ router.beforeEach((to, from, next) => {
     }
 });
 
+// ✅ Meta Pixel: Fire PageView on every SPA route change
+router.afterEach((to) => {
+    if (typeof window.fbq === 'function') {
+        window.fbq('track', 'PageView');
+    }
+});
+
 export default router;

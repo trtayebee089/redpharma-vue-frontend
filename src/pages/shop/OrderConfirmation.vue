@@ -32,7 +32,7 @@
             <div class="grid grid-cols-1 md:grid-cols-1 gap-4 text-sm  ">
                 <div class="flex justify-between">
                     <span class="font-medium text-gray-700">Username: (Your Contact Number)</span>
-                    <span class="text-gray-900">{{ order.customer.phone_number || "-" }}</span>
+                    <span class="text-gray-900">{{ order.customer?.phone_number || "-" }}</span>
                 </div>
                 <div class="flex justify-between">
                     <span class="font-medium text-gray-700">Password:</span>
@@ -60,20 +60,6 @@
                         <span class="font-medium text-gray-700">Date:</span>
                         <span class="text-gray-900">{{ formatDate(order.created_at) }}</span>
                     </div>
-                    <div class="flex justify-between">
-                        <span class="font-medium text-gray-700">Subtotal:</span>
-                        <span class="text-gray-900">{{ formatCurrency(order.total_price) }}</span>
-                    </div>
-                </div>
-                <div class="space-y-2">
-                    <div class="flex justify-between">
-                        <span class="font-medium text-gray-700">Shipping:</span>
-                        <span class="text-gray-900">{{ formatCurrency(order.shipping_cost) }}</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="font-medium text-gray-700">Grand Total:</span>
-                        <span class="text-gray-900">{{ formatCurrency(order.grand_total) }}</span>
-                    </div>
                     <div class="flex justify-between items-center">
                         <span class="font-medium text-gray-700">Status:</span>
                         <span class="px-3 py-1 text-xs font-semibold rounded-full uppercase" :class="{
@@ -87,6 +73,25 @@
                             {{ tracking.current_status || "Pending" }}
                         </span>
                     </div>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span class="font-medium text-gray-700">Subtotal:</span>
+                        <span class="text-gray-900">{{ formatCurrency(order.total_price) }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-medium text-gray-700">Shipping:</span>
+                        <span class="text-gray-900">{{ formatCurrency(order.shipping_cost) }}</span>
+                    </div>
+                    <div class="flex justify-between" v-if="order.order_discount > 0">
+                        <span class="font-medium text-gray-700">Order Discount:</span>
+                        <span class="text-red-500 font-semibold">-{{ formatCurrency(order.order_discount) }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-medium text-gray-700">Grand Total:</span>
+                        <span class="text-gray-900 font-bold text-lg">{{ formatCurrency(order.grand_total) }}</span>
+                    </div>
+                    
                 </div>
             </div>
         </section>
@@ -195,7 +200,7 @@ const { getOrderDetails, order, tracking } = useCheckout();
 const order_id = route.params?.order_id;
 console.log("order_id: " + order_id);
 
-const formatCurrency = (value) => (value != null ? "৳" + parseFloat(value).toFixed(2) : "-");
+const formatCurrency = (value) => (value != null ? parseFloat(value).toFixed(2) + " Tk" : "-");
 const formatDate = (value) => (value ? new Date(value).toLocaleString("en-BD", { dateStyle: "medium", timeStyle: "short" }) : "-");
 
 const getOrderStateData = () => {

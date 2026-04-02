@@ -54,7 +54,7 @@
                                 <i class="pi pi-minus"></i>
                             </button>
 
-                            <input type="number" v-model.number="quantity" min="1"
+                            <input type="text" v-model.number="quantity" min="1"
                                 class="w-16 text-center text-gray-800 font-medium bg-white border-l border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all rounded-none" />
 
                             <button @click="increaseQty" :disabled="isStockOut"
@@ -165,6 +165,18 @@ const addToCart = (prod) => {
         quantity: quantity.value
     });
     push.success(`${prod.name} added to cart!`);
+
+    // ✅ Meta Pixel AddToCart event
+    if (typeof window.fbq === 'function') {
+        window.fbq('track', 'AddToCart', {
+            content_name: prod.name,
+            content_ids: [String(prod.id)],
+            content_type: 'product',
+            value: Number(prod.promotion_price ?? prod.price) || 0,
+            currency: 'BDT'
+        });
+    }
+
     quantity.value = 1;
 };
 

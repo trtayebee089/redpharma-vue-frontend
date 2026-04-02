@@ -140,13 +140,13 @@ const handleAddToCart = () => {
     showQuantityControls.value = true;
     push.success(`${props.product.name} added to cart!`);
 
-    // Facebook Pixel AddToCart event
-    if (window.fbq) {
+    // ✅ Meta Pixel AddToCart event
+    if (typeof window.fbq === 'function') {
         window.fbq('track', 'AddToCart', {
             content_name: props.product.name,
-            content_ids: [props.product.id],
+            content_ids: [String(props.product.id)],
             content_type: 'product',
-            value: props.product.promotion_price || props.product.price,
+            value: Number(props.product.promotion_price ?? props.product.price) || 0,
             currency: 'BDT'
         });
     }

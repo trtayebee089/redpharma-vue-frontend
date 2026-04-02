@@ -3,8 +3,6 @@ import Header from './components/layout/Header.vue'
 import Footer from './components/layout/Footer.vue'
 import CategorySidebar from './components/layout/CategorySidebar.vue'
 import 'primeicons/primeicons.css'
-import CartOffCanvas from './components/cart/CartOffCanvas.vue'
-import PrimeVue from 'primevue/config'
 import { useI18n } from "vue-i18n";
 import { Notivue, Notification, push } from 'notivue'
 import { useLanguageStore } from "@/stores/language";
@@ -12,7 +10,6 @@ import { watch, ref, onMounted, onUnmounted } from "vue";
 import MobileFooter from './components/layout/MobileFooter.vue'
 import useTawk from "./composables/useTawk";
 import { useRoute } from 'vue-router'
-// import FloatingChat from './components/common/FloatingChat.vue'
 
 const { locale } = useI18n();
 const langStore = useLanguageStore();
