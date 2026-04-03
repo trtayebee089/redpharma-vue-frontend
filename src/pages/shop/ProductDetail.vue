@@ -1,7 +1,7 @@
 <template>
   <section
     v-if="productDetail"
-    class="text-gray-800 sm:space-y-12 px-0 md:px-8 lg:px-16 pt-0"
+    class="text-gray-800 space-y-6 md:space-y-12 px-3 sm:px-4 md:px-8 lg:px-16 py-6 md:py-8"
   >
     <!-- Product Information Card -->
     <div
@@ -268,6 +268,7 @@
       </div>
     </div>
 
+    <!-- Doses Informations -->
     <div
       v-if="product.description || product.doses"
       class="bg-white p-6 rounded-lg shadow border border-gray-200"
@@ -281,6 +282,7 @@
       </ul>
     </div>
 
+    <!-- Related Medicines -->
     <div>
       <h2 v-if="alternativeProducts.length" class="text-xl font-semibold mb-4">
         Related Medicines ({{ alternativeProducts.length }})
