@@ -39,13 +39,13 @@ function setTawkPosition() {
         visibility: {
             desktop: {
                 position: "br", // bottom right
-                xOffset: isMobile ? 10 : 20,
-                yOffset: isMobile ? 60 : 20,
+                xOffset: 20,
+                yOffset: 20,
             },
             mobile: {
                 position: "br",
-                xOffset: 10,
-                yOffset: 60,
+                xOffset: 12,
+                yOffset: 100, // moved up to clear the bottom nav bar
             },
         },
     };

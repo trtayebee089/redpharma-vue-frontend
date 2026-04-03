@@ -87,6 +87,7 @@ function openRegister() {
                 <ul class="space-y-2">
                     <li v-for="category in categories" :key="category.id">
                         <router-link :to="`/category/${category.slug}`"
+                            @click="isSidebarOpen = false"
                             class="flex items-center justify-between px-4 py-3 text-gray-700 hover:bg-red-200 transition-colors hover:font-bold hover:text-red-950"
                             :class="{
                                 'bg-red-200 font-bold text-red-950': route.params.slug === category.slug
