@@ -1,8 +1,5 @@
 <template>
-  <section
-    v-if="productDetail"
-    class="text-gray-800 space-y-6 md:space-y-12 px-3 sm:px-4 md:px-8 lg:px-16 py-6 md:py-8"
-  >
+  <section v-if="productDetail" class="text-gray-800 space-y-6 md:space-y-12">
     <!-- Product Information Card -->
     <div
       class="grid grid-cols-1 md:grid-cols-5 gap-6 md:gap-8 bg-white p-4 sm:p-6 lg:p-8 rounded-xl shadow border border-gray-200"
@@ -175,16 +172,16 @@
     <!-- Price Information Card -->
     <div
       v-if="showPriceInfo"
-      class="bg-white p-6 rounded-lg shadow border border-gray-200"
+      class="bg-white p-4 rounded-lg shadow border border-gray-200"
     >
       <div class="flex items-center gap-3 mb-6">
         <div
-          class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center"
+          class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center shrink-0"
         >
           <img :src="bdtIcon" class="w-5 h-5 object-contain opacity-80" />
         </div>
-        <h2 class="text-xl md:text-2xl font-bold text-gray-800">
-          {{ productDetail.name }} Price Information
+        <h2 class="text-lg sm:text-lg md:text-2xl font-bold text-gray-800">
+          Price Information
         </h2>
       </div>
 
@@ -200,7 +197,7 @@
           </div>
           <span class="text-sm font-bold text-gray-800 mb-2">Per Piece</span>
           <div
-            class="text-2xl font-bold text-green-600 flex items-baseline justify-center"
+            class="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-green-600 flex items-baseline justify-center whitespace-nowrap"
           >
             {{ formatPrice(piecePrice) }} Tk
           </div>
@@ -216,7 +213,7 @@
             <i class="pi pi-table text-blue-500 text-sm"></i>
           </div>
           <span class="text-sm font-bold text-gray-800 mb-2">Per Strip</span>
-          <div class="text-2xl font-bold text-blue-500">
+          <div class="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-blue-500 flex items-baseline justify-center whitespace-nowrap">
             {{ formatPrice(stripPrice) }} Tk
           </div>
         </div>
@@ -231,7 +228,7 @@
             <i class="pi pi-box text-purple-600 text-sm"></i>
           </div>
           <span class="text-sm font-bold text-gray-800 mb-2">Per Pack</span>
-          <div class="text-2xl font-bold text-purple-600">
+          <div class="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-purple-600 flex items-baseline justify-center whitespace-nowrap">
             {{ formatPrice(packPrice) }} Tk
           </div>
         </div>
@@ -246,10 +243,12 @@
             <i class="pi pi-server text-orange-500 text-sm"></i>
           </div>
           <span class="text-sm font-bold text-gray-800 mb-2">Pack Size</span>
-          <div class="text-lg font-bold text-orange-600 leading-tight">
-            {{ productDetail.stripe_qty || 1 }} x
-            {{ productDetail.piece_qty || 1 }}
-            <span class="block text-sm font-normal text-orange-800 mt-1"
+          <div class="text-base sm:text-lg font-bold text-orange-600 leading-tight whitespace-nowrap flex flex-col items-center justify-center">
+            <div>
+              {{ productDetail.stripe_qty || 1 }} x
+              {{ productDetail.piece_qty || 1 }}
+            </div>
+            <span class="block text-xs sm:text-sm font-normal text-orange-800 mt-1"
               >units/tablets</span
             >
           </div>
