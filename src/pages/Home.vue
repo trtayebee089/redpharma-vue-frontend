@@ -105,77 +105,96 @@
 
       <!-- Quick Contact / Social Stack -->
       <div class="flex flex-col gap-3 h-full md:max-h-[198px]">
-        <!-- Row 1: 3 Horizontal Buttons -->
+        <!-- Row 1 -->
         <div
           class="grid grid-cols-3 gap-2 sm:gap-3 flex-1 min-h-[50px] md:min-h-[64px]"
         >
-          <!-- Live Call -->
+          <!-- Call (Blue) -->
           <a
             href="tel:+8801997202010"
-            class="group bg-white rounded-xl shadow-sm border border-gray-100 p-2 sm:px-3 sm:py-2 flex items-center justify-center gap-1.5 sm:gap-2 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 hover:border-blue-200 cursor-pointer text-center overflow-hidden"
+            class="group rounded-xl shadow-sm border border-blue-200 
+             bg-gradient-to-r from-blue-50 to-blue-100/40
+             p-2 sm:px-3 sm:py-2 flex items-center justify-center gap-2 
+             transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 
+             hover:border-blue-300 text-center overflow-hidden"
           >
             <div
-              class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300"
+              class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 
+                  flex items-center justify-center 
+                  group-hover:bg-blue-600 group-hover:text-white transition"
             >
-              <i class="pi pi-phone text-xs sm:text-sm"></i>
+              <i class="pi pi-phone text-sm"></i>
             </div>
             <h3
-              class="font-bold text-gray-800 text-[11px] sm:text-[13px] leading-tight group-hover:text-blue-700 transition-colors"
+              class="font-bold text-gray-800 text-xs sm:text-sm group-hover:text-blue-700"
             >
-              Call
+              Call Us
             </h3>
           </a>
 
-          <!-- WhatsApp -->
+          <!-- WhatsApp (Green brand) -->
           <a
             href="https://wa.me/8801997202010"
             target="_blank"
-            class="group bg-white rounded-xl shadow-sm border border-gray-100 p-2 sm:px-3 sm:py-2 flex items-center justify-center gap-1.5 sm:gap-2 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 hover:border-green-200 cursor-pointer text-center overflow-hidden"
+            class="group rounded-xl shadow-sm border border-green-200 
+             bg-gradient-to-r from-green-50 to-green-100/40
+             p-2 sm:px-3 sm:py-2 flex items-center justify-center gap-2 
+             transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 
+             hover:border-green-300 text-center overflow-hidden"
           >
             <div
-              class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors duration-300"
+              class="w-8 h-8 rounded-full bg-green-100 text-green-600 
+                  flex items-center justify-center 
+                  group-hover:bg-green-600 group-hover:text-white transition"
             >
-              <i class="pi pi-whatsapp text-xs sm:text-sm"></i>
+              <i class="pi pi-whatsapp text-sm"></i>
             </div>
             <h3
-              class="font-bold text-gray-800 text-[11px] sm:text-[13px] leading-tight group-hover:text-green-700 transition-colors"
+              class="font-bold text-gray-800 text-xs sm:text-sm group-hover:text-green-700"
             >
               WhatsApp
             </h3>
           </a>
 
-          <!-- Facebook -->
+          <!-- Facebook (Brand blue) -->
           <a
             href="https://www.facebook.com/redpharmabd/"
             target="_blank"
-            class="group bg-white rounded-xl shadow-sm border border-gray-100 p-2 sm:px-3 sm:py-2 flex items-center justify-center gap-1.5 sm:gap-2 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 hover:border-indigo-200 cursor-pointer text-center overflow-hidden"
+            class="group rounded-xl shadow-sm border border-[#1877F2]/30 
+             bg-gradient-to-r from-[#E7F0FE] to-[#F5F9FF]
+             p-2 sm:px-3 sm:py-2 flex items-center justify-center gap-2 
+             transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 
+             hover:border-[#1877F2]/50 text-center overflow-hidden"
           >
             <div
-              class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300"
+              class="w-8 h-8 rounded-full bg-[#E7F0FE] text-[#1877F2] 
+                  flex items-center justify-center 
+                  group-hover:bg-[#1877F2] group-hover:text-white transition"
             >
-              <i class="pi pi-facebook text-xs sm:text-sm"></i>
+              <i class="pi pi-facebook text-sm"></i>
             </div>
             <h3
-              class="font-bold text-gray-800 text-[11px] sm:text-[13px] leading-tight group-hover:text-indigo-700 transition-colors"
+              class="font-bold text-gray-800 text-xs sm:text-sm group-hover:text-[#1877F2]"
             >
               Facebook
             </h3>
           </a>
         </div>
 
-        <!-- Row 2: Message Box -->
+        <!-- Row 2: Message Box (keep green but refined) -->
         <div
-          class="flex-1 bg-gradient-to-r from-green-50/80 to-white rounded-xl border border-green-100 p-2 sm:p-3 flex flex-col justify-center items-center text-center shadow-sm"
+          class="flex-1 rounded-xl border border-orange-200 
+         bg-gradient-to-r from-orange-50 to-orange-100/40
+         p-2 sm:p-3 flex flex-col justify-center items-center 
+         text-center shadow-sm"
         >
-          <div class="flex items-center gap-1.5 sm:gap-2 mb-1">
-            <i class="pi pi-info-circle text-green-600 text-sm"></i>
-            <span class="text-[13px] sm:text-[14px] font-bold text-gray-800"
-              >Need Medicines Urgently?</span
-            >
+          <div class="flex items-center gap-2 mb-1">
+            <i class="pi pi-info-circle text-orange-600 text-sm"></i>
+            <span class="text-sm font-bold text-gray-800">
+              Need Medicines Urgently?
+            </span>
           </div>
-          <p
-            class="text-[11px] sm:text-xs text-gray-600 leading-snug lg:max-w-[80%]"
-          >
+          <p class="text-md text-gray-600 leading-snug lg:max-w-[80%]">
             Call us directly to order or message us on WhatsApp
           </p>
         </div>
@@ -193,6 +212,8 @@
         :class="[langStore.langClass]"
       >
         {{ $t("home.best_selling")
+
+
         }}<span
           class="absolute left-0 bottom-0 w-16 h-1 bg-green-500 rounded-full"
         ></span>
@@ -241,6 +262,8 @@
         :class="[langStore.langClass]"
       >
         {{ $t("home.featured_products")
+
+
         }}<span
           class="absolute left-0 bottom-0 w-16 h-1 bg-green-500 rounded-full"
         ></span>
