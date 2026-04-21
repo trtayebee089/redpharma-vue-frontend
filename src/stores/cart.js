@@ -13,6 +13,7 @@ export const useCartStore = defineStore('cart', {
     setShippingRate(rate) {
       this.shippingRate = Number(rate) || 0;
     },
+
     getQuantity(productId) {
       const item = this.items.find(i => i.id === productId);
       return item ? item.quantity : 0;
@@ -22,14 +23,26 @@ export const useCartStore = defineStore('cart', {
       localStorage.setItem('cartItems', JSON.stringify(this.items))
     },
 
+    /**
+     * Add a product to cart, respecting its stock_qty.
+     * Returns { capped: boolean, stock_qty: number|null } so the
+     * caller (component) can show a toast when stock is the limit.
+     */
     addToCart(product) {
       const existing = this.items.find(item => item.id === product.id)
       if (existing) {
-        existing.quantity += product.quantity
+        const stockQty = existing.stock_qty ?? product.stock_qty ?? null;
+        const newQty = existing.quantity + (product.quantity || 1);
+        existing.quantity = stockQty !== null ? Math.min(newQty, stockQty) : newQty;
+        this.saveCart()
+        return { capped: stockQty !== null && newQty > stockQty, stock_qty: stockQty };
       } else {
-        this.items.push({ ...product })
+        const stockQty = product.stock_qty ?? null;
+        const qty = stockQty !== null ? Math.min(product.quantity || 1, stockQty) : (product.quantity || 1);
+        this.items.push({ ...product, quantity: qty })
+        this.saveCart()
+        return { capped: stockQty !== null && (product.quantity || 1) > stockQty, stock_qty: stockQty };
       }
-      this.saveCart()
     },
 
     removeFromCart(id) {
@@ -37,10 +50,20 @@ export const useCartStore = defineStore('cart', {
       this.saveCart()
     },
 
+    /**
+     * Update quantity, capped at stock_qty if known.
+     * Returns { capped: boolean, actual_qty: number }.
+     */
     updateQuantity(id, qty) {
       const item = this.items.find(item => item.id === id)
-      if (item) item.quantity = qty
-      this.saveCart()
+      if (item) {
+        const stockQty = item.stock_qty ?? null;
+        const safeQty = stockQty !== null ? Math.min(Math.max(1, qty), stockQty) : Math.max(1, qty);
+        item.quantity = safeQty;
+        this.saveCart()
+        return { capped: stockQty !== null && qty > stockQty, actual_qty: safeQty };
+      }
+      return { capped: false, actual_qty: qty };
     },
 
     clearCart() {

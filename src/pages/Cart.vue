@@ -74,22 +74,32 @@
                                         <div
                                             class="inline-flex items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-sm">
                                             <!-- Decrease -->
-                                            <button @click="decreaseQty(item)" :disabled="quantity <= 1 || isStockOut"
+                                            <button @click="updateQty(item, item.quantity - 1)" :disabled="item.quantity <= 1"
                                                 class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
                                                 <i class="pi pi-minus"></i>
                                             </button>
 
                                             <!-- Quantity Input -->
-                                            <input type="number" v-model.number="item.
-                                                quantity" min="1"
+                                            <input
+                                                type="number"
+                                                v-model.number="item.quantity"
+                                                @input="handleManualInput(item)"
+                                                min="1"
+                                                :max="item.stock_qty ?? undefined"
                                                 class="w-16 text-center text-gray-800 font-medium bg-white border-l border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all rounded-none" />
 
                                             <!-- Increase -->
-                                            <button @click="increaseQty(item)" :disabled="isStockOut"
-                                                class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-green-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
+                                            <button @click="updateQty(item, item.quantity + 1)"
+                                                :disabled="item.stock_qty != null && item.quantity >= item.stock_qty"
+                                                class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-green-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200"
+                                                :title="item.stock_qty != null && item.quantity >= item.stock_qty ? 'Maximum stock reached' : ''">
                                                 <i class="pi pi-plus"></i>
                                             </button>
                                         </div>
+                                        <!-- Stock badge -->
+                                        <p v-if="item.stock_qty != null" class="text-xs text-gray-400 mt-1">
+                                            Available: {{ item.stock_qty }}
+                                        </p>
                                     </td>
 
                                     <!-- Amount -->
@@ -171,25 +181,36 @@
                                 <div
                                     class="inline-flex items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-sm">
                                     <!-- Decrease -->
-                                    <button @click="decreaseQty(item)" :disabled="quantity <= 1 || isStockOut"
+                                    <button @click="updateQty(item, item.quantity - 1)" :disabled="item.quantity <= 1"
                                         class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
                                         <i class="pi pi-minus"></i>
                                     </button>
 
                                     <!-- Quantity Input -->
-                                    <input type="number" v-model.number="item.
-                                        quantity" min="1"
+                                    <input
+                                        type="number"
+                                        v-model.number="item.quantity"
+                                        @input="handleManualInput(item)"
+                                        min="1"
+                                        :max="item.stock_qty ?? undefined"
                                         class="w-16 text-center text-gray-800 font-medium bg-white border-l border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all rounded-none" />
 
                                     <!-- Increase -->
-                                    <button @click="increaseQty(item)" :disabled="isStockOut"
-                                        class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-green-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
+                                    <button @click="updateQty(item, item.quantity + 1)"
+                                        :disabled="item.stock_qty != null && item.quantity >= item.stock_qty"
+                                        class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-green-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200"
+                                        :title="item.stock_qty != null && item.quantity >= item.stock_qty ? 'Maximum stock reached' : ''">
                                         <i class="pi pi-plus"></i>
                                     </button>
                                 </div>
-                                <span class="text-gray-700 font-medium">{{ (Number(item.offerPrice ?? item.price) || 0)
-                                    *
-                                    (Number(item.quantity) || 1).toFixed(2) }} Tk</span>
+                                <div class="text-right">
+                                    <span class="text-gray-700 font-medium">
+                                        {{ ((Number(item.offerPrice ?? item.price) || 0) * (Number(item.quantity) || 1)).toFixed(2) }} Tk
+                                    </span>
+                                    <p v-if="item.stock_qty != null" class="text-xs text-gray-400 mt-0.5">
+                                        Available: {{ item.stock_qty }}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -332,6 +353,7 @@
 import { computed, reactive, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
+import { push } from 'notivue';
 
 import { useCartStore } from "@/stores/cart";
 import { useAuthStore } from "@/stores/auth";
@@ -345,6 +367,20 @@ const langStore = useLanguageStore();
 const router = useRouter();
 const { t } = useI18n();
 const { submitOrder, shippingZones, getShippingZones, getShippingRate, error } = useCheckout();
+
+/**
+ * Show a notification using Notivue (the app's active toast library).
+ * severity: 'warn' | 'error' | 'success'
+ */
+const showToast = (message, severity = 'warn') => {
+    if (severity === 'error') {
+        push.error({ title: 'Error', message });
+    } else if (severity === 'success') {
+        push.success({ title: 'Success', message });
+    } else {
+        push.warning({ title: 'Stock Limit', message });
+    }
+};
 
 const checkoutForm = reactive({
     fullName: authStore.user?.name || '',
@@ -389,10 +425,44 @@ const getImageUrl = (product) => {
     }
 };
 
-const increaseQty = (item) => cartStore.updateQuantity(item.id, item.quantity + 1);
-const decreaseQty = (item) => {
-    if (item.quantity > 1) cartStore.updateQuantity(item.id, item.quantity - 1);
+// ─── Quantity controls with stock-cap enforcement ───────────────────────────
+
+/**
+ * Central qty updater. Enforces stock cap, shows toast, auto-resets.
+ * Used by + button, - button, and the manual input handler.
+ */
+const updateQty = (item, newQty) => {
+    if (item.qty != null && newQty > item.qty) {
+        cartStore.updateQuantity(item.id, item.qty);
+        showToast(`Only ${item.qty} item(s) available in stock for ${item.name}`);
+        console.log(`Only ${item.qty} item(s) available in stock for ${item.name}.`);
+        return;
+    }
+    if (newQty < 1 || isNaN(newQty)) {
+        cartStore.updateQuantity(item.id, 1);
+        return;
+    }
+    cartStore.updateQuantity(item.id, newQty);
 };
+
+/**
+ * Handles manual typing in the quantity input.
+ * v-model.number keeps it numeric; @input fires on every keystroke.
+ */
+const handleManualInput = (item) => {
+    const val = Number(item.quantity);
+    if (isNaN(val) || val < 1) {
+        cartStore.updateQuantity(item.id, 1);
+        return;
+    }
+    if (item.stock_qty != null && val > item.stock_qty) {
+        cartStore.updateQuantity(item.id, item.stock_qty);
+        showToast(`Only ${item.stock_qty} item(s) available in stock.`);
+    } else {
+        cartStore.updateQuantity(item.id, val);
+    }
+};
+
 const removeItem = (item) => cartStore.removeFromCart(item.id);
 
 const submitCheckout = async () => {
@@ -455,14 +525,25 @@ const submitCheckout = async () => {
     } catch (err) {
         console.error(err);
 
+        // ── Handle stock 422 from backend ──────────────────────────────
+        if (err?.response?.status === 422) {
+            const data = err.response.data;
+            showToast(data.message || 'Stock limit exceeded.', 'error');
+
+            // Auto-correct the offending item quantity in the cart
+            if (data.product_id && data.available_stock != null) {
+                cartStore.updateQuantity(data.product_id, data.available_stock);
+            }
+            return;
+        }
+
         if (error.value) {
             const message = typeof error.value === 'string'
                 ? error.value
                 : Object.values(error.value).flat().join('\n');
-
-            alert(message);
+            showToast(message, 'error');
         } else {
-            alert("Failed to place order. Please try again.");
+            showToast('Failed to place order. Please try again.', 'error');
         }
     }
 };
