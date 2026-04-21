@@ -54,6 +54,18 @@
                 <span class="font-bold">{{ fullCategoryName }}</span>
               </span>
             </div>
+
+            <div class="flex items-end sm:justify-end pb-1 pb-sm-0">
+              <div
+                v-if="productDetail.qty != null && !isStockOut"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg shadow-sm"
+              >
+                 <i class="pi pi-check-circle text-green-500 text-sm"></i>
+                <span class="text-sm text-green-800 font-medium">
+                  In Stock: <span class="font-bold">{{ productDetail.qty }} {{ productDetail.unit ?? 'pcs' }}</span>
+                </span>
+              </div>
+            </div>
           </div>
 
           <!-- Unit Selection Dropdown -->
@@ -98,58 +110,70 @@
             </div>
           </div>
 
-          <div>
-            <p class="block text-sm font-medium text-gray-700 mb-0 mt-5">
-              Total Price:
-            </p>
-            <div class="flex items-center flex-wrap gap-3 mt-0 price-field">
-              <p class="text-2xl font-bold text-green-600" v-if="hasPromotion">
-                {{ formatPrice(displayPromotionPrice) }} Tk
+          <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4 price-qty-stat">
+            <div>
+              <p class="block text-sm font-medium text-gray-700 mb-0 mt-5">
+                Total Price:
               </p>
+              <div class="flex items-center flex-wrap gap-3 mt-0 price-field">
+                <p
+                  class="text-2xl font-bold text-green-600"
+                  v-if="hasPromotion"
+                >
+                  {{ formatPrice(displayPromotionPrice) }} Tk
+                </p>
 
-              <p
-                class="font-bold"
-                :class="
+                <p
+                  class="font-bold"
+                  :class="
                   hasPromotion
                     ? 'line-through text-gray-500 text-xl'
                     : 'text-green-600 text-3xl'
                 "
-              >
-                {{ formatPrice(displayRegularPrice) }} Tk
-              </p>
+                >
+                  {{ formatPrice(displayRegularPrice) }} Tk
+                </p>
 
-              <span
-                v-if="hasPromotion && product.discountPercentage"
-                class="bg-green-50 text-green-700 font-semibold text-xs px-3 py-1 rounded-full shadow-sm border border-green-200"
-              >
-                -{{ product.discountPercentage }}%
-              </span>
+                <span
+                  v-if="hasPromotion && product.discountPercentage"
+                  class="bg-green-50 text-green-700 font-semibold text-xs px-3 py-1 rounded-full shadow-sm border border-green-200"
+                >
+                  -{{ product.discountPercentage }}%
+                </span>
+              </div>
             </div>
           </div>
+
           <div
             class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mt-6"
           >
             <div
               class="flex sm:inline-flex justify-between sm:justify-center items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-sm"
             >
+              <!-- Decrease -->
               <button
-                @click="decreaseQty"
+                @click="updateQty(quantity - 1)"
                 :disabled="quantity <= 1 || isStockOut"
                 class="w-12 h-12 sm:w-10 sm:h-10 flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200"
               >
                 <i class="pi pi-minus"></i>
               </button>
 
+              <!-- Qty Input -->
               <input
-                type="text"
+                type="number"
                 v-model.number="quantity"
+                @input="handleManualInput"
                 min="1"
+                :max="productDetail.qty ?? undefined"
                 class="w-16 sm:w-16 flex-1 text-center text-gray-800 font-medium bg-white border-l border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all rounded-none py-3 sm:py-2"
               />
 
+              <!-- Increase -->
               <button
-                @click="increaseQty"
-                :disabled="isStockOut"
+                @click="updateQty(quantity + 1)"
+                :disabled="isStockOut || (productDetail.qty != null && quantity >= productDetail.qty)"
+                :title="productDetail.qty != null && quantity >= productDetail.qty ? 'Maximum stock reached' : ''"
                 class="w-12 h-12 sm:w-10 sm:h-10 flex items-center justify-center text-gray-600 hover:bg-green-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200"
               >
                 <i class="pi pi-plus"></i>
@@ -213,7 +237,9 @@
             <i class="pi pi-table text-blue-500 text-sm"></i>
           </div>
           <span class="text-sm font-bold text-gray-800 mb-2">Per Strip</span>
-          <div class="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-blue-500 flex items-baseline justify-center whitespace-nowrap">
+          <div
+            class="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-blue-500 flex items-baseline justify-center whitespace-nowrap"
+          >
             {{ formatPrice(stripPrice) }} Tk
           </div>
         </div>
@@ -228,7 +254,9 @@
             <i class="pi pi-box text-purple-600 text-sm"></i>
           </div>
           <span class="text-sm font-bold text-gray-800 mb-2">Per Pack</span>
-          <div class="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-purple-600 flex items-baseline justify-center whitespace-nowrap">
+          <div
+            class="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-purple-600 flex items-baseline justify-center whitespace-nowrap"
+          >
             {{ formatPrice(packPrice) }} Tk
           </div>
         </div>
@@ -243,12 +271,15 @@
             <i class="pi pi-server text-orange-500 text-sm"></i>
           </div>
           <span class="text-sm font-bold text-gray-800 mb-2">Pack Size</span>
-          <div class="text-base sm:text-lg font-bold text-orange-600 leading-tight whitespace-nowrap flex flex-col items-center justify-center">
+          <div
+            class="text-base sm:text-lg font-bold text-orange-600 leading-tight whitespace-nowrap flex flex-col items-center justify-center"
+          >
             <div>
               {{ productDetail.stripe_qty || 1 }} x
               {{ productDetail.piece_qty || 1 }}
             </div>
-            <span class="block text-xs sm:text-sm font-normal text-orange-800 mt-1"
+            <span
+              class="block text-xs sm:text-sm font-normal text-orange-800 mt-1"
               >units/tablets</span
             >
           </div>
@@ -457,22 +488,48 @@ const showPriceInfo = computed(() => {
   return b !== s || s !== p || b !== p;
 });
 
-const increaseQty = () => {
-  quantity.value += 1;
+// ─── Quantity controls with stock-cap enforcement (mirrors Cart.vue updateQty)
+
+const stockQty = computed(() => Number(productDetail.value?.qty) || null);
+
+/**
+ * Central qty updater. Enforces stock cap, shows toast, auto-resets.
+ */
+const updateQty = (newQty) => {
+  if (stockQty.value !== null && newQty > stockQty.value) {
+    quantity.value = stockQty.value;
+    push.warning(`Only ${stockQty.value} item(s) available in stock.`);
+    return;
+  }
+  if (newQty < 1 || isNaN(newQty)) {
+    quantity.value = 1;
+    return;
+  }
+  quantity.value = newQty;
 };
 
-const decreaseQty = () => {
-  if (quantity.value > 1) quantity.value -= 1;
+/**
+ * Fired on every keystroke in the qty input.
+ */
+const handleManualInput = () => {
+  const val = Number(quantity.value);
+  updateQty(isNaN(val) ? 1 : val);
 };
 
 const addToCart = (prod) => {
   const totalPieces = quantity.value * unitMultiplier.value;
 
-  cartStore.addToCart({
+  const result = cartStore.addToCart({
     ...prod,
     quantity: totalPieces,
+    stock_qty: stockQty.value,  // pass stock so Cart.vue can enforce limits too
   });
-  push.success(`${prod.name} added to cart!`);
+
+  if (result?.capped) {
+    push.warning(`Only ${stockQty.value} item(s) available — qty adjusted.`);
+  } else {
+    push.success(`${prod.name} added to cart!`);
+  }
 
   // ✅ Meta Pixel AddToCart event
   if (typeof window.fbq === "function") {
