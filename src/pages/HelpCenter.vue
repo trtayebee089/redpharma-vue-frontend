@@ -2,8 +2,8 @@
     <PageTemplate>
         <div class="relative fade-up mb-16 container mx-auto max-w-5xl pt-6">
             <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Help Center</h1>
-                <p class="text-gray-600">Find answers to the most frequently asked questions.</p>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ t('helpCenter.title') }}</h1>
+                <p class="text-gray-600">{{ t('helpCenter.subtitle') }}</p>
             </div>
 
             <div class="space-y-4">
@@ -26,32 +26,14 @@
 
 <script setup>
     import {
+        computed,
         ref
     } from "vue";
+import { useI18n } from "vue-i18n";
 import PageTemplate from "../components/layout/PageTemplate.vue";
 
-    // FAQ data
-    const faqs = [{
-            question: "How to place an order?",
-            answer: "Browse our medicines or products, add them to your cart, and proceed to checkout. You can pay via multiple payment methods.",
-        },
-        {
-            question: "How to contact with a doctor?",
-            answer: "You can contact our partnered doctors via the consultation section. Fill out the form and a doctor will reach out to you.",
-        },
-        {
-            question: "How to use my points?",
-            answer: "Points earned from previous purchases can be redeemed at checkout for discounts according to your membership tier.",
-        },
-        {
-            question: "How to know about available doctors?",
-            answer: "Our website lists all available doctors with their specialties and reviews. You can filter based on your needs.",
-        },
-        {
-            question: "How to track my order?",
-            answer: "Use the Order Tracking page and enter your order ID to get the latest updates on your delivery.",
-        },
-    ];
+    const { tm } = useI18n();
+    const faqs = computed(() => tm("helpCenter.faqs"));
 
     // State to track which accordion is open
     const openIndex = ref(null);

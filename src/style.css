@@ -28,6 +28,29 @@
   font-variation-settings: "wdth" 100;
 }
 
+.noto-serif-bengali,
+.noto-serif-bengali * {
+  font-family: "Noto Serif Bengali", serif !important;
+}
+
+.noto-serif-bengali input,
+.noto-serif-bengali textarea,
+.noto-serif-bengali select,
+.noto-serif-bengali button {
+  font-family: "Noto Serif Bengali", serif !important;
+}
+
+.noto-serif-bengali .pi,
+.noto-serif-bengali .pi::before,
+.noto-serif-bengali [class^="pi-"],
+.noto-serif-bengali [class*=" pi-"],
+.noto-serif-bengali .icon,
+.noto-serif-bengali .icon *,
+.noto-serif-bengali svg,
+.noto-serif-bengali svg * {
+  font-family: "primeicons" !important;
+}
+
 .font-bn {
   font-family: 'Noto Sans Bengali', sans-serif;
 }

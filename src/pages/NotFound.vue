@@ -5,17 +5,16 @@
         <div ref="lottieContainer" class="w-[600px] h-[400px] mb-6"></div>
 
         <h2 class="text-3xl text-gray-800 mb-4 font-semibold">
-            Page Not Found
+            {{ $t('notFound.title') }}
         </h2>
         <p class="text-lg text-gray-600 mb-6 max-w-md">
-            Oops! The page you are looking for might have been removed, had its name changed, or is temporarily
-            unavailable.
+            {{ $t('notFound.description') }}
         </p>
 
         <!-- Go Home Button -->
         <router-link to="/"
             class="px-8 py-3 bg-green-500 text-white rounded-lg shadow-lg hover:bg-green-600 transition-all transform hover:scale-105">
-            Go Home
+            {{ $t('notFound.goHome') }}
         </router-link>
     </div>
 </template>

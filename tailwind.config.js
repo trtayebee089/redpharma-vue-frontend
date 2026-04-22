@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      colors: {
+        primary: "#16a34a",
+      },
       // keyframes: {
       //   'slide-fade-in': {
       //     '0%': { opacity: '0', transform: 'translateY(-20px)' },

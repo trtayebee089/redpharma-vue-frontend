@@ -5,7 +5,7 @@
                 <label class="number" v-html="formattedCardNumber"></label>
 
                 <label class="name">
-                    {{ authStore.user?.name || "Member Name" }}
+                    {{ authStore.user?.name || t("membership.memberName") }}
                 </label>
 
                 <label class="expiry">
@@ -15,19 +15,19 @@
                 <img class="cardLogo" :src="brandLogo" alt="Tier Logo" />
 
                 <div class="chip" style="overflow: hidden !important">
-                    <svg role="img" viewBox="0 0 100 100" aria-label="Chip">
+                    <svg role="img" viewBox="0 0 100 100" :aria-label="t('common.chip')">
                         <use href="#chip-lines" />
                     </svg>
                 </div>
 
                 <div class="contactless">
-                    <svg role="img" viewBox="0 0 24 24" aria-label="Contactless">
+                    <svg role="img" viewBox="0 0 24 24" :aria-label="t('common.contactless')">
                         <use href="#contactless-icon" />
                     </svg>
                 </div>
 
                 <div v-if="locked" class="card-overlay">
-                    <span class="frozen-tag">FROZEN</span>
+                    <span class="frozen-tag">{{ t("membership.frozen") }}</span>
                 </div>
             </aside>
 
@@ -43,7 +43,7 @@
                 </div>
 
                 <div class="footer">
-                    <p>Need help? Call our hotline: <strong>+880 123 456 789</strong></p>
+                    <p>{{ t("membership.needHelp") }} <strong>+880 123 456 789</strong></p>
                     <p class="website">www.redpharmabd.com</p>
                 </div>
             </aside>
@@ -68,6 +68,7 @@
 
 <script setup>
 import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/auth";
 import bronzeCardBg from "@/assets/images/bronze-card.png";
 import silverCardBg from "@/assets/images/silver-card.jpg";
@@ -89,6 +90,7 @@ const props = defineProps({
 const type = computed(() => (props.type || "bronze").toLowerCase());
 
 const authStore = useAuthStore();
+const { t } = useI18n();
 
 const cardBackgrounds = {
     bronze: bronzeCardBg,

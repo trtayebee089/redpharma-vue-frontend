@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useCategories } from "@/composables/useCategories.js";
 const { categories, loading, error } = useCategories();
 import { useRoute } from 'vue-router';
@@ -38,6 +38,23 @@ function openRegister() {
     showLoginModal.value = false;
     showRegister.value = true;
 }
+
+function openLogin() {
+    showRegister.value = false;
+    showLoginModal.value = true;
+}
+
+function closeAuthModals() {
+    showLoginModal.value = false;
+    showRegister.value = false;
+}
+
+watch(
+    () => route.path,
+    () => {
+        closeAuthModals();
+    }
+);
 
 </script>
 
@@ -107,7 +124,7 @@ function openRegister() {
 
     <LoginFormModal :show="showLoginModal" @close="() => { showLoginModal = false }" @open-register="openRegister" />
 
-    <RegistrationModal :show="showRegister" @close="showRegister = false" @open-login="() => showLoginModal = true" />
+    <RegistrationModal :show="showRegister" @close="showRegister = false" @open-login="openLogin" />
 </template>
 
 <style scoped>

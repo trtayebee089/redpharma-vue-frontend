@@ -41,7 +41,7 @@ useTawk();
 </script>
 
 <template>
-    <div class="min-h-screen flex flex-col bg-white">
+    <div class="min-h-screen flex flex-col bg-white" :class="langStore.langClass">
         <Header />
 
         <div class="flex flex-1 relative">

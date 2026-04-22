@@ -2,11 +2,11 @@
     <section class="mb-16 relative leading-relaxed max-w-7xl mx-auto px-4 pt-6">
         <div class="mb-12 fade-up">
             <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-2 text-center relative drop-shadow-md tracking-wide">
-                Contact Us
+                {{ $t('contact.title') }}
                 <span class="block w-28 h-1 mx-auto mt-3 rounded-full bg-gradient-to-r from-green-400 to-green-600"></span>
             </h2>
             <p class="text-gray-500 text-center mb-10">
-                We'd love to hear from you. Send us a message and we will get back to you promptly.
+                {{ $t('contact.subtitle') }}
             </p>
         </div>
 
@@ -15,32 +15,32 @@
             <div class="bg-white shadow-sm rounded-xl p-8 hover:shadow-lg transition-all duration-300 border border-green-200 fade-up">
                 <form @submit.prevent="submitForm" class="space-y-6">
                     <div>
-                        <label class="block text-gray-700 font-medium mb-2" for="name">Name</label>
+                        <label class="block text-gray-700 font-medium mb-2" for="name">{{ $t('common.name') }}</label>
                         <input type="text" id="name" v-model="form.name" required
                             class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" />
                     </div>
 
                     <div>
-                        <label class="block text-gray-700 font-medium mb-2" for="email">Email</label>
+                        <label class="block text-gray-700 font-medium mb-2" for="email">{{ $t('common.email') }}</label>
                         <input type="email" id="email" v-model="form.email" required
                             class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" />
                     </div>
 
                     <div>
-                        <label class="block text-gray-700 font-medium mb-2" for="subject">Subject</label>
+                        <label class="block text-gray-700 font-medium mb-2" for="subject">{{ $t('contact.subject') }}</label>
                         <input type="text" id="subject" v-model="form.subject" required
                             class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" />
                     </div>
 
                     <div>
-                        <label class="block text-gray-700 font-medium mb-2" for="message">Message</label>
+                        <label class="block text-gray-700 font-medium mb-2" for="message">{{ $t('contact.message') }}</label>
                         <textarea id="message" v-model="form.message" rows="3" required
                             class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition resize-none"></textarea>
                     </div>
 
                     <button type="submit"
                         class="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition-all font-semibold shadow-md hover:shadow-lg">
-                        Send Message
+                        {{ $t('contact.sendMessage') }}
                     </button>
                 </form>
             </div>
@@ -65,7 +65,7 @@
 
                     <!-- Content -->
                     <div class="relative z-10">
-                        <h3 class="text-2xl font-semibold text-gray-800 mb-6">Contact Information</h3>
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-6">{{ $t('contact.information') }}</h3>
                         <p class="flex items-center space-x-3 text-gray-700 mb-3">
                             <i class="pi pi-map-marker text-green-500 text-lg"></i>
                             <span>303, Rajshahi 6000</span>
@@ -101,6 +101,9 @@
     import {
         ref
     } from 'vue'
+    import { useI18n } from 'vue-i18n'
+
+    const { t } = useI18n()
 
     const form = ref({
         name: '',
@@ -115,7 +118,7 @@
 
     const submitForm = () => {
         alert(
-            `Message sent!\nName: ${form.value.name}\nEmail: ${form.value.email}\nSubject: ${form.value.subject}\nMessage: ${form.value.message}`
+            t('contact.alertSent', form.value)
         )
         form.value = {
             name: '',

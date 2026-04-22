@@ -8,7 +8,7 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
             </svg>
-            <p class="text-green-700 font-medium">Updating profile…</p>
+            <p class="text-green-700 font-medium">{{ $t('account.profileUpdating') }}</p>
         </div>
     </div>
 
@@ -27,12 +27,12 @@
             </div>
             <h1 class="text-3xl md:text-4xl font-bold text-green-600 leading-relaxed mb-2 relative z-10"
                 :class="langStore.langClass">
-                Edit Profile
+                {{ $t('account.editProfile') }}
             </h1>
 
             <p class="text-gray-700 text-lg md:text-xl leading-relaxed relative z-10 max-w-2xl mx-auto"
                 :class="langStore.langClass">
-                Manage your personal information and account settings
+                {{ $t('account.profileSubtitle') }}
             </p>
         </div>
 
@@ -45,43 +45,43 @@
             </div>
             <div>
                 <p class="font-semibold text-lg text-gray-800">{{ user.name }}</p>
-                <p class="text-sm text-gray-500">Click the image to change your avatar</p>
+                <p class="text-sm text-gray-500">{{ $t('account.avatarHelp') }}</p>
             </div>
         </div>
 
         <form @submit.prevent="saveProfile" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('auth.fullName') }}</label>
                     <input v-model="user.name" type="text"
                         class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('common.email') }}</label>
                     <input v-model="user.email" type="email"
                         class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('common.phone') }}</label>
                     <input v-model="user.phone_number" type="text"
                         class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('forms.gender') }}</label>
                     <select v-model="user.gender"
                         class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
-                        <option value="">Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
+                        <option value="">{{ $t('forms.selectGender') }}</option>
+                        <option value="male">{{ $t('forms.male') }}</option>
+                        <option value="female">{{ $t('forms.female') }}</option>
+                        <option value="other">{{ $t('forms.other') }}</option>
                     </select>
                 </div>
 
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('common.address') }}</label>
                     <textarea v-model="user.address" rows="3"
                         class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500"></textarea>
                 </div>
@@ -98,7 +98,7 @@
 
 
                     <span>
-                        {{ authStore.loading ? "Saving..." : "Save Changes" }}
+                        {{ authStore.loading ? $t('common.saving') : $t('account.saveChanges') }}
                     </span>
                 </button>
             </div>

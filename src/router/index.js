@@ -22,6 +22,10 @@ import CategoryGrid from '../pages/shop/CategoryGrid.vue';
 import OrderConfirmation from '@/pages/shop/OrderConfirmation.vue';
 import RemoveAccount from '../pages/RemoveAccount.vue';
 import NotFound from '../pages/NotFound.vue';
+import TermsConditions from '../pages/TermsConditions.vue';
+import LoginPage from '../pages/auth/LoginPage.vue';
+import RegisterPage from '../pages/auth/RegisterPage.vue';
+import ForgotPassword from '../pages/auth/ForgotPassword.vue';
 
 const routes = [
     { path: '/', name: 'Home', component: Home, meta: { title: 'Home - RedPharma BD' } }, //✅
@@ -31,8 +35,14 @@ const routes = [
     { path: '/contact', name: 'Contact Us', component: Contact, meta: { title: 'Contact Us - RedPharma BD' } }, //✅
     { path: '/categories', name: 'CategoryList', component: CategoryGrid, meta: { title: 'Categories - RedPharma BD' } }, 
     { path: '/category/:slug', name: 'Category', component: Category, meta: { title: 'Category - RedPharma BD' } }, 
+    { path: '/terms', name: 'Terms', component: TermsConditions, meta: { title: 'Terms & Conditions - RedPharma BD' } },
+    { path: '/terms-and-conditions', name: 'TermsConditions', component: TermsConditions, meta: { title: 'Terms & Conditions - RedPharma BD' } },
     { path: '/privacy-and-policy', name: 'Privacy & Policy', component: PrivacyPolicy, meta: { title: 'Privacy & Policy - RedPharma BD' } }, //✅
     { path: '/refund-and-returns', name: 'RefundReturn', component: RefundReturn, meta: { title: 'Refund & Returns - RedPharma BD' } }, //✅
+    { path: '/refund', redirect: '/refund-and-returns' },
+    { path: '/login', name: 'LoginPage', component: LoginPage, meta: { title: 'Login - RedPharma BD' } },
+    { path: '/register', name: 'RegisterPage', component: RegisterPage, meta: { title: 'Register - RedPharma BD' } },
+    { path: '/forgot-password', name: 'ForgotPassword', component: ForgotPassword, meta: { title: 'Forgot Password - RedPharma BD' } },
     { path: '/delivery-coverage', name: 'Delivery Coverage', component: DeliveryCoverage, meta: { title: 'Delivery Coverage - RedPharma BD' } }, //✅
     { path: '/order-tracking', name: 'Order Tracking', component: OrderTracking, meta: { title: 'Track Order - RedPharma BD' } }, //✅
     { path: '/upload-prescription', name: 'Upload Prescription', component: OrderTracking, meta: { title: 'Upload Prescription - RedPharma BD' } }, //✅

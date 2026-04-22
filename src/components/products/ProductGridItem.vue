@@ -9,7 +9,7 @@
         <div v-if="isStockOut"
             class="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full font-semibold z-10"
             style="top: 0; border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;">
-            Stock Out
+            {{ t("product.stockOut") }}
         </div>
 
         <router-link :to="`/products/${product.slug}`" class="block relative bg-[#f9f9f9] rounded-t-lg overflow-hidden">
@@ -34,7 +34,7 @@
             </p>
 
             <p class="text-xs sm:text-sm text-gray-600 mt-1" v-if="product.strength && product.packSize">
-                {{ product.strength }} | Pack: {{ product.packSize }}
+                {{ product.strength }} | {{ t("product.pack") }}: {{ product.packSize }}
             </p>
 
             <div class="mt-2 flex items-center justify-between">
@@ -91,6 +91,7 @@
 import { ref, computed, watch } from "vue";
 import { useCartStore } from "@/stores/cart";
 import { usePush } from "notivue";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps({
     product: {
@@ -103,6 +104,7 @@ const loading = ref(true)
 
 const cartStore = useCartStore();
 const push = usePush();
+const { t } = useI18n();
 
 const quantity = ref(1);
 const showQuantityControls = ref(false);
@@ -138,7 +140,7 @@ const isStockOut = computed(() => {
 const handleAddToCart = () => {
     cartStore.addToCart({ ...props.product, quantity: quantity.value });
     showQuantityControls.value = true;
-    push.success(`${props.product.name} added to cart!`);
+    push.success(t("product.addedToCart", { name: props.product.name }));
 
     // ✅ Meta Pixel AddToCart event
     if (typeof window.fbq === 'function') {

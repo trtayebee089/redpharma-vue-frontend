@@ -1,6 +1,6 @@
 <template>
     <div class="p-6 font-sans text-gray-800 pt-6">
-        <BreadCrumb :crumbs="crumbs" :title="title" subtitle="Manage your orders and track their status" />
+        <BreadCrumb :crumbs="crumbs" :title="title" :subtitle="t('orders.subtitle')" />
 
         <div class="flex space-x-4 border-b border-gray-200 mb-4 mt-10">
             <button v-for="tab in tabs" :key="tab.value" @click="activeTab = tab.value" :class="[
@@ -17,17 +17,17 @@
             <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
                 <thead class="bg-gray-50 text-gray-700 font-medium">
                     <tr>
-                        <th class="px-4 py-3 text-left">Order ID</th>
-                        <th class="px-4 py-3 text-left">Date</th>
-                        <th class="px-4 py-3 text-left">Status</th>
-                        <th class="px-4 py-3 text-left">Items</th>
-                        <th class="px-4 py-3 text-right">Total</th>
-                        <th class="px-4 py-3 text-center">Actions</th>
+                        <th class="px-4 py-3 text-left">{{ t('orders.orderId') }}</th>
+                        <th class="px-4 py-3 text-left">{{ t('orders.date') }}</th>
+                        <th class="px-4 py-3 text-left">{{ t('orders.status') }}</th>
+                        <th class="px-4 py-3 text-left">{{ t('orders.items') }}</th>
+                        <th class="px-4 py-3 text-right">{{ t('orders.total') }}</th>
+                        <th class="px-4 py-3 text-center">{{ t('orders.actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-if="loading">
-                        <td colspan="6" class="text-center py-6">Loading orders...</td>
+                        <td colspan="6" class="text-center py-6">{{ t('orders.loading') }}</td>
                     </tr>
 
                     <tr v-else-if="filteredOrders.length > 0" v-for="order in filteredOrders" :key="order.id"
@@ -51,14 +51,14 @@
                         <td class="px-4 py-3 text-center">
                             <router-link :to="{ name: 'order-detail', params: { orderId: order.id }, state: { order } }"
                                 class="text-green-600 hover:underline">
-                                View
+                                {{ t('common.view') }}
                             </router-link>
                         </td>
                     </tr>
 
                     <tr v-else>
                         <td colspan="6" class="text-center py-6 text-gray-500">
-                            No orders found for this tab.
+                            {{ t('orders.noOrdersForTab') }}
                         </td>
                     </tr>
                 </tbody>
@@ -69,23 +69,25 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/auth";
 import BreadCrumb from "@/components/common/BreadCrumb.vue";
 
 const authStore = useAuthStore();
+const { t } = useI18n();
 
-const crumbs = [
-    { label: "Home", to: "/" },
-    { label: "My Orders" },
-];
+const crumbs = computed(() => [
+    { label: t("common.home"), to: "/" },
+    { label: t("orders.title") },
+]);
 
-const title = "My Orders";
-const tabs = [
-    { label: "All", value: "all" },
-    { label: "Delivered", value: "delivered" },
-    { label: "Canceled", value: "canceled" },
-    { label: "Processing", value: "processing" },
-];
+const title = computed(() => t("orders.title"));
+const tabs = computed(() => [
+    { label: t("orders.filters.all"), value: "all" },
+    { label: t("orders.filters.delivered"), value: "delivered" },
+    { label: t("orders.filters.canceled"), value: "canceled" },
+    { label: t("orders.filters.processing"), value: "processing" },
+]);
 
 const activeTab = ref("all");
 const orders = ref([]);

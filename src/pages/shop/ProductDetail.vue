@@ -152,8 +152,8 @@
             >
               <!-- Decrease -->
               <button
-                @click="updateQty(quantity - 1)"
-                :disabled="quantity <= 1 || isStockOut"
+                @click="updateQty(Number(quantity) - 1)"
+                :disabled="Number(quantity) <= 1 || isStockOut"
                 class="w-12 h-12 sm:w-10 sm:h-10 flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200"
               >
                 <i class="pi pi-minus"></i>
@@ -162,18 +162,19 @@
               <!-- Qty Input -->
               <input
                 type="number"
-                v-model.number="quantity"
+                :value="quantity"
                 @input="handleManualInput"
+                @blur="handleBlur"
                 min="1"
-                :max="productDetail.qty ?? undefined"
+                :max="maxUnits ?? undefined"
                 class="w-16 sm:w-16 flex-1 text-center text-gray-800 font-medium bg-white border-l border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all rounded-none py-3 sm:py-2"
               />
 
               <!-- Increase -->
               <button
-                @click="updateQty(quantity + 1)"
-                :disabled="isStockOut || (productDetail.qty != null && quantity >= productDetail.qty)"
-                :title="productDetail.qty != null && quantity >= productDetail.qty ? 'Maximum stock reached' : ''"
+                @click="updateQty(Number(quantity) + 1)"
+                :disabled="isStockOut || (maxUnits != null && Number(quantity) >= maxUnits)"
+                :title="maxUnits != null && Number(quantity) >= maxUnits ? 'Maximum stock reached' : ''"
                 class="w-12 h-12 sm:w-10 sm:h-10 flex items-center justify-center text-gray-600 hover:bg-green-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200"
               >
                 <i class="pi pi-plus"></i>
@@ -492,13 +493,18 @@ const showPriceInfo = computed(() => {
 
 const stockQty = computed(() => Number(productDetail.value?.qty) || null);
 
+const maxUnits = computed(() => {
+  if (stockQty.value === null) return null;
+  return Math.max(1, Math.floor(stockQty.value / unitMultiplier.value));
+});
+
 /**
- * Central qty updater. Enforces stock cap, shows toast, auto-resets.
+ * Central qty updater. Enforces stock cap, shows toast.
  */
 const updateQty = (newQty) => {
-  if (stockQty.value !== null && newQty > stockQty.value) {
-    quantity.value = stockQty.value;
-    push.warning(`Only ${stockQty.value} item(s) available in stock.`);
+  if (maxUnits.value !== null && newQty > maxUnits.value) {
+    quantity.value = maxUnits.value;
+    push.warning(`Only ${maxUnits.value} ${selectedUnit.value}(s) available in stock.`);
     return;
   }
   if (newQty < 1 || isNaN(newQty)) {
@@ -511,13 +517,38 @@ const updateQty = (newQty) => {
 /**
  * Fired on every keystroke in the qty input.
  */
-const handleManualInput = () => {
+const handleManualInput = (e) => {
+  const valRaw = e.target.value;
+  if (valRaw === '') {
+    quantity.value = ''; // Let them clear the field without snapping to 1
+    return;
+  }
+  
+  const val = Number(valRaw);
+  if (maxUnits.value !== null && val > maxUnits.value) {
+    quantity.value = maxUnits.value;
+    push.warning(`Only ${maxUnits.value} ${selectedUnit.value}(s) available in stock.`);
+  } else {
+    // Note: Do not snap to 1 here immediately to allow typing trailing 0s or finishing edits
+    quantity.value = val;
+  }
+};
+
+const handleBlur = () => {
   const val = Number(quantity.value);
-  updateQty(isNaN(val) ? 1 : val);
+  if (isNaN(val) || val < 1) {
+    quantity.value = 1;
+  }
 };
 
 const addToCart = (prod) => {
-  const totalPieces = quantity.value * unitMultiplier.value;
+  let finalQty = Number(quantity.value);
+  if (isNaN(finalQty) || finalQty < 1) {
+    finalQty = 1;
+    quantity.value = 1;
+  }
+
+  const totalPieces = finalQty * unitMultiplier.value;
 
   const result = cartStore.addToCart({
     ...prod,

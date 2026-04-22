@@ -90,7 +90,7 @@ const langStore = useLanguageStore();
                             class="w-6 h-6 flex items-center justify-center rounded-full bg-green-100 text-green-600 shadow-sm">
                             <i class="pi pi-map-marker"></i>
                         </div>
-                        <span class="text-gray-200">303, Rajshahi 6000</span>
+                        <span class="text-gray-200">{{ $t('footer.addressLine') }}</span>
                     </li>
 
                     <li class="flex items-center space-x-3">
@@ -118,9 +118,9 @@ const langStore = useLanguageStore();
                 <div class="flex items-center space-x-4 mt-6">
                     <a href="https://www.facebook.com/redpharmabd" target="_blank"
                         class="group relative flex items-center justify-center gap-2 px-4 h-10 rounded-full bg-gray-100 text-gray-600 shadow-sm hover:bg-blue-700 hover:text-white transition-all duration-300"
-                        title="Facebook">
+                        :title="$t('common.facebook')">
                         <i class="pi pi-facebook text-lg"></i>
-                        <span class="font-medium text-sm tracking-wide">FOLLOW US</span>
+                        <span class="font-medium text-sm tracking-wide">{{ $t('common.followUs') }}</span>
                     </a>
                 </div>
             </div>
@@ -128,7 +128,7 @@ const langStore = useLanguageStore();
 
         <div class="bg-gray-800 text-gray-400 py-4 px-6 flex flex-col md:flex-row items-center justify-between text-sm border-t border-gray-700">
             <div class="mb-2 md:mb-0">
-                © {{ year }} <strong>RedPharma BD</strong>. All rights reserved.
+                © {{ year }} <strong>RedPharma BD</strong>. {{ $t('common.allRightsReserved') }}
             </div>
 
             <div>

@@ -97,7 +97,7 @@
                         <span class="w-8 h-8 bg-white text-green-600 flex items-center justify-center rounded-full">
                             <i class="pi pi-user text-lg"></i>
                         </span>
-                        <span class="font-semibold">Login</span>
+                        <span class="font-semibold">{{ $t('auth.login') }}</span>
                     </button>
 
                     <UserDropdown v-else />
@@ -220,7 +220,7 @@
 
     <LoginFormModal :show="showLoginModal" @close="() => { showLoginModal = false }" @open-register="openRegister" />
 
-    <RegistrationModal :show="showRegister" @close="showRegister = false" @open-login="() => showLoginModal.value = true" />
+    <RegistrationModal :show="showRegister" @close="showRegister = false" @open-login="openLogin" />
 </template>
 
 <script setup>
@@ -228,7 +228,7 @@ import { ref, onMounted, onUnmounted, computed, reactive, watch } from 'vue'
 import mainLogo from '@/assets/logo.png';
 import { products } from "@/data/products.js";
 import { categories } from "@/data/categories.js";
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useCartStore } from "@/stores/cart"
 import LoginFormModal from '@/components/auth/LoginFormModal.vue';
 import { useAuthStore } from "@/stores/auth";
@@ -252,6 +252,7 @@ const flags = {
 };
 
 const router = useRouter()
+const route = useRoute()
 const showLoginModal = ref(false);
 const authStore = useAuthStore();
 const langStore = useLanguageStore();
@@ -293,6 +294,16 @@ function capitalizeWords(text) {
 function openRegister() {
     showLoginModal.value = false;
     showRegister.value = true;
+}
+
+function openLogin() {
+    showRegister.value = false;
+    showLoginModal.value = true;
+}
+
+function closeAuthModals() {
+    showLoginModal.value = false;
+    showRegister.value = false;
 }
 
 function typeEffect() {
@@ -358,6 +369,13 @@ watch(searchQuery, (newQuery) => {
     }, 400);
 });
 
+watch(
+    () => route.path,
+    () => {
+        closeAuthModals();
+    }
+);
+
 const filteredProducts = computed(() => searchResults.value);
 
 const addToCart = (product) => {
@@ -367,7 +385,7 @@ const addToCart = (product) => {
     });
 
     searchQuery.value = ""
-    push.success(`${product.name} added to cart!`)
+    push.success(t("product.addedToCart", { name: product.name }))
 };
 
 onMounted(() => {
