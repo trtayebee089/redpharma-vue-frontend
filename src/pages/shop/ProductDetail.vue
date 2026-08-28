@@ -1,5 +1,7 @@
 <template>
-  <section v-if="productDetail" class="text-gray-800 space-y-6 md:space-y-12">
+  <ProductDetailSkeleton v-if="isProductLoading || isProductNavigationPending" />
+
+  <section v-else-if="productDetail" class="text-gray-800 space-y-6 md:space-y-12">
     <!-- Product Information Card -->
     <div
       class="grid grid-cols-1 md:grid-cols-5 gap-6 md:gap-8 bg-white p-4 sm:p-6 lg:p-8 rounded-xl shadow border border-gray-200"
@@ -336,43 +338,56 @@
     </div>
   </section>
 
-  <div v-else class="flex justify-center items-center min-h-[300px]">
-    <svg
-      class="animate-spin h-10 w-10 text-green-600"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        class="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        stroke-width="4"
-      ></circle>
-      <path
-        class="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-      ></path>
-    </svg>
+  <div
+    v-else
+    role="alert"
+    class="min-h-[350px] flex items-center justify-center bg-white rounded-xl border border-gray-200 shadow p-6"
+  >
+    <div class="max-w-md text-center">
+      <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-red-50 flex items-center justify-center">
+        <i class="pi pi-exclamation-circle text-2xl text-red-500"></i>
+      </div>
+      <h1 class="text-2xl font-bold text-gray-800 mb-2">Product unavailable</h1>
+      <p class="text-gray-600 mb-6">{{ loadError }}</p>
+      <div class="flex flex-col sm:flex-row justify-center gap-3">
+        <button
+          type="button"
+          class="px-5 py-2.5 rounded-full bg-green-600 text-white font-semibold hover:bg-green-700 transition"
+          @click="loadProduct(route.params.slug)"
+        >
+          Try Again
+        </button>
+        <router-link
+          to="/"
+          class="px-5 py-2.5 rounded-full border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition"
+        >
+          Continue Shopping
+        </router-link>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed } from "vue";
+import { ref, onBeforeUnmount, watch, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useCartStore } from "@/stores/cart";
 import { usePush } from "notivue";
 import { useProducts } from "@/composables/useProducts";
+import { useProductNavigation } from "@/composables/useProductNavigation";
 import ProductGridItem from "../../components/products/ProductGridItem.vue";
+import ProductDetailSkeleton from "@/components/products/ProductDetailSkeleton.vue";
 import bdtIcon from "@/assets/images/bdt-icon.png";
 
 const BASE_URL = "http://127.0.0.1:8000";
 const route = useRoute();
-const { product, fetchProductDetails } = useProducts();
+const { product, error: productError, fetchProductDetails } = useProducts();
+const { isProductNavigationPending } = useProductNavigation();
 const productDetail = ref(null);
+const isProductLoading = ref(true);
+const loadError = ref("");
+let activeRequestId = 0;
+let detailRequestController = null;
 
 const cartStore = useCartStore();
 const push = usePush();
@@ -583,19 +598,54 @@ const fullCategoryName = computed(() => {
 });
 
 // Fetch product based on slug in URL
-async function loadProduct() {
-  const slug = route.params.slug;
-  const related = await fetchProductDetails(slug);
-  productDetail.value = product.value;
-  console.log(productDetail.value);
-  // Filter out the current product from related products
-  alternativeProducts.value = related.filter(
-    (p) => p.id !== productDetail.value.id,
-  );
+async function loadProduct(slug) {
+  const requestId = ++activeRequestId;
+
+  detailRequestController?.abort();
+  detailRequestController = new AbortController();
+
+  isProductLoading.value = true;
+  loadError.value = "";
+  productDetail.value = null;
+  alternativeProducts.value = [];
+  quantity.value = 1;
+  selectedUnit.value = "piece";
+
+  try {
+    const related = await fetchProductDetails(slug, {
+      signal: detailRequestController.signal,
+    });
+
+    if (requestId !== activeRequestId) return;
+
+    if (!product.value) {
+      loadError.value = productError.value || "Product not found.";
+      return;
+    }
+
+    productDetail.value = product.value;
+    alternativeProducts.value = related.filter(
+      (relatedProduct) => relatedProduct.id !== productDetail.value.id,
+    );
+  } catch {
+    if (requestId === activeRequestId) {
+      loadError.value = "Unable to load product details. Please try again.";
+    }
+  } finally {
+    if (requestId === activeRequestId) {
+      isProductLoading.value = false;
+    }
+  }
 }
 
-onMounted(loadProduct);
+watch(
+  () => route.params.slug,
+  (slug) => loadProduct(slug),
+  { immediate: true, flush: "sync" },
+);
 
-// Refetch if route slug changes
-watch(() => route.params.slug, loadProduct);
+onBeforeUnmount(() => {
+  activeRequestId += 1;
+  detailRequestController?.abort();
+});
 </script>

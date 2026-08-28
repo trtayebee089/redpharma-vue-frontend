@@ -30,7 +30,7 @@
                             <li v-for="product in filteredProducts" :key="product.id"
                                 class="px-4 py-3 hover:bg-red-100 flex justify-between items-center gap-3">
                                 <router-link :to="`/products/${product.slug}`" class="flex-1 flex flex-col gap-1"
-                                    @click="clearSearch">
+                                    @click.prevent="selectProductSuggestion(product)">
                                     <p class="font-medium text-gray-800">{{ capitalizeWords(product.name) }}</p>
                                     <p class="text-sm text-gray-600">
                                         Brand: {{ product.brand.title }} | Category:
@@ -167,7 +167,7 @@
                         <li v-for="product in filteredProducts" :key="product.id"
                             class="px-4 py-3 hover:bg-gray-50 flex justify-between items-center gap-3">
                             <router-link :to="`/products/${product.slug}`" class="flex-1 flex flex-col gap-1"
-                                @click="clearSearch">
+                                @click.prevent="selectProductSuggestion(product)">
                                 <p class="font-medium text-gray-800">{{ product.name }}</p>
                                 <p class="text-sm text-gray-600">
                                     {{ product.brand?.title }} <br>
@@ -237,6 +237,7 @@ import UserDropdown from "@/components/auth/UserDropdown.vue";
 import { useLanguageStore } from "@/stores/language";
 import RegistrationModal from "@/components/auth/RegistrationModal.vue";
 import { useProducts } from "@/composables/useProducts";
+import { useProductNavigation } from "@/composables/useProductNavigation";
 import { usePush } from "notivue"
 
 import usFlag from '@/assets/icons/us-flag.png';
@@ -269,6 +270,7 @@ const isMenuOpen = ref(false)
 const isSticky = ref(false)
 const cartStore = useCartStore();
 const push = usePush()
+const { beginProductNavigation, completeProductNavigation } = useProductNavigation();
 
 const searchQuery = ref("");
 const desktopSearchInput = ref(null);
@@ -285,6 +287,22 @@ const clearSearch = () => {
     searchResults.value = [];
     desktopSearchInput.value?.blur();
     mobileSearchInput.value?.blur();
+};
+
+const selectProductSuggestion = async (product) => {
+    beginProductNavigation(product.slug);
+    clearSearch();
+
+    try {
+        await router.push({
+            name: "ProductDetails",
+            params: { slug: product.slug },
+        });
+    } catch {
+        push.error("Unable to open this product. Please try again.");
+    } finally {
+        completeProductNavigation(product.slug);
+    }
 };
 
 function capitalizeWords(text) {

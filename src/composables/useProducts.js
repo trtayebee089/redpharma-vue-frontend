@@ -34,15 +34,24 @@ export function useProducts() {
         }
     };
 
-    const fetchProductDetails = async (slug) => {
+    const fetchProductDetails = async (slug, { signal } = {}) => {
         loading.value = true;
+        error.value = null;
+        product.value = null;
+
         try {
-            const response = await api.get(`/products/${slug}`);
+            const response = await api.get(`/products/${slug}`, { signal });
             product.value = response.data.data || response.data;
             // Return related products
             return response.data.relatedProducts || [];
         } catch (err) {
-            error.value = err.message || "Failed to fetch product details";
+            if (err.name === "CanceledError" || err.code === "ERR_CANCELED") {
+                return [];
+            }
+
+            error.value = err.response?.status === 404
+                ? "Product not found."
+                : "Unable to load product details. Please check your connection and try again.";
             return [];
         } finally {
             loading.value = false;
