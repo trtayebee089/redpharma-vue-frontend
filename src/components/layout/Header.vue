@@ -10,7 +10,7 @@
                 <!-- Desktop Search -->
                 <div class="hidden md:flex flex-1 justify-center px-4 relative">
                     <div class="relative w-full max-w-full md:max-w-xl lg:max-w-2xl">
-                        <input type="text" v-model="searchQuery" :placeholder="placeholderText"
+                        <input ref="desktopSearchInput" type="text" v-model="searchQuery" :placeholder="placeholderText"
                             :class="[langStore.langClass]" class="w-full transition bg-white search-input" />
 
                         <span v-if="searchQuery" @click="searchQuery = ''"
@@ -148,7 +148,7 @@
             <!-- Mobile Search -->
             <div class="flex-1 relative flex md:hidden">
                 <div class="relative w-full max-w-full">
-                    <input type="text" v-model="searchQuery" :placeholder="placeholderText"
+                    <input ref="mobileSearchInput" type="text" v-model="searchQuery" :placeholder="placeholderText"
                         :class="[langStore.langClass]"
                         class="w-full transition bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-700" />
                     <span v-if="searchQuery" @click="searchQuery = ''"
@@ -166,7 +166,8 @@
                     <ul>
                         <li v-for="product in filteredProducts" :key="product.id"
                             class="px-4 py-3 hover:bg-gray-50 flex justify-between items-center gap-3">
-                            <router-link :to="`/products/${product.slug}`" class="flex-1 flex flex-col gap-1">
+                            <router-link :to="`/products/${product.slug}`" class="flex-1 flex flex-col gap-1"
+                                @click="clearSearch">
                                 <p class="font-medium text-gray-800">{{ product.name }}</p>
                                 <p class="text-sm text-gray-600">
                                     {{ product.brand?.title }} <br>
@@ -270,6 +271,8 @@ const cartStore = useCartStore();
 const push = usePush()
 
 const searchQuery = ref("");
+const desktopSearchInput = ref(null);
+const mobileSearchInput = ref(null);
 const placeholders = computed(() => tm("header.searchPlaceHolders"));
 const placeholderText = ref("");
 let index = 0;
@@ -280,6 +283,8 @@ let typingInterval;
 const clearSearch = () => {
     searchQuery.value = "";
     searchResults.value = [];
+    desktopSearchInput.value?.blur();
+    mobileSearchInput.value?.blur();
 };
 
 function capitalizeWords(text) {
@@ -384,7 +389,7 @@ const addToCart = (product) => {
         quantity: 1
     });
 
-    searchQuery.value = ""
+    clearSearch();
     push.success(t("product.addedToCart", { name: product.name }))
 };
 

@@ -1,10 +1,8 @@
 <template>
-    <main class="flex min-h-[calc(100vh-96px)] items-start justify-center bg-gray-50">
-        <section class="w-full max-w-md rounded-2xl bg-white px-6 pb-6 shadow-sm md:px-8 md:pb-4">
+    <main class="flex min-h-[calc(100vh-96px)] items-start justify-center bg-white pt-12">
+        <section class="w-full max-w-md rounded-2xl bg-white px-6 pb-6 shadow-md md:px-8 md:pb-4">
             <div class="text-center">
-                <div class="mx-auto flex h-14 w-30 items-center justify-center rounded-2xl bg-green-50">
-                    <img :src="mainLogo" alt="RedPharma" class="h-9 w-full object-contain" />
-                </div>
+                <img :src="mainLogo" alt="RedPharma" class="h-9 w-full object-contain" />
                 <h1 class="mt-5 text-2xl font-bold tracking-tight text-gray-900">{{ t('auth.createAccount') }}</h1>
                 <p class="mt-2 text-sm text-gray-500">{{ t('auth.registerSubtitle') }}</p>
             </div>

@@ -1,5 +1,4 @@
 import { ref } from "vue";
-import axios from "axios";
 import api from "@/api/config";
 
 export function useServices() {
@@ -20,7 +19,7 @@ export function useServices() {
         try {
             loading.value = true;
             error.value = null;
-            const { data } = await axios.get(`/api/${endpoint}`);
+            const { data } = await api.get(`/${endpoint}`);
             targetRef.value = data;
         } catch (err) {
             error.value = err.response?.data?.message || err.message;

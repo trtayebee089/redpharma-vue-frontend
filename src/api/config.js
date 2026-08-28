@@ -1,12 +1,21 @@
 import axios from 'axios';
 
-// const base_url = "https://redpharma-api.techrajshahi.com/api/";
-const base_url = "https://redapi-staging.techrajshahi.com/api/";
-// const base_url = "http://127.0.0.1:8000/api/";
+const base_url = import.meta.env.VITE_API_BASE_URL
+    || "https://national-thyself-thigh.ngrok-free.dev/api/";
 
 const api = axios.create({
     baseURL: base_url,
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    headers: { 'Accept': 'application/json' },
+});
+
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
 });
 
 export default api;

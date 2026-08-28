@@ -1,6 +1,5 @@
 // stores/auth.js
 import { defineStore } from "pinia";
-import axios from "axios";
 import api from "@/api/config"
 import { computed } from "vue";
 
@@ -93,7 +92,6 @@ export const useAuthStore = defineStore("auth", {
             localStorage.setItem("user", JSON.stringify(user));
             localStorage.setItem("token", token);
 
-            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         },
 
         async login({ phone_number, password }) {
@@ -103,17 +101,17 @@ export const useAuthStore = defineStore("auth", {
             try {
                 const { data } = await api.post("/customer/login", { phone_number, password });
 
-                if (!data.token || !data.user) {
+                const auth = data.data || data;
+                if (!auth.token || !auth.user) {
                     throw new Error("Invalid response from server");
                 }
 
-                this.user = data.user;
-                this.token = data.token;
+                this.user = auth.user;
+                this.token = auth.token;
 
-                localStorage.setItem("user", JSON.stringify(data.user));
-                localStorage.setItem("token", data.token);
+                localStorage.setItem("user", JSON.stringify(auth.user));
+                localStorage.setItem("token", auth.token);
 
-                axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
             } catch (err) {
                 this.error = err.response?.data?.message || "Login failed";
                 throw err;
@@ -134,16 +132,21 @@ export const useAuthStore = defineStore("auth", {
                     password,
                     password_confirmation: confirmPassword
                 });
-                console.log(data)
-                this.user = data.data.user;
-                this.token = data.data.token;
+                const auth = data.data || data;
+                if (!auth.user || !auth.token) {
+                    throw new Error("Invalid response from server");
+                }
+                this.user = auth.user;
+                this.token = auth.token;
 
-                localStorage.setItem("user", JSON.stringify(data.data.user));
-                localStorage.setItem("token", data.data.token);
+                localStorage.setItem("user", JSON.stringify(auth.user));
+                localStorage.setItem("token", auth.token);
 
-                axios.defaults.headers.common["Authorization"] = `Bearer ${data.data.token}`;
             } catch (err) {
-                this.error = Object.values(err.response.data.errors).flat().join(", ");
+                const errors = err.response?.data?.errors;
+                this.error = errors
+                    ? Object.values(errors).flat().join(", ")
+                    : err.response?.data?.message || err.message || "Registration failed";
                 throw err;
             } finally {
                 this.loading = false;
@@ -154,12 +157,12 @@ export const useAuthStore = defineStore("auth", {
             if (!this.token) return;
 
             try {
-                const { data } = await axios.get("/customer/profile", {
+                const { data } = await api.get("/customer/profile", {
                     headers: { Authorization: `Bearer ${this.token}` },
                 });
 
-                this.user = data;
-                localStorage.setItem("user", JSON.stringify(data));
+                this.user = data.data?.user || data.user || data.data || data;
+                localStorage.setItem("user", JSON.stringify(this.user));
             } catch (err) {
                 console.warn("Failed to refresh user after checkout:", err);
             }
@@ -171,12 +174,9 @@ export const useAuthStore = defineStore("auth", {
 
             try {
                 const formData = new FormData();
-                formData.append("id", this.user.id);
-
                 for (const key in profileData) {
                     if (profileData[key] !== undefined && profileData[key] !== null) {
                         if (key === "avatar") {
-                            console.log(profileData[key] instanceof File)
                             if (profileData[key] instanceof File) {
                                 formData.append("avatar", profileData[key]);
                             }
@@ -271,6 +271,7 @@ export const useAuthStore = defineStore("auth", {
                     {
                         currentPassword: currentPassword,
                         newPassword: newPassword,
+                        confirmPassword: confirmPassword,
                     },
                     {
                         headers: {
@@ -306,12 +307,19 @@ export const useAuthStore = defineStore("auth", {
             }
         },
 
-        logout() {
-            this.user = null;
-            this.token = null;
-            localStorage.removeItem("user");
-            localStorage.removeItem("token");
-            delete axios.defaults.headers.common["Authorization"];
+        async logout() {
+            try {
+                if (this.token) {
+                    await api.post("/customer/logout", null, {
+                        headers: { Authorization: `Bearer ${this.token}` },
+                    });
+                }
+            } finally {
+                this.user = null;
+                this.token = null;
+                localStorage.removeItem("user");
+                localStorage.removeItem("token");
+            }
         },
     },
 });
