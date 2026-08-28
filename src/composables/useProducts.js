@@ -3,7 +3,7 @@ import { ref, onMounted } from "vue";
 import api from "@/api/config";
 import { PRODUCTS } from "@/api/endpoints"; // assume something like '/products'
 
-export function useProducts() {
+export function useProducts({ fetchOnMount = true } = {}) {
     const products = ref([]);
     const product = ref(null);
     const featured = ref([]);
@@ -71,28 +71,40 @@ export function useProducts() {
     };
 
     const fetchSearchResults = async (query) => {
+        if (controller) {
+            controller.abort();
+            controller = null;
+        }
+
         if (!query || query.trim().length < 2) {
             products.value = [];
+            loading.value = false;
             return;
         }
 
-        if (controller) controller.abort();
-        controller = new AbortController();
+        const requestController = new AbortController();
+        controller = requestController;
 
         loading.value = true;
         error.value = null;
 
         try {
             const response = await api.get(`/search/${encodeURIComponent(query)}`, {
-                signal: controller.signal,
+                signal: requestController.signal,
             });
+
+            if (controller !== requestController) return;
+
             products.value = response.data.data || [];
         } catch (err) {
             if (err.name !== "CanceledError") {
                 error.value = err.message || "Failed to fetch search results";
             }
         } finally {
-            loading.value = false;
+            if (controller === requestController) {
+                controller = null;
+                loading.value = false;
+            }
         }
     };
 
@@ -109,7 +121,9 @@ export function useProducts() {
     }
     
     onMounted(() => {
-        fetchProducts();
+        if (fetchOnMount) {
+            fetchProducts();
+        }
     });
 
     return {

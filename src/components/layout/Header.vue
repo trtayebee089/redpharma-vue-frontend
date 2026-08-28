@@ -8,12 +8,16 @@
                 </a>
 
                 <!-- Desktop Search -->
-                <div class="hidden md:flex flex-1 justify-center px-4 relative">
-                    <div class="relative w-full max-w-full md:max-w-xl lg:max-w-2xl">
+                <div class="hidden md:flex flex-1 justify-center px-4">
+                    <div ref="desktopSearchContainer" class="relative w-full max-w-full md:max-w-xl lg:max-w-2xl">
                         <input ref="desktopSearchInput" type="text" v-model="searchQuery" :placeholder="placeholderText"
-                            :class="[langStore.langClass]" class="w-full transition bg-white search-input" />
+                            :class="[langStore.langClass]" class="w-full transition bg-white search-input"
+                            role="combobox" aria-autocomplete="list" autocomplete="off"
+                            :aria-expanded="shouldShowSearchPanel" aria-controls="desktop-product-search-results"
+                            :aria-activedescendant="activeSearchIndex >= 0 ? `desktop-product-search-results-option-${activeSearchIndex}` : undefined"
+                            @focus="openSearchPanel" @keydown="handleSearchKeydown" />
 
-                        <span v-if="searchQuery" @click="searchQuery = ''"
+                        <span v-if="searchQuery" @click="clearSearch"
                             class="absolute right-12 top-0 h-full w-10 flex items-center justify-center text-gray-500 hover:text-red-500 cursor-pointer transition">
                             <i class="pi pi-times text-lg"></i>
                         </span>
@@ -21,35 +25,12 @@
                             class="absolute right-0 top-0 h-full w-12 flex items-center justify-center bg-gradient-to-bl from-green-400 to-green-600 text-white rounded-r-lg cursor-pointer">
                             <i class="pi pi-search text-lg"></i>
                         </span>
-                    </div>
 
-                    <!-- Live Search Results -->
-                    <div v-if="searchQuery && filteredProducts.length"
-                        class="absolute top-full mt-1 bg-white border border-gray-200 rounded shadow-lg z-50 max-h-[60vh] overflow-y-auto">
-                        <ul>
-                            <li v-for="product in filteredProducts" :key="product.id"
-                                class="px-4 py-3 hover:bg-red-100 flex justify-between items-center gap-3">
-                                <router-link :to="`/products/${product.slug}`" class="flex-1 flex flex-col gap-1"
-                                    @click.prevent="selectProductSuggestion(product)">
-                                    <p class="font-medium text-gray-800">{{ capitalizeWords(product.name) }}</p>
-                                    <p class="text-sm text-gray-600">
-                                        Brand: {{ product.brand.title }} | Category:
-                                        {{ product.category?.name }}
-                                    </p>
-                                    <p class="text-md font-bold text-green-600 m-0">
-                                        {{ product.promotion_price ? product.promotion_price.toFixed(2) :
-                                            product.price.toFixed(2) }} Tk
-                                    </p>
-                                </router-link>
-
-                                <button @click="addToCart(product)"
-                                    class="relative inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white font-semibold text-sm rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out hover:bg-red-700 hover:shadow-lg hover:border-red-800">
-                                    Add to Cart
-                                    <span
-                                        class="absolute inset-0 bg-white opacity-10 rounded-lg scale-0 hover:scale-100 transition-transform duration-300"></span>
-                                </button>
-                            </li>
-                        </ul>
+                        <ProductSearchDropdown v-if="shouldShowSearchPanel && isDesktopSearch"
+                            id="desktop-product-search-results" :products="filteredProducts" :query="searchQuery"
+                            :loading="searchRequestPending" :active-index="activeSearchIndex"
+                            @select="selectProductSuggestion" @add="addToCart"
+                            @active-change="activeSearchIndex = $event" />
                     </div>
                 </div>
 
@@ -147,11 +128,15 @@
 
             <!-- Mobile Search -->
             <div class="flex-1 relative flex md:hidden">
-                <div class="relative w-full max-w-full">
+                <div ref="mobileSearchContainer" class="relative w-full max-w-full">
                     <input ref="mobileSearchInput" type="text" v-model="searchQuery" :placeholder="placeholderText"
                         :class="[langStore.langClass]"
-                        class="w-full transition bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-700" />
-                    <span v-if="searchQuery" @click="searchQuery = ''"
+                        class="w-full transition bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-700"
+                        role="combobox" aria-autocomplete="list" autocomplete="off"
+                        :aria-expanded="shouldShowSearchPanel" aria-controls="mobile-product-search-results"
+                        :aria-activedescendant="activeSearchIndex >= 0 ? `mobile-product-search-results-option-${activeSearchIndex}` : undefined"
+                        @focus="openSearchPanel" @keydown="handleSearchKeydown" />
+                    <span v-if="searchQuery" @click="clearSearch"
                         class="absolute right-12 top-0 h-full w-10 flex items-center justify-center text-gray-500 hover:text-red-500 cursor-pointer transition">
                         <i class="pi pi-times text-lg"></i>
                     </span>
@@ -159,33 +144,12 @@
                         class="absolute right-0 top-0 h-full w-12 flex items-center justify-center bg-gradient-to-bl from-green-400 to-green-600 text-white rounded-r-lg cursor-pointer">
                         <i class="pi pi-search text-lg"></i>
                     </span>
-                </div>
 
-                <div v-if="searchQuery && filteredProducts.length"
-                    class="absolute top-full mt-1 w-full bg-white border border-gray-200 rounded shadow-lg z-50 max-h-[60vh] overflow-y-auto">
-                    <ul>
-                        <li v-for="product in filteredProducts" :key="product.id"
-                            class="px-4 py-3 hover:bg-gray-50 flex justify-between items-center gap-3">
-                            <router-link :to="`/products/${product.slug}`" class="flex-1 flex flex-col gap-1"
-                                @click.prevent="selectProductSuggestion(product)">
-                                <p class="font-medium text-gray-800">{{ product.name }}</p>
-                                <p class="text-sm text-gray-600">
-                                    {{ product.brand?.title }} <br>
-                                    {{ product.category?.name }}
-                                </p>
-                                <p class="text-md font-bold text-green-600 m-0">
-                                    {{ product.promotion_price ? product.promotion_price.toFixed(2) :
-                                        product.price.toFixed(2) }} Tk
-                                </p>
-                            </router-link>
-                            <button @click="addToCart(product)"
-                                class="relative inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white font-semibold text-sm rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out hover:bg-red-700 hover:shadow-lg">
-                                Add to Cart
-                                <span
-                                    class="absolute inset-0 bg-white opacity-10 rounded-lg scale-0 hover:scale-100 transition-transform duration-300"></span>
-                            </button>
-                        </li>
-                    </ul>
+                    <ProductSearchDropdown v-if="shouldShowSearchPanel && !isDesktopSearch"
+                        id="mobile-product-search-results" :products="filteredProducts" :query="searchQuery"
+                        :loading="searchRequestPending" :active-index="activeSearchIndex"
+                        @select="selectProductSuggestion" @add="addToCart"
+                        @active-change="activeSearchIndex = $event" />
                 </div>
 
             </div>
@@ -225,7 +189,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed, reactive, watch } from 'vue'
+import { ref, onMounted, onUnmounted, computed, nextTick, watch } from 'vue'
 import mainLogo from '@/assets/logo.png';
 import { products } from "@/data/products.js";
 import { categories } from "@/data/categories.js";
@@ -238,6 +202,7 @@ import { useLanguageStore } from "@/stores/language";
 import RegistrationModal from "@/components/auth/RegistrationModal.vue";
 import { useProducts } from "@/composables/useProducts";
 import { useProductNavigation } from "@/composables/useProductNavigation";
+import ProductSearchDropdown from "@/components/products/ProductSearchDropdown.vue";
 import { usePush } from "notivue"
 
 import usFlag from '@/assets/icons/us-flag.png';
@@ -258,7 +223,7 @@ const route = useRoute()
 const showLoginModal = ref(false);
 const authStore = useAuthStore();
 const langStore = useLanguageStore();
-const { products: searchResults, fetchSearchResults, loading } = useProducts();
+const { products: searchResults, fetchSearchResults } = useProducts({ fetchOnMount: false });
 
 const currentLanguage = computed(() => langStore.lang.toUpperCase());
 const currentFlag = computed(() => flags[langStore.lang]);
@@ -275,18 +240,87 @@ const { beginProductNavigation, completeProductNavigation } = useProductNavigati
 const searchQuery = ref("");
 const desktopSearchInput = ref(null);
 const mobileSearchInput = ref(null);
+const desktopSearchContainer = ref(null);
+const mobileSearchContainer = ref(null);
+const searchPanelOpen = ref(false);
+const searchRequestPending = ref(false);
+const activeSearchIndex = ref(-1);
+const isDesktopSearch = ref(false);
 const placeholders = computed(() => tm("header.searchPlaceHolders"));
 const placeholderText = ref("");
 let index = 0;
 let charIndex = 0;
 let isDeleting = false;
 let typingInterval;
+let searchMediaQuery;
 
 const clearSearch = () => {
+    clearTimeout(debounceTimeout);
     searchQuery.value = "";
     searchResults.value = [];
+    searchPanelOpen.value = false;
+    searchRequestPending.value = false;
+    activeSearchIndex.value = -1;
     desktopSearchInput.value?.blur();
     mobileSearchInput.value?.blur();
+};
+
+const openSearchPanel = () => {
+    if (searchQuery.value.trim().length >= 2) {
+        searchPanelOpen.value = true;
+    }
+};
+
+const closeSearchPanel = () => {
+    searchPanelOpen.value = false;
+    activeSearchIndex.value = -1;
+};
+
+const handleSearchKeydown = async (event) => {
+    if (event.key === "Escape") {
+        if (searchPanelOpen.value) {
+            event.preventDefault();
+            closeSearchPanel();
+        }
+        return;
+    }
+
+    if (!["ArrowDown", "ArrowUp", "Enter"].includes(event.key)) return;
+
+    if (event.key === "Enter") {
+        if (shouldShowSearchPanel.value && activeSearchIndex.value >= 0) {
+            event.preventDefault();
+            await selectProductSuggestion(filteredProducts.value[activeSearchIndex.value]);
+        }
+        return;
+    }
+
+    if (!filteredProducts.value.length || searchRequestPending.value) return;
+
+    event.preventDefault();
+    searchPanelOpen.value = true;
+
+    const direction = event.key === "ArrowDown" ? 1 : -1;
+    const totalResults = filteredProducts.value.length;
+    activeSearchIndex.value = activeSearchIndex.value < 0
+        ? (direction > 0 ? 0 : totalResults - 1)
+        : (activeSearchIndex.value + direction + totalResults) % totalResults;
+
+    await nextTick();
+};
+
+const handleSearchOutsideClick = (event) => {
+    const clickedInsideDesktop = desktopSearchContainer.value?.contains(event.target);
+    const clickedInsideMobile = mobileSearchContainer.value?.contains(event.target);
+
+    if (!clickedInsideDesktop && !clickedInsideMobile) {
+        closeSearchPanel();
+    }
+};
+
+const handleSearchViewportChange = (event) => {
+    isDesktopSearch.value = event.matches;
+    activeSearchIndex.value = -1;
 };
 
 const selectProductSuggestion = async (product) => {
@@ -304,15 +338,6 @@ const selectProductSuggestion = async (product) => {
         completeProductNavigation(product.slug);
     }
 };
-
-function capitalizeWords(text) {
-    if (!text) return '';
-    return text
-        .toLowerCase()
-        .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-}
 
 function openRegister() {
     showLoginModal.value = false;
@@ -387,8 +412,26 @@ let debounceTimeout = null;
 
 watch(searchQuery, (newQuery) => {
     clearTimeout(debounceTimeout);
-    debounceTimeout = setTimeout(() => {
-        fetchSearchResults(newQuery);
+    activeSearchIndex.value = -1;
+
+    const normalizedQuery = newQuery.trim();
+
+    if (normalizedQuery.length < 2) {
+        searchPanelOpen.value = false;
+        searchRequestPending.value = false;
+        fetchSearchResults("");
+        return;
+    }
+
+    searchPanelOpen.value = true;
+    searchRequestPending.value = true;
+
+    debounceTimeout = setTimeout(async () => {
+        await fetchSearchResults(normalizedQuery);
+
+        if (searchQuery.value.trim() === normalizedQuery) {
+            searchRequestPending.value = false;
+        }
     }, 400);
 });
 
@@ -400,6 +443,9 @@ watch(
 );
 
 const filteredProducts = computed(() => searchResults.value);
+const shouldShowSearchPanel = computed(
+    () => searchPanelOpen.value && searchQuery.value.trim().length >= 2,
+);
 
 const addToCart = (product) => {
     cartStore.addToCart({
@@ -413,11 +459,18 @@ const addToCart = (product) => {
 
 onMounted(() => {
     window.addEventListener("scroll", handleScroll);
+    document.addEventListener("pointerdown", handleSearchOutsideClick);
+    searchMediaQuery = window.matchMedia("(min-width: 768px)");
+    isDesktopSearch.value = searchMediaQuery.matches;
+    searchMediaQuery.addEventListener("change", handleSearchViewportChange);
     typingInterval = setInterval(typeEffect, 100);
 });
 
 onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll)
+    document.removeEventListener("pointerdown", handleSearchOutsideClick);
+    searchMediaQuery?.removeEventListener("change", handleSearchViewportChange);
+    clearTimeout(debounceTimeout);
     clearInterval(typingInterval);
 })
 </script>
