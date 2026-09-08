@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const base_url = import.meta.env.VITE_API_BASE_URL
-    || "https://national-thyself-thigh.ngrok-free.dev/api/";
+    || "https://api.redpharmabd.com/api/";
 
 const api = axios.create({
     baseURL: base_url,
