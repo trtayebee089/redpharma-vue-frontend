@@ -20,8 +20,8 @@ const notivue = createNotivue() // now works
 
 app.use(PrimeVue);
 app.use(ToastService);
-app.use(router)
 app.use(createPinia())
+app.use(router)
 app.use(i18n)
 app.use(notivue)
 app.component('Toast', Toast);

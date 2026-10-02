@@ -9,7 +9,7 @@ defineProps({ initial: Boolean, checking: Boolean });
             <img :src="logo" alt="RedPharma" class="availability-logo" />
             <div class="availability-symbol" aria-hidden="true">+</div>
             <h1>{{ initial ? 'Connecting to RedPharma' : "We're temporarily unavailable" }}</h1>
-            <p>{{ initial ? 'Please wait a moment while we connect you.' : 'Our services are currently unavailable. Please try again shortly.' }}</p>
+            <p>{{ initial ? 'Please wait a moment while we connect you.' : "Our services are currently unavailable. We're working to restore them. Please try again shortly." }}</p>
             <div class="availability-status">
                 <span class="availability-dot" :class="{ checking }" aria-hidden="true"></span>
                 {{ checking ? 'Checking availability…' : 'We’ll reconnect you automatically.' }}

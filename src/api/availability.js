@@ -33,16 +33,17 @@ export function createApiAvailability(api) {
         clearTimeout(timer);
         // HEAD at the configured API root avoids downloading catalog data.
         // Even 404/405 confirms connectivity. Use the existing client and adapter.
-        pending = api.request({
+        pending = Promise.resolve().then(() => api.request({
             method: 'head', url: '', timeout: HEALTH_TIMEOUT,
             availabilityProbe: true, validateStatus: () => true,
             headers: { 'Content-Type': undefined, Authorization: undefined },
-        }).then(() => {
+        })).then(() => {
             status.value = 'available';
         }).catch((error) => {
             if (error.response) status.value = 'available';
-            else if (isConnectivityError(error)) status.value = 'unavailable';
-            else if (status.value === 'checking') status.value = 'available';
+            // A probe without an HTTP response cannot establish connectivity.
+            // Configuration/setup failures also resolve to a visible page.
+            else status.value = 'unavailable';
         }).finally(() => {
             pending = undefined;
             checking.value = false;

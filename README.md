@@ -8,6 +8,8 @@ Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://
 Set the existing `VITE_API_BASE_URL` build environment variable to
 `https://api.redpharmabd.com/api`. Vite embeds this value at build time; deployments
 must supply it before running `npm run build`. The local `.env` is Git-ignored.
+Missing or malformed values resolve to the maintenance page without throwing
+during app initialization or issuing API requests to the frontend origin.
 
 The shared Axios client checks its API root with HEAD (5-second timeout) once at
 startup. Any HTTP response, including 401/403/404/405/422/5xx, proves reachability.
@@ -26,4 +28,14 @@ network failure in browser JavaScript.
 Run `node --test tests/availability.test.js` for HTTP-error, connectivity,
 interceptor, request-sharing, and scheduled recovery tests, and `npm run build`
 for production compilation.
+
+For rendered browser verification, start Vite and run
+`node tests/availability.browser.mjs <playwright-package-path> http://127.0.0.1:5174`.
+The test simulates refusal, DNS/network failure, timeout, HTTP error responses,
+31 seconds of sustained downtime, automatic recovery at `/about`, and invalid
+configuration. It checks mobile overflow and uncaught browser errors. Playwright
+can be supplied from an existing runtime; no production dependency is required.
+To verify the compiled bundle, run `node tests/preview-server.mjs`, set
+`TEST_PRODUCTION=1`, and target `http://127.0.0.1:5181`; configuration injection
+checks require the development server and are skipped for compiled assets.
 

@@ -3,6 +3,23 @@ import assert from 'node:assert/strict';
 import http from 'node:http';
 import axios from 'axios';
 import { createApiAvailability, isConnectivityError, HEALTH_TIMEOUT } from '../src/api/availability.js';
+import { normalizeApiBaseUrl } from '../src/api/baseUrl.js';
+
+test('missing and malformed configuration cannot crash initialization', async () => {
+    for (const value of [undefined, '', '  ', 'bad-url', '/api', 'ftp://example.test', 'https://example.test/api?x=1']) {
+        assert.equal(normalizeApiBaseUrl(value), undefined);
+    }
+    assert.equal(normalizeApiBaseUrl(' https://example.test/api/// '), 'https://example.test/api/');
+    const health = createApiAvailability({
+        request() { throw new Error('Synchronous setup failure'); },
+        interceptors: { response: { use() { return 0; }, eject() {} } },
+    });
+    try {
+        await health.check();
+        assert.equal(health.status.value, 'unavailable');
+        assert.equal(health.checking.value, false);
+    } finally { health.stop(); }
+});
 
 test('HTTP application errors are reachable and probes are shared', async () => {
     let calls = 0;
@@ -16,13 +33,13 @@ test('HTTP application errors are reachable and probes are shared', async () => 
     } });
     const health = createApiAvailability(api);
     try {
-        for (const code of [200, 401, 403, 404, 405, 422, 500, 503]) {
+        for (const code of [200, 201, 400, 401, 403, 404, 405, 422, 429, 500, 503]) {
             responseStatus = code;
             await Promise.all([health.check(), health.check(), health.check()]);
             assert.equal(health.status.value, 'available');
             assert.equal(isConnectivityError({ response: { status: code }, code: 'ERR_NETWORK' }), false);
         }
-        assert.equal(calls, 8);
+        assert.equal(calls, 11);
         assert.equal(isConnectivityError(new axios.CanceledError()), false);
         for (const code of ['ERR_NETWORK', 'ECONNABORTED', 'ETIMEDOUT', 'ENOTFOUND', 'ECONNREFUSED']) {
             assert.equal(isConnectivityError({ code }), true);
