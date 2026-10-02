@@ -10,6 +10,14 @@ import { watch, ref, onMounted, onUnmounted } from "vue";
 import MobileFooter from './components/layout/MobileFooter.vue'
 import useTawk from "./composables/useTawk";
 import { useRoute } from 'vue-router'
+import api from './api/config';
+import { createApiAvailability } from './api/availability';
+import ServiceUnavailable from './components/common/ServiceUnavailable.vue';
+
+const availability = createApiAvailability(api);
+const { status, checking } = availability;
+onMounted(() => availability.check());
+onUnmounted(() => availability.stop());
 
 const { locale } = useI18n();
 const langStore = useLanguageStore();
@@ -41,7 +49,8 @@ useTawk();
 </script>
 
 <template>
-    <div class="min-h-screen flex flex-col bg-white" :class="langStore.langClass">
+    <ServiceUnavailable v-if="status !== 'available'" :initial="status === 'checking'" :checking="checking" />
+    <div v-else class="min-h-screen flex flex-col bg-white" :class="langStore.langClass">
         <Header />
 
         <div class="flex flex-1 relative">
@@ -67,7 +76,7 @@ useTawk();
         <!-- <FloatingChat /> -->
     </div>
 
-    <Notivue v-slot="item">
+    <Notivue v-if="status === 'available'" v-slot="item">
         <Notification :item="item" />
     </Notivue>
 </template>
