@@ -1,6 +1,7 @@
 import { ref, onMounted } from "vue";
 import axios from "@/api/config"; // your axios instance
 import { CATEGORIES } from "@/api/endpoints.js";
+import { visibleCategories } from "@/utils/categoryNavigation.js";
 
 const CACHE_KEY = "categories_cache";
 const CACHE_TTL = 1000 * 60 * 60; // 1 hour
@@ -19,7 +20,7 @@ export function useCategories() {
         if (!force) {
             const cached = getCachedCategories();
             if (cached) {
-                categories.value = cached;
+                categories.value = visibleCategories(cached);
                 return;
             }
         }
@@ -28,7 +29,7 @@ export function useCategories() {
         loading.value = true;
         try {
             const res = await axios.get(CATEGORIES);
-            categories.value = res.data.data;
+            categories.value = visibleCategories(res.data.data);
 
             // 3️⃣ Save to cache
             setCachedCategories(categories.value);
@@ -44,10 +45,17 @@ export function useCategories() {
         const cached = localStorage.getItem(CACHE_KEY);
         if (!cached) return null;
 
-        const parsed = JSON.parse(cached);
+        let parsed;
+        try {
+            parsed = JSON.parse(cached);
+        } catch {
+            localStorage.removeItem(CACHE_KEY);
+            return null;
+        }
 
         // Check expiry
-        if (Date.now() - parsed.timestamp > CACHE_TTL) {
+        if (!parsed || !Array.isArray(parsed.data) || !Number.isFinite(parsed.timestamp)
+            || Date.now() - parsed.timestamp > CACHE_TTL) {
             localStorage.removeItem(CACHE_KEY);
             return null;
         }

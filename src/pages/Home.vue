@@ -43,11 +43,11 @@
             <!-- Loaded Category -->
             <router-link
               v-if="!loading"
-              :to="`/category/${category.slug}`"
+              :to="category.navigationPath"
               class="group block bg-white rounded-xl overflow-hidden hover:shadow-lg transition border border-gray-200"
             >
               <div class="w-full aspect-square bg-gray-50">
-                <img
+                <CategoryImage
                   :src="category.image"
                   alt=""
                   class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -321,7 +321,7 @@
       >
         <div class="flex items-center gap-3 mb-5">
           <div class="flex items-center gap-3">
-            <img
+            <CategoryImage
               v-if="item.category.image"
               :src="item.category.image"
               :alt="item.category.name"
@@ -342,7 +342,7 @@
             </h2>
           </div>
           <router-link
-            :to="`/category/${item.category.slug}`"
+            :to="item.category.navigationPath"
             class="ml-auto text-green-800 font-medium hover:underline"
           >
             {{ $t("home.view_all") }}
@@ -393,6 +393,7 @@ import { useI18n } from "vue-i18n";
 import { useLanguageStore } from "@/stores/language";
 import { computed, onMounted, reactive, ref } from "vue";
 import { useCategories } from "@/composables/useCategories.js";
+import CategoryImage from "@/components/common/CategoryImage.vue";
 import { useProducts } from "@/composables/useProducts";
 import slider1 from "@/assets/images/slide-1.jpg";
 import slider2 from "@/assets/images/slide-2.jpg";

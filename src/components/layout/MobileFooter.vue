@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useCategories } from "@/composables/useCategories.js";
+import CategoryImage from "@/components/common/CategoryImage.vue";
 const { categories, loading, error } = useCategories();
 import { useRoute } from 'vue-router';
 import { useCartStore } from "@/stores/cart";
@@ -103,14 +104,14 @@ watch(
                 </div>
                 <ul class="space-y-2">
                     <li v-for="category in categories" :key="category.id">
-                        <router-link :to="`/category/${category.slug}`"
+                        <router-link :to="category.navigationPath"
                             @click="isSidebarOpen = false"
                             class="flex items-center justify-between px-4 py-3 text-gray-700 hover:bg-red-200 transition-colors hover:font-bold hover:text-red-950"
                             :class="{
                                 'bg-red-200 font-bold text-red-950': route.params.slug === category.slug
                             }">
                             <div class="flex items-center">
-                                <img v-if="category.image" :src="category.image" alt="" class="w-6 h-6 mr-3"
+                                <CategoryImage v-if="category.image" :src="category.image" alt="" class="w-6 h-6 mr-3"
                                     loading="lazy" />
                                 <span>{{ category.name }}</span>
                             </div>

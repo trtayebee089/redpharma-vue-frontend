@@ -9,10 +9,10 @@ grid-cols-1
 [@media(min-width:375px)]:grid-cols-2
 [@media(min-width:638px)]:grid-cols-3
 [@media(min-width:1140px)]:grid-cols-4">
-            <router-link v-for="category in categories" :key="category.id" :to="`/category/${category.slug}`"
+            <router-link v-for="category in categories" :key="category.id" :to="category.navigationPath"
                 class="group relative block aspect-square rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300">
                 <!-- Image -->
-                <img :src="category.image" :alt="category.name"
+                <CategoryImage :src="category.image" :alt="category.name"
                     class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
 
                 <div v-if="category.total_products > 0"
@@ -25,6 +25,7 @@ grid-cols-1
 </template>
 
 <script setup>
+import CategoryImage from "@/components/common/CategoryImage.vue";
 import { useCategories } from "@/composables/useCategories";
 import { useRoute } from "vue-router";
 
