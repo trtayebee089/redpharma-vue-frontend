@@ -379,7 +379,7 @@ import ProductGridItem from "../../components/products/ProductGridItem.vue";
 import ProductDetailSkeleton from "@/components/products/ProductDetailSkeleton.vue";
 import bdtIcon from "@/assets/images/bdt-icon.png";
 
-const BASE_URL = "http://127.0.0.1:8000";
+const BASE_URL = new URL(import.meta.env.VITE_API_BASE_URL || "https://pos.redpharmabd.com/api").origin;
 const route = useRoute();
 const { product, error: productError, fetchProductDetails } = useProducts();
 const { isProductNavigationPending } = useProductNavigation();
