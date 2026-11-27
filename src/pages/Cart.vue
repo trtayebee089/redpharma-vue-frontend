@@ -18,155 +18,115 @@
                     <router-link to="/categories">{{ $t('cart.browseCategories') }}</router-link>
                 </div>
 
-                <!-- Desktop Cart Table -->
-                <div v-else class="hidden md:block">
-                    <div class="cart-table overflow-x-auto">
-                        <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden border-collapse">
-                            <thead class="bg-green-200">
-                                <tr>
-                                    <th scope="col" class="text-left">{{ $t('cart.table.thead.product') }}</th>
-                                    <th scope="col">{{ $t('cart.table.thead.price') }}</th>
-                                    <th scope="col">{{ $t('cart.table.thead.qty') }}</th>
-                                    <th scope="col">{{ $t('cart.table.thead.total') }}</th>
-                                    <th scope="col">{{ $t('cart.table.thead.action') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="item in cartItems" :key="item.id" class="last:border-b hover:bg-gray-50">
-                                    <!-- Product -->
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center gap-3">
-                                            <img v-if="getImageUrl(item)" :src="getImageUrl(item).url"
-                                                @error="retryProductImage($event, getImageUrl(item).fallbackUrl)"
-                                                alt="" class="cart-product-image" />
-                                            <span class="font-medium text-gray-800">{{ item.name }}</span>
+                <div v-else class="cart-table hidden md:block">
+                    <table :aria-label="$t('cart.title')">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="cart-product-column">{{ $t('cart.table.thead.product') }}</th>
+                                <th scope="col" class="cart-money-column">{{ $t('cart.table.thead.price') }}</th>
+                                <th scope="col" class="cart-quantity-column">{{ $t('cart.table.thead.qty') }}</th>
+                                <th scope="col" class="cart-money-column">{{ $t('cart.table.thead.total') }}</th>
+                                <th scope="col" class="cart-action-column">
+                                    <span class="sr-only">{{ $t('cart.table.thead.action') }}</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in cartItems" :key="item.id">
+                                <th scope="row" class="cart-product-column">
+                                    <div class="cart-product">
+                                        <img v-if="getImageUrl(item)" :src="getImageUrl(item).url"
+                                            @error="retryProductImage($event, getImageUrl(item).fallbackUrl)"
+                                            alt="" class="cart-product-image" />
+                                        <div>
+                                            <p class="cart-product-name">{{ item.name }}</p>
+                                            <p v-if="item.brand?.title" class="cart-product-brand">{{ item.brand.title }}</p>
                                         </div>
-                                    </td>
-
-                                    <!-- Price -->
-                                    <td class="px-4 py-3 text-center text-gray-700">
-                                        {{ (Number(item.offerPrice ?? item.price) || 0).toFixed(2) }} Tk
-                                    </td>
-
-                                    <!-- Quantity -->
-                                    <td class="px-4 py-3 text-center">
-                                        <div
-                                            class="inline-flex items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-sm">
-                                            <!-- Decrease -->
-                                            <button @click="updateQty(item, item.quantity - 1)" :disabled="item.quantity <= 1"
-                                                :aria-label="$t('cart.decreaseQuantity')"
-                                                class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
-                                                <i class="pi pi-minus"></i>
-                                            </button>
-
-                                            <!-- Quantity Input -->
-                                            <input
-                                                type="number"
-                                                v-model.number="item.quantity"
-                                                :aria-label="$t('cart.table.thead.qty')"
-                                                @input="handleManualInput(item)"
-                                                min="1"
-                                                :max="item.stock_qty ?? undefined"
-                                                class="w-16 text-center text-gray-800 font-medium bg-white border-l border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all rounded-none" />
-
-                                            <!-- Increase -->
-                                            <button @click="updateQty(item, item.quantity + 1)"
-                                                :aria-label="$t('cart.increaseQuantity')"
-                                                :disabled="item.stock_qty != null && item.quantity >= item.stock_qty"
-                                                class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-green-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200"
-                                                :title="item.stock_qty != null && item.quantity >= item.stock_qty ? $t('cart.maximumStock') : ''">
-                                                <i class="pi pi-plus"></i>
-                                            </button>
-                                        </div>
-                                        <!-- Stock badge -->
-                                        <p v-if="item.stock_qty != null" class="text-xs text-gray-400 mt-1">
-                                            {{ $t('cart.available', { count: n(Number(item.stock_qty)) }) }}
-                                        </p>
-                                    </td>
-
-                                    <!-- Amount -->
-                                    <td class="px-4 py-3 text-center text-gray-700">
-                                        {{ ((Number(item.offerPrice ?? item.price) || 0) * (Number(item.quantity) ||
-                                            1)).toFixed(2) }} Tk
-                                    </td>
-
-                                    <!-- Action -->
-                                    <td class="px-4 py-3 text-center">
-                                        <button @click="removeItem(item)" :aria-label="$t('cart.removeProduct', { name: item.name })"
-                                            class="text-red-500 hover:text-red-700 font-semibold bg-red-50 px-2 py-1 rounded border border-red-200 hover:bg-red-300 transition">
-                                            ✕
+                                    </div>
+                                </th>
+                                <td class="cart-money-column">{{ itemUnitPrice(item).toFixed(2) }} Tk</td>
+                                <td class="cart-quantity-column">
+                                    <div class="cart-quantity">
+                                        <button type="button" @click="updateQty(item, item.quantity - 1)" :disabled="item.quantity <= 1"
+                                            :aria-label="$t('cart.decreaseQuantity')">
+                                            <i class="pi pi-minus" aria-hidden="true"></i>
                                         </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                                        <input type="number" v-model.number="item.quantity" @input="handleManualInput(item)"
+                                            :aria-label="$t('cart.table.thead.qty')" min="1" :max="item.stock_qty ?? undefined" />
+                                        <button type="button" @click="updateQty(item, item.quantity + 1)"
+                                            :aria-label="$t('cart.increaseQuantity')"
+                                            :disabled="item.stock_qty != null && item.quantity >= item.stock_qty"
+                                            :title="item.stock_qty != null && item.quantity >= item.stock_qty ? $t('cart.maximumStock') : ''">
+                                            <i class="pi pi-plus" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <p v-if="item.stock_qty != null" class="cart-stock">
+                                        {{ $t('cart.available', { count: n(Number(item.stock_qty)) }) }}
+                                    </p>
+                                </td>
+                                <td class="cart-money-column cart-line-total">{{ itemLineTotal(item).toFixed(2) }} Tk</td>
+                                <td class="cart-action-column">
+                                    <button type="button" class="cart-remove" @click="removeItem(item)"
+                                        :aria-label="$t('cart.removeProduct', { name: item.name })">
+                                        <i class="pi pi-trash" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
-                <!-- Mobile Cart Cards -->
-                <div v-if="cartItems.length" class="md:hidden">
-                    <div class="grid gap-3">
-                        <div v-for="item in cartItems" :key="item.id"
-                            class="cart-item-card">
-                            <div class="flex items-start gap-3">
+                <ul v-if="cartItems.length" class="cart-item-list md:hidden">
+                    <li v-for="item in cartItems" :key="item.id" class="cart-item-card">
+                        <div class="cart-item-header">
+                            <div class="cart-product">
                                 <img v-if="getImageUrl(item)" :src="getImageUrl(item).url"
                                     @error="retryProductImage($event, getImageUrl(item).fallbackUrl)"
                                     alt="" class="cart-product-image" />
-                                <div class="min-w-0 flex-1">
-                                    <h3 class="font-medium text-gray-800">{{ item.name }}</h3>
-                                    <p v-if="item.brand?.title" class="text-sm text-gray-600 mt-1">{{ item.brand.title }}</p>
-                                    <p class="text-sm text-gray-600 mt-1">
-                                        {{ (Number(item.offerPrice ?? item.price) || 0).toFixed(2) }} Tk
+                                <div>
+                                    <h2 class="cart-product-name">{{ item.name }}</h2>
+                                    <p v-if="item.brand?.title" class="cart-product-brand">{{ item.brand.title }}</p>
+                                    <p class="cart-unit-price">
+                                        <span>{{ $t('cart.table.thead.price') }}</span>
+                                        <strong>{{ itemUnitPrice(item).toFixed(2) }} Tk</strong>
                                     </p>
                                 </div>
-                                <button @click="removeItem(item)" :aria-label="$t('cart.removeProduct', { name: item.name })"
-                                    class="cart-remove-mobile text-red-500 hover:text-red-700 font-semibold text-lg">
-                                    ✕
-                                </button>
                             </div>
 
-                            <!-- Quantity Controls -->
-                            <div class="cart-item-controls flex items-center justify-between gap-2 mt-3">
-                                <div
-                                    class="inline-flex items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-sm">
-                                    <!-- Decrease -->
-                                    <button @click="updateQty(item, item.quantity - 1)" :disabled="item.quantity <= 1"
-                                        :aria-label="$t('cart.decreaseQuantity')"
-                                        class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200">
-                                        <i class="pi pi-minus"></i>
+                            <button type="button" class="cart-remove" @click="removeItem(item)"
+                                :aria-label="$t('cart.removeProduct', { name: item.name })">
+                                <i class="pi pi-trash" aria-hidden="true"></i>
+                            </button>
+                        </div>
+
+                        <div class="cart-item-controls">
+                            <div>
+                                <p class="cart-card-label">{{ $t('cart.table.thead.qty') }}</p>
+                                <div class="cart-quantity">
+                                    <button type="button" @click="updateQty(item, item.quantity - 1)" :disabled="item.quantity <= 1"
+                                        :aria-label="$t('cart.decreaseQuantity')">
+                                        <i class="pi pi-minus" aria-hidden="true"></i>
                                     </button>
-
-                                    <!-- Quantity Input -->
-                                    <input
-                                        type="number"
-                                        v-model.number="item.quantity"
-                                        :aria-label="$t('cart.table.thead.qty')"
-                                        @input="handleManualInput(item)"
-                                        min="1"
-                                        :max="item.stock_qty ?? undefined"
-                                        class="w-16 text-center text-gray-800 font-medium bg-white border-l border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all rounded-none" />
-
-                                    <!-- Increase -->
-                                    <button @click="updateQty(item, item.quantity + 1)"
+                                    <input type="number" v-model.number="item.quantity" @input="handleManualInput(item)"
+                                        :aria-label="$t('cart.table.thead.qty')" min="1" :max="item.stock_qty ?? undefined" />
+                                    <button type="button" @click="updateQty(item, item.quantity + 1)"
                                         :aria-label="$t('cart.increaseQuantity')"
                                         :disabled="item.stock_qty != null && item.quantity >= item.stock_qty"
-                                        class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-green-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200"
                                         :title="item.stock_qty != null && item.quantity >= item.stock_qty ? $t('cart.maximumStock') : ''">
-                                        <i class="pi pi-plus"></i>
+                                        <i class="pi pi-plus" aria-hidden="true"></i>
                                     </button>
                                 </div>
-                                <div class="text-right">
-                                    <span class="text-gray-700 font-medium">
-                                        {{ ((Number(item.offerPrice ?? item.price) || 0) * (Number(item.quantity) || 1)).toFixed(2) }} Tk
-                                    </span>
-                                    <p v-if="item.stock_qty != null" class="text-xs text-gray-400 mt-0.5">
-                                        {{ $t('cart.available', { count: n(Number(item.stock_qty)) }) }}
-                                    </p>
-                                </div>
+                                <p v-if="item.stock_qty != null" class="cart-stock">
+                                    {{ $t('cart.available', { count: n(Number(item.stock_qty)) }) }}
+                                </p>
+                            </div>
+                            <div class="cart-item-total">
+                                <p class="cart-card-label">{{ $t('cart.table.thead.total') }}</p>
+                                <p class="cart-line-total">{{ itemLineTotal(item).toFixed(2) }} Tk</p>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </li>
+                </ul>
             </div>
 
             <!-- Right Column: Summary & Checkout Form -->
@@ -360,6 +320,8 @@ function onDivisionChange() {
 }
 
 const cartItems = computed(() => cartStore.items);
+const itemUnitPrice = (item) => Number(item.offerPrice ?? item.price) || 0;
+const itemLineTotal = (item) => itemUnitPrice(item) * (Number(item.quantity) || 1);
 
 // ─── Quantity controls with stock-cap enforcement ───────────────────────────
 
@@ -564,48 +526,261 @@ onMounted(async () => {
     box-shadow: 0 2px 8px rgb(20 61 42 / 4%);
 }
 
-.cart-table th {
-    padding: 12px;
-    background: #f1f8f3;
-    color: #244e3a;
+.cart-table {
+    overflow-x: auto;
+}
+
+.cart-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .875rem;
+}
+
+.cart-table thead {
+    background: #1d4d37;
+    color: #fff;
+}
+
+.cart-table thead th {
+    padding: 12px 10px;
     font-size: .8125rem;
+    font-weight: 650;
     white-space: nowrap;
 }
 
-.cart-table td {
-    border-top: 1px solid #e9efeb;
+.cart-table tbody :is(th, td) {
+    padding: 14px 10px;
+    border-top: 1px solid #e3ebe5;
+    vertical-align: middle;
 }
 
-.cart-table :is(th, td):not(:first-child) {
+.cart-table tbody tr:nth-child(even) {
+    background: #f6faf7;
+}
+
+.cart-table tbody tr:focus-within {
+    background: #eff7f1;
+}
+
+.cart-table .cart-product-column {
+    width: 100%;
+    padding-inline-start: 16px;
+    text-align: start;
+}
+
+.cart-money-column {
+    text-align: end;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.cart-quantity-column,
+.cart-action-column {
     text-align: center;
     white-space: nowrap;
 }
 
+.cart-table .cart-action-column {
+    padding-inline-end: 16px;
+}
+
+.cart-product {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.cart-product-name {
+    color: #1a3a2b;
+    font-weight: 700;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+.cart-product-brand,
+.cart-stock {
+    color: #4e6658;
+    font-size: .75rem;
+    font-weight: 400;
+}
+
+.cart-product-brand {
+    margin-top: 3px;
+    overflow-wrap: anywhere;
+}
+
+.cart-stock {
+    margin-top: 5px;
+}
+
 .cart-product-image {
     flex: none;
-    width: 48px;
-    height: 48px;
-    padding: 3px;
-    border: 1px solid #e3ebe5;
-    border-radius: 8px;
-    background: #f7faf8;
+    width: 56px;
+    height: 56px;
+    padding: 4px;
+    border: 1px solid #dce8e0;
+    border-radius: 10px;
+    background: #fff;
     object-fit: contain;
 }
 
-.cart-item-card {
+.cart-quantity {
+    display: inline-grid;
+    grid-template-columns: 33px 40px 33px;
+    overflow: hidden;
+    border: 1px solid #c5d9cb;
+    border-radius: 8px;
+    background: #fff;
+    color: #183c2a;
+}
+
+.cart-quantity button {
+    display: grid;
+    height: 34px;
+    place-items: center;
+    background: #eaf5ed;
+    color: #28563d;
+    font-size: .75rem;
+    cursor: pointer;
+}
+
+.cart-quantity button:hover:enabled {
+    background: #d7eddf;
+}
+
+.cart-quantity button:disabled {
+    background: #f3f6f4;
+    color: #61786a;
+    cursor: default;
+}
+
+.cart-quantity input {
+    width: 100%;
+    min-width: 0;
+    border-inline: 1px solid #d9e7dd;
+    border-radius: 0;
+    appearance: textfield;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+}
+
+.cart-quantity input::-webkit-inner-spin-button,
+.cart-quantity input::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
+}
+
+.cart-page .cart-quantity :is(button, input):focus-visible {
+    outline: 2px solid #218158;
+    outline-offset: -2px;
+}
+
+.cart-line-total {
+    color: #155538;
+    font-weight: 750;
+}
+
+.cart-remove {
+    display: inline-grid;
+    width: 38px;
+    height: 38px;
+    flex: none;
+    place-items: center;
+    border: 1px solid #e5eae7;
+    border-radius: 8px;
+    background: #fff;
+    color: #9b2c38;
+    cursor: pointer;
+}
+
+.cart-remove:hover {
+    border-color: #edc8cd;
+    background: #fdf0f1;
+}
+
+.cart-item-list {
+    list-style: none;
+}
+
+.cart-item-card + .cart-item-card {
+    margin-top: 12px;
+}
+
+.cart-item-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
     padding: 14px;
 }
 
-.cart-remove-mobile {
-    min-width: 36px;
-    min-height: 36px;
-    border-radius: 8px;
-    background: #fff4f4;
+.cart-item-card .cart-product {
+    align-items: flex-start;
+}
+
+.cart-item-card .cart-product-image {
+    width: 62px;
+    height: 62px;
+    background: #f4f8f5;
+}
+
+.cart-item-card .cart-remove {
+    width: 44px;
+    height: 44px;
+}
+
+.cart-unit-price {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 6px;
+    margin-top: 6px;
+    color: #4e6658;
+    font-size: .8125rem;
+}
+
+.cart-unit-price strong {
+    color: #1a3a2b;
+    font-weight: 650;
+    white-space: nowrap;
 }
 
 .cart-item-controls {
-    padding-top: 12px;
-    border-top: 1px solid #edf1ee;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: 10px;
+    padding: 10px 12px;
+    margin: 0 8px 8px;
+    border: 1px solid #e0ece3;
+    border-radius: 9px;
+    background: #f0f7f2;
+}
+
+.cart-item-controls .cart-quantity {
+    grid-template-columns: 44px 38px 44px;
+}
+
+.cart-item-controls .cart-quantity button {
+    height: 44px;
+}
+
+.cart-card-label {
+    margin-bottom: 4px;
+    color: #3d5c49;
+    font-size: .75rem;
+    font-weight: 650;
+}
+
+.cart-item-total {
+    text-align: end;
+}
+
+.cart-item-total .cart-line-total {
+    font-size: 1.125rem;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
 }
 
 .cart-empty {
