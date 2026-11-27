@@ -1,153 +1,113 @@
 <template>
-    <div class="max-w-4xl mx-auto p-6 font-sans text-gray-800 space-y-6 relative leading-relaxed fade-up mb-16">
-        <div
-            class="max-w-5xl mx-auto text-center leading-relaxed bg-green-100 rounded-lg p-6 relative overflow-hidden mb-6">
+    <div class="customer-page settings-page">
+        <header class="customer-heading">
+            <h1>{{ t('settings.title') }}</h1>
+            <p>{{ t('settings.description') }}</p>
+        </header>
 
-            <div class="absolute inset-0 opacity-10 pointer-events-none">
-                <svg class="w-full h-full" preserveAspectRatio="none">
-                    <defs>
-                        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                            <path d="M20 0 L0 0 0 20" fill="none" stroke="#013302" stroke-width="1.0" />
-                        </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#grid)"></rect>
-                </svg>
-            </div>
+        <div class="settings-grid">
+            <section class="customer-panel settings-password">
+                <h2><i class="pi pi-lock" aria-hidden="true"></i> {{ t('settings.changePassword') }}</h2>
+                <form class="grid gap-3 mt-4" @submit.prevent="changePassword">
+                    <div>
+                        <label for="settings-current-password" class="customer-label">{{ t('settings.currentPassword') }}</label>
+                        <input id="settings-current-password" v-model="currentPassword" class="customer-input"
+                            type="password" autocomplete="current-password" required />
+                    </div>
+                    <div>
+                        <label for="settings-new-password" class="customer-label">{{ t('settings.newPassword') }}</label>
+                        <input id="settings-new-password" v-model="newPassword" class="customer-input"
+                            type="password" autocomplete="new-password" required />
+                    </div>
+                    <button type="submit" class="customer-button customer-button-primary justify-self-start" :disabled="loading">
+                        {{ t(loading ? 'settings.updating' : 'settings.changePassword') }}
+                    </button>
+                    <p v-if="passwordMsg" role="status" class="text-sm"
+                        :class="passwordSuccess ? 'text-green-800' : 'text-red-700'">{{ passwordMsg }}</p>
+                </form>
+            </section>
 
-            <h1 class="text-3xl md:text-4xl font-bold text-green-600 leading-relaxed mb-2 relative z-10"
-                :class="langStore.langClass">
-                Settings
-            </h1>
+            <section class="customer-panel">
+                <h2><i class="pi pi-globe" aria-hidden="true"></i> {{ t('settings.language') }}</h2>
+                <label for="settings-language" class="customer-label mt-4">{{ t('settings.displayLanguage') }}</label>
+                <select id="settings-language" :value="langStore.lang" class="customer-input"
+                    @change="langStore.setLanguage($event.target.value)">
+                    <option value="en" lang="en">English</option>
+                    <option value="bn" lang="bn">বাংলা</option>
+                </select>
+            </section>
 
-            <p class="text-gray-700 text-lg md:text-xl leading-relaxed relative z-10 max-w-2xl mx-auto"
-                :class="langStore.langClass">
-                Manage your account preferences and security settings.
-            </p>
-        </div>
-
-        <div class="bg-white shadow rounded-lg p-6">
-            <h2 class="text-lg font-semibold text-gray-800 mb-3">Language</h2>
-            <select v-model="langStore.lang" @change="langStore.setLanguage(langStore.lang)"
-                class="border border-gray-300 rounded px-3 py-2 w-full focus:ring-2 focus:ring-green-500">
-                <option value="en">English</option>
-                <option value="bn">Bangla</option>
-            </select>
-        </div>
-
-        <div class="bg-white shadow rounded-lg p-6 space-y-3 fade-up">
-            <h2 class="text-lg font-semibold text-gray-800 mb-3">Change Password</h2>
-            <div class="flex flex-col md:flex-row gap-3">
-                <input v-model="currentPassword" type="password" placeholder="Current Password"
-                    class="flex-1 px-3 py-2 border rounded focus:ring-2 focus:ring-green-500" />
-                <input v-model="newPassword" type="password" placeholder="New Password"
-                    class="flex-1 px-3 py-2 border rounded focus:ring-2 focus:ring-green-500" />
-                <button @click="changePassword" :disabled="loading"
-                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded font-semibold transition">
-                    <span v-if="loading">Updating...</span>
-                    <span v-else>Change</span>
-                </button>
-            </div>
-            <p v-if="passwordMsg" :class="{ 'text-green-600': passwordSuccess, 'text-red-500': !passwordSuccess }">
-                {{ passwordMsg }}</p>
-        </div>
-
-        <div class="bg-white shadow rounded-lg p-6 space-y-2 fade-up">
-            <h2 class="text-lg font-semibold text-gray-800 mb-3">Policies</h2>
-            <router-link to="/privacy-and-policy" class="block text-green-600 hover:underline">Privacy
-                Policy</router-link>
-            <router-link to="/terms-and-conditions" class="block text-green-600 hover:underline">Terms &
-                Conditions</router-link>
-        </div>
-
-        <div class="bg-white rounded-lg p-6 fade-up grid grid-cols-2 gap-5">
-            <button @click="showModal = true" :disabled="loading"
-                class="bg-orange-500 hover:bg-orange-800 text-white px-4 py-2 rounded font-semibold transition w-full disabled:opacity-50">
-                <span v-if="loading">Processing...</span>
-                <span v-else>Delete Account</span>
-            </button>
-
-            <button @click="logout"
-                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded font-semibold transition w-full">
-                Logout
-            </button>
-        </div>
-    </div>
-
-    <div v-if="showModal" class="fixed inset-0 bg-red-50 bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white p-6 rounded shadow-lg max-w-2xl w-full">
-            <h2 class="text-xl font-bold mb-4">Confirm Account Deletion</h2>
-            <div class="text-gray-700 mb-4 space-y-3 text-sm">
-                <p>
-                    Please review what will happen when your RedPharma account is deleted. This action is permanent and
-                    cannot be reversed.
-                </p>
-                <p>
-                    <strong>Orders & Prescriptions:</strong> Any active orders will be cancelled and your prescription
-                    history will be queued for permanent deletion after 30 days.
-                </p>
-                <p>
-                    <strong>Data:</strong> Your profile information and all associated data will be
-                    queued for permanent deletion after 30 days.
-                </p>
-            </div>
-
-            <!-- Issue selection -->
-            <div class="mb-4">
-                <p class="font-semibold mb-2">Reason for leaving:</p>
-                <div class="flex flex-col gap-2">
-                    <label v-for="option in issues" :key="option"
-                        class="relative cursor-pointer flex items-center justify-between p-3 border rounded-lg transition-colors duration-200"
-                        :class="selectedIssue === option ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white hover:bg-gray-50'">
-                        <span class="text-gray-800">{{ option }}</span>
-                        <span
-                            class="w-5 h-5 flex items-center justify-center rounded-full border-2 transition-colors duration-200"
-                            :class="selectedIssue === option ? 'border-blue-500 bg-blue-500' : 'border-gray-400 bg-white'">
-                            <span v-if="selectedIssue === option" class="block w-2 h-2 rounded-full bg-white"></span>
-                        </span>
-                        <input type="radio" :value="option" v-model="selectedIssue"
-                            class="absolute opacity-0 w-0 h-0" />
-                    </label>
+            <section class="customer-panel">
+                <h2><i class="pi pi-file" aria-hidden="true"></i> {{ t('settings.policies') }}</h2>
+                <div class="settings-links">
+                    <router-link to="/privacy-and-policy">
+                        {{ t('header.menu.privacy') }}
+                        <i class="pi pi-chevron-right" aria-hidden="true"></i>
+                    </router-link>
+                    <router-link to="/terms-and-conditions">
+                        {{ t('settings.terms') }}
+                        <i class="pi pi-chevron-right" aria-hidden="true"></i>
+                    </router-link>
                 </div>
-            </div>
+            </section>
 
-
-            <!-- Comment field -->
-            <div class="mb-4">
-                <label class="block font-semibold mb-1">Additional Comments (optional):</label>
-                <textarea v-model="comment" class="w-full border border-gray-300 rounded px-2 py-1" rows="3"
-                    placeholder="Your comment..."></textarea>
-            </div>
-
-            <!-- Buttons -->
-            <div class="flex justify-end gap-3">
-                <button @click="showModal = false" :disabled="loading"
-                    class="px-3 py-1 rounded border border-gray-400 hover:bg-gray-100">
-                    Cancel
-                </button>
-                <button @click="confirmDeletion" :disabled="loading || !selectedIssue"
-                    class="px-3 py-1 rounded bg-red-500 text-white hover:bg-red-600">
-                    <span v-if="loading">Deleting...</span>
-                    <span v-else>Confirm</span>
-                </button>
-            </div>
+            <section class="customer-panel settings-account">
+                <h2><i class="pi pi-user" aria-hidden="true"></i> {{ t('mobileNav.account') }}</h2>
+                <div class="flex flex-wrap gap-2 mt-4">
+                    <button class="customer-button" type="button" @click="logout">{{ t('header.buttons.logout') }}</button>
+                    <button class="customer-button customer-button-danger" type="button" :disabled="loading"
+                        @click="deletionDialog.showModal()">{{ t('settings.deleteAccount') }}</button>
+                </div>
+            </section>
         </div>
+
+        <dialog ref="deletionDialog" class="settings-dialog" aria-labelledby="settings-delete-heading"
+            @cancel="loading && $event.preventDefault()">
+            <div class="customer-panel">
+                <h2 id="settings-delete-heading">{{ t('settings.confirmDeletion') }}</h2>
+                <div class="settings-deletion-notes customer-muted">
+                    <p>{{ t('settings.deletionNotice') }}</p>
+                    <p>{{ t('settings.deletionOrders') }}</p>
+                    <p>{{ t('settings.deletionData') }}</p>
+                </div>
+
+                <form class="grid gap-3" @submit.prevent="confirmDeletion">
+                    <fieldset>
+                        <legend class="customer-label">{{ t('settings.reason') }}</legend>
+                        <div class="grid gap-2">
+                            <label v-for="issue in issues" :key="issue.value" class="settings-reason">
+                                <input v-model="selectedIssue" type="radio" name="deletion-reason" :value="issue.value" required />
+                                {{ t(`settings.reasons.${issue.key}`) }}
+                            </label>
+                        </div>
+                    </fieldset>
+                    <div>
+                        <label for="settings-delete-comment" class="customer-label">{{ t('settings.comment') }}</label>
+                        <textarea id="settings-delete-comment" v-model="comment" class="customer-input" rows="3"></textarea>
+                    </div>
+                    <div class="flex flex-wrap justify-end gap-2">
+                        <button type="button" class="customer-button" :disabled="loading" @click="deletionDialog.close()">
+                            {{ t('settings.cancel') }}
+                        </button>
+                        <button type="submit" class="customer-button customer-button-danger" :disabled="loading || !selectedIssue">
+                            {{ t(loading ? 'settings.deleting' : 'settings.confirm') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </dialog>
     </div>
 </template>
 
 <script setup>
-import {
-    ref
-} from "vue";
-import {
-    useAuthStore
-} from "@/stores/auth";
-import {
-    useLanguageStore
-} from "@/stores/language";
-import {
-    useRouter
-} from "vue-router";
+import { ref } from "vue";
+import { useI18n } from "vue-i18n";
+import { useAuthStore } from "@/stores/auth";
+import { useLanguageStore } from "@/stores/language";
+import { useRouter } from "vue-router";
+import "@/assets/customer-pages.css";
 
+const { t } = useI18n();
 const authStore = useAuthStore();
 const langStore = useLanguageStore();
 const router = useRouter();
@@ -156,23 +116,19 @@ const newPassword = ref("");
 const passwordMsg = ref("");
 const passwordSuccess = ref(false);
 const loading = ref(false);
-const showModal = ref(false);
+const deletionDialog = ref(null);
 
 const issues = [
-    'I no longer need the service',
-    'Privacy concerns',
-    'Found a better alternative',
-    'Other'
+    { key: "unused", value: "I no longer need the service" },
+    { key: "privacy", value: "Privacy concerns" },
+    { key: "alternative", value: "Found a better alternative" },
+    { key: "other", value: "Other" },
 ];
-const selectedIssue = ref('');
-const comment = ref('');
+const selectedIssue = ref("");
+const comment = ref("");
 
 const changePassword = async () => {
-    if (!currentPassword.value || !newPassword.value) {
-        passwordMsg.value = "Please enter both current and new passwords.";
-        passwordSuccess.value = false;
-        return;
-    }
+    if (loading.value || !currentPassword.value || !newPassword.value) return;
 
     loading.value = true;
     passwordMsg.value = "";
@@ -182,16 +138,15 @@ const changePassword = async () => {
         await authStore.updatePassword({
             currentPassword: currentPassword.value,
             newPassword: newPassword.value,
-            confirmPassword: newPassword.value
+            confirmPassword: newPassword.value,
         });
 
-        passwordMsg.value = "Password changed successfully!";
+        passwordMsg.value = t("settings.passwordChanged");
         passwordSuccess.value = true;
         currentPassword.value = "";
         newPassword.value = "";
-    } catch (err) {
-        passwordMsg.value = authStore.error || "Failed to update password.";
-        passwordSuccess.value = false;
+    } catch {
+        passwordMsg.value = typeof authStore.error === "string" ? authStore.error : t("settings.passwordFailed");
     } finally {
         loading.value = false;
     }
@@ -199,11 +154,11 @@ const changePassword = async () => {
 
 const logout = () => {
     authStore.logout();
-    router.push('/');
+    router.push("/");
 };
 
 const confirmDeletion = async () => {
-    if (!authStore.user) return;
+    if (loading.value || !selectedIssue.value || !authStore.user) return;
 
     loading.value = true;
 
@@ -211,16 +166,15 @@ const confirmDeletion = async () => {
         await authStore.removeAccount({
             issue: selectedIssue.value,
             comment: comment.value,
-            phone_number: authStore.user.phone_number
+            phone_number: authStore.user.phone_number,
         });
 
+        deletionDialog.value.close();
         authStore.logout();
-        alert('Your account deletion request has been submitted successfully.');
-        router.push('/'); // redirect to home
-        showModal.value = false;
-    } catch (err) {
-        console.error(err);
-        alert('Failed to delete account. Please try again.');
+        alert(t("settings.deletionSubmitted"));
+        router.push("/");
+    } catch {
+        alert(t("settings.deletionFailed"));
     } finally {
         loading.value = false;
     }
@@ -228,7 +182,90 @@ const confirmDeletion = async () => {
 </script>
 
 <style scoped>
-a:hover {
-    color: #059669;
+.settings-page {
+    max-width: 54rem;
+}
+
+.settings-grid {
+    display: grid;
+    gap: 14px;
+}
+
+.settings-grid h2 i {
+    margin-inline-end: 5px;
+    color: #176742;
+    font-size: .875rem;
+}
+
+.settings-links {
+    display: grid;
+    margin-top: 12px;
+}
+
+.settings-links a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 0;
+    border-top: 1px solid #e5eee7;
+    color: #176742;
+    font-size: .875rem;
+    font-weight: 650;
+}
+
+.settings-links a:hover {
+    text-decoration: underline;
+}
+
+.settings-dialog {
+    position: fixed;
+    inset: 0;
+    width: min(35rem, calc(100% - 24px));
+    max-height: calc(100dvh - 24px);
+    margin: auto;
+    border-radius: 13px;
+    color: #183c2a;
+    overflow: auto;
+}
+
+.settings-dialog::backdrop {
+    background: rgb(21 43 32 / 58%);
+}
+
+.settings-deletion-notes {
+    display: grid;
+    gap: 6px;
+    margin: 10px 0 14px;
+    font-size: .875rem;
+}
+
+.settings-reason {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border: 1px solid #dce8e0;
+    border-radius: 7px;
+    font-size: .875rem;
+}
+
+.settings-reason input {
+    accent-color: #176742;
+}
+
+@media (min-width: 768px) {
+    .settings-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
+    }
+
+    .settings-password {
+        grid-area: 1 / 1 / 3 / 2;
+    }
+
+    .settings-account {
+        grid-column: 1 / -1;
+    }
 }
 </style>

@@ -1,224 +1,199 @@
 <template>
-    <div>
-        <div class="relative fade-up max-w-4xl mx-auto pt-6">
-            <div
-                class="max-w-5xl mx-auto space-y-4 text-center leading-relaxed bg-green-50 rounded-lg p-6 relative overflow-hidden mb-6">
-                <!-- Decorative background pattern -->
-                <div class="absolute inset-0 opacity-10 pointer-events-none">
-                    <svg class="w-full h-full" preserveAspectRatio="none">
-                        <defs>
-                            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                                <path d="M20 0 L0 0 0 20" fill="none" stroke="#FF0B55" stroke-width="0.5" />
-                            </pattern>
-                        </defs>
-                        <rect width="100%" height="100%" fill="url(#grid)"></rect>
-                    </svg>
-                </div>
-
-                <!-- Title -->
-                <h1 class="text-3xl md:text-4xl font-bold text-green-600 leading-relaxed mb-2 relative z-10"
-                    :class="langStore.langClass">
-                    {{ $t('tracking.title') }}
-                </h1>
-
-                <!-- Subtitle -->
-                <p class="text-gray-700 text-lg md:text-xl leading-relaxed relative z-10 max-w-2xl mx-auto"
-                    :class="langStore.langClass">
-                    {{$t('tracking.description')}}
-                </p>
-            </div>
-
-            <div class="flex justify-center mb-12">
-                <input type="text" v-model="trackingNumber" :placeholder="$t('tracking.placeholder')"
-                    class="w-full max-w-md px-4 py-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
-                <button @click="trackOrder"
-                    class="px-6 py-3 bg-green-500 text-white rounded-r-lg hover:bg-green-600 transition">
-                    {{$t('tracking.button')}}
+    <div class="customer-page tracking-page">
+        <header class="customer-heading">
+            <h1>{{ t('tracking.title') }}</h1>
+            <p>{{ t('tracking.description') }}</p>
+        </header>
+        <form class="customer-panel tracking-form" @submit.prevent="trackOrder">
+            <label for="tracking-number" class="customer-label">{{ t('tracking.number') }}</label>
+            <div class="tracking-field">
+                <input id="tracking-number" v-model.trim="trackingNumber" class="customer-input"
+                    type="text" :placeholder="t('tracking.placeholder')" autocapitalize="characters"
+                    autocomplete="off" spellcheck="false" required />
+                <button type="submit" class="customer-button customer-button-primary" :disabled="loading">
+                    <i class="pi pi-search" aria-hidden="true"></i>
+                    {{ t('tracking.button') }}
                 </button>
             </div>
+        </form>
 
-            <section v-if="order && order.reference_no"
-                class="mb-8 bg-white shadow-sm rounded-lg p-6 border border-green-200">
-                <h2 class="text-2xl font-bold mb-6 flex items-center justify-center space-x-3 relative">
-                    <i class="pi pi-shopping-cart text-green-500 text-xl"></i>
-                    <span class="bg-clip-text text-transparent bg-gradient-to-b from-green-400 to-green-700">
-                        Order Summary
-                    </span>
-                </h2>
-
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm  ">
-                    <!-- Left Column -->
-                    <div class="space-y-2">
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-700">Order #:</span>
-                            <span class="text-gray-900">{{ order.reference_no || "-" }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-700">Date:</span>
-                            <span class="text-gray-900">{{ formatDate(order.created_at) }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-700">Subtotal:</span>
-                            <span class="text-gray-900">{{ formatCurrency(order.total_price) }}</span>
-                        </div>
-                    </div>
-
-                    <!-- Right Column -->
-                    <div class="space-y-2">
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-700">Shipping:</span>
-                            <span class="text-gray-900">{{ formatCurrency(order.shipping_cost) }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-700">Grand Total:</span>
-                            <span class="text-gray-900">{{ formatCurrency(order.grand_total) }}</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="font-medium text-gray-700">Status:</span>
-                            <span class="px-3 py-1 text-xs font-semibold rounded-full uppercase" :class="{
-                                'bg-yellow-100 text-yellow-800': tracking.current_status === 'pending',
-                                'bg-blue-100 text-blue-800': tracking.current_status === 'processing',
-                                'bg-indigo-100 text-indigo-800': tracking.current_status === 'in_transit',
-                                'bg-green-100 text-green-800': tracking.current_status === 'completed',
-                                'bg-red-100 text-red-800': tracking.current_status === 'cancelled',
-                                'bg-gray-100 text-gray-800': !tracking.current_status
-                            }">
-                                {{ tracking.current_status || "Pending" }}
-                            </span>
-                        </div>
-                    </div>
+        <p v-if="loading" class="customer-panel customer-empty mt-4" role="status">{{ t('tracking.loading') }}</p>
+        <p v-else-if="error" class="customer-panel tracking-error mt-4" role="alert">{{ t(`tracking.${error}`) }}</p>
+        <template v-else-if="order.reference_no">
+            <section class="customer-panel tracking-result">
+                <div>
+                    <p>{{ t('tracking.orderReference') }}</p>
+                    <h2>{{ order.reference_no }}</h2>
                 </div>
+                <span class="customer-status" :data-status="orderStatusKey(currentStatus)">{{ statusLabel(currentStatus) }}</span>
             </section>
 
-            <section v-if="order && order.customer"
-                class="mb-8 bg-white shadow rounded-lg p-6 transition-all duration-500 hover:shadow-lg border border-green-200">
+            <div class="tracking-results">
+                <section class="customer-panel tracking-history">
+                    <h2>{{ t('tracking.history') }}</h2>
+                    <TimeLine :tracking="histories" :format-date="formatDate" />
+                </section>
+                <section class="customer-panel">
+                    <h2>{{ t('cart.summary') }}</h2>
+                    <dl class="tracking-facts">
+                        <div><dt>{{ t('orders.date') }}</dt><dd>{{ formatDate(order.created_at) }}</dd></div>
+                        <div><dt>{{ t('cart.subtotal') }}</dt><dd>{{ formatCurrency(order.total_price) }}</dd></div>
+                        <div><dt>{{ t('cart.shipping') }}</dt><dd>{{ formatCurrency(order.shipping_cost) }}</dd></div>
+                        <div><dt>{{ t('cart.grand') }}</dt><dd>{{ formatCurrency(order.grand_total) }}</dd></div>
+                    </dl>
+                </section>
 
-                <h2 class="text-2xl font-bold mb-6 flex items-center justify-center space-x-3 text-gray-800 relative">
-                    <i class="pi pi-user text-green-500 text-xl"></i>
-                    <span class="bg-clip-text text-transparent bg-gradient-to-b from-green-400 to-green-700">
-                        Customer Information
-                    </span>
-                </h2>
+                <section v-if="order.customer" class="customer-panel">
+                    <h2>{{ t('tracking.customer') }}</h2>
+                    <dl class="tracking-facts">
+                        <div><dt>{{ t('auth.fullName') }}</dt><dd>{{ order.customer.name || '–' }}</dd></div>
+                        <div><dt>{{ t('common.phone') }}</dt><dd>{{ order.customer.phone_number || '–' }}</dd></div>
+                        <div><dt>{{ t('common.address') }}</dt><dd>{{ order.customer.address || '–' }}</dd></div>
+                    </dl>
+                </section>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                    <!-- Name -->
-                    <div class="flex items-center space-x-2 group transition-colors duration-300">
-                        <i class="pi pi-id-card text-gray-400 group-hover:text-blue-500"></i>
-                        <div>
-                            <p class="text-gray-500 font-medium">Name</p>
-                            <p class="text-gray-900 font-semibold">{{ order.customer?.name || "-" }}</p>
-                        </div>
-                    </div>
-
-                    <!-- Phone -->
-                    <div class="flex items-center space-x-2 group transition-colors duration-300">
-                        <i class="pi pi-phone text-gray-400 group-hover:text-green-500"></i>
-                        <div>
-                            <p class="text-gray-500 font-medium">Phone</p>
-                            <p class="text-gray-900 font-semibold">{{ order.customer?.phone_number || "-" }}</p>
-                        </div>
-                    </div>
-
-                    <!-- Address -->
-                    <div
-                        class="col-span-1 md:col-span-2 flex items-start space-x-2 group transition-colors duration-300">
-                        <i class="pi pi-map-marker text-gray-400 mt-1 group-hover:text-red-500"></i>
-                        <div>
-                            <p class="text-gray-500 font-medium">Address</p>
-                            <p class="text-gray-900 font-semibold">{{ order.customer?.address || "-" }}</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section v-if="order && order.product_sales?.length"
-                class="mb-8 bg-white shadow rounded-lg p-6 transition-all duration-500 hover:shadow-lg border border-green-200">
-                <h2 class="text-2xl font-bold mb-6 flex items-center justify-center space-x-3 text-gray-800 relative">
-                    <i class="pi pi-box text-green-500 text-xl"></i>
-                    <span class="bg-clip-text text-transparent bg-gradient-to-b from-green-400 to-green-700">
-                        Ordered Medicines
-                    </span>
-                </h2>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full border-collapse text-sm">
-                        <thead class="bg-green-100 rounded">
-                            <tr>
-                                <th class="p-3 border-b border-green-300 rounded text-left text-gray-800 font-medium">
-                                    Medicine</th>
-                                <th class="p-3 border-b border-green-300  text-left text-gray-800 font-medium">Qty</th>
-                                <th class="p-3 border-b border-green-300  text-left text-gray-800 font-medium">Unit
-                                    Price</th>
-                                <th class="p-3 border-b border-green-300 rounded text-left text-gray-800 font-medium">
-                                    Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(item, index) in order.product_sales || []" :key="index"
-                                class="hover:bg-gray-50 transition-colors duration-300">
-                                <td class="p-3 border-b border-green-300 text-gray-900 font-medium">{{ item.name }}</td>
-                                <td class="p-3 border-b border-green-300 text-gray-800">{{ item.pivot.qty + ' ' +
-                                    item.unit.unit_name }}</td>
-                                <td class="p-3 border-b border-green-300 text-gray-800">{{
-                                    formatCurrency(item.pivot.net_unit_price) }}</td>
-                                <td class="p-3 border-b border-green-300 text-gray-900 font-semibold">{{
-                                    formatCurrency(item.pivot.total) }}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <section v-if="tracking && tracking.histories"
-                class="mb-8 bg-white shadow rounded-lg p-6 transition-all duration-500 hover:shadow-lg border border-green-200">
-                <h2 class="text-2xl font-bold mb-6 flex items-center justify-center space-x-3 text-gray-800 relative">
-                    <i class="pi pi-truck text-green-500 text-xl"></i>
-                    <span class="bg-clip-text text-transparent bg-gradient-to-b from-green-400 to-green-700">
-                        Tracking Updates
-                    </span>
-                </h2>
-                <TimeLine :tracking="tracking.histories" :formatDate="formatDate" />
-            </section>
-        </div>
+                <section v-if="products.length" class="customer-panel tracking-products">
+                    <h2>{{ t('orders.orderedProducts') }}</h2>
+                    <ul>
+                        <li v-for="(item, index) in products" :key="item.id ?? index">
+                            <div>
+                                <p>{{ item.name }}</p>
+                                <p class="customer-muted text-sm">
+                                    {{ [item.pivot?.qty, item.unit?.unit_name].filter(value => value != null).join(' ') }}
+                                    <span v-if="item.pivot?.net_unit_price != null"> · {{ formatCurrency(item.pivot.net_unit_price) }}</span>
+                                </p>
+                            </div>
+                            <p>{{ formatCurrency(item.pivot?.total) }}</p>
+                        </li>
+                    </ul>
+                </section>
+            </div>
+        </template>
     </div>
 </template>
 
 <script setup>
-import {
-    ref
-} from "vue";
-import 'primevue/resources/themes/saga-green/theme.css' // choose any theme
-import 'primevue/resources/primevue.min.css'
-import 'primeicons/primeicons.css'
-import TimeLine from "@/components/common/TimeLine.vue";
-import { useCheckout } from '@/composables/useCheckout';
-import { useLanguageStore } from "@/stores/language";
+import { computed, ref } from "vue";
+import "primevue/resources/themes/saga-green/theme.css";
+import "primevue/resources/primevue.min.css";
 import { useI18n } from "vue-i18n";
+import { useCheckout } from "@/composables/useCheckout";
+import { orderStatusKey, useOrderStatus } from "@/composables/useOrderStatus";
+import TimeLine from "@/components/common/TimeLine.vue";
+import "@/assets/customer-pages.css";
 
+const { t, n, locale } = useI18n();
+const statusLabel = useOrderStatus();
 const { order, tracking, getTrackingDetails, loading, error } = useCheckout();
-const { t } = useI18n();
-const langStore = useLanguageStore();
-
 const trackingNumber = ref("");
-const formatCurrency = (value) => (value != null ? "৳" + parseFloat(value).toFixed(2) : "-");
-const formatDate = (value) => (value ? new Date(value).toLocaleString("en-BD", { dateStyle: "medium", timeStyle: "short" }) : "-");
+const histories = computed(() => Array.isArray(tracking.value.histories) ? tracking.value.histories : []);
+const products = computed(() => Array.isArray(order.value.product_sales) ? order.value.product_sales.filter(Boolean) : []);
+const currentStatus = computed(() => tracking.value.current_status);
+const formatCurrency = value => value == null || !Number.isFinite(Number(value))
+    ? "–" : n(Number(value), { style: "currency", currency: "BDT", maximumFractionDigits: 2 });
+const formatDate = value => value && Number.isFinite(Date.parse(value))
+    ? new Date(value).toLocaleString(`${locale.value}-BD`, { dateStyle: "medium", timeStyle: "short" }) : "–";
 
 function trackOrder() {
-    if (!trackingNumber.value || trackingNumber.value.trim() === "") {
-        alert("Please enter a Mobile Order Number!");
-        return;
-    }
+    if (loading.value || !trackingNumber.value) return;
+    return getTrackingDetails(trackingNumber.value);
+}
+</script>
 
-    // Call your composable or API to fetch the order
-    getTrackingDetails(trackingNumber.value)
-        .then(() => {
-            console.log("Tracking fetched:", tracking.value, order.value);
-        })
-        .catch(err => {
-            console.error(err);
-            alert("No order found for this tracking number.");
-        });
+<style scoped>
+.tracking-page {
+    max-width: 64rem;
 }
 
-</script>
+.tracking-form {
+    background: #f3f9f5;
+}
+
+.tracking-field {
+    display: grid;
+    gap: 9px;
+}
+
+.tracking-error {
+    border-color: #ebc8cd;
+    color: #912e3b;
+}
+
+.tracking-result {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 12px;
+    margin-top: 16px;
+    background: #f2f8f4;
+}
+
+.tracking-result p {
+    color: #4d6557;
+    font-size: .8125rem;
+}
+
+.tracking-results {
+    display: grid;
+    align-items: start;
+    gap: 14px;
+    margin-top: 14px;
+}
+
+.tracking-history h2 {
+    margin-bottom: 14px;
+}
+
+.tracking-facts {
+    display: grid;
+    margin-top: 8px;
+    font-size: .875rem;
+}
+
+.tracking-facts > div,
+.tracking-products li {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #e4ece6;
+}
+
+.tracking-facts > div:last-child,
+.tracking-products li:last-child {
+    border: 0;
+}
+
+.tracking-facts dt {
+    flex: none;
+    color: #4d6557;
+}
+
+.tracking-facts dd {
+    text-align: end;
+    font-weight: 650;
+}
+
+.tracking-products ul {
+    margin-top: 8px;
+    font-size: .875rem;
+}
+
+.tracking-products li > p {
+    flex: none;
+    font-weight: 700;
+}
+
+@media (min-width: 540px) {
+    .tracking-field {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+}
+
+@media (min-width: 820px) {
+    .tracking-results {
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    }
+}
+</style>

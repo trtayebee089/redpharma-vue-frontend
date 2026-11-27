@@ -1,142 +1,157 @@
 <template>
-    <div class="max-w-4xl mx-auto p-6 font-sans text-gray-800 space-y-6">
-        <nav class="text-sm mb-6" aria-label="Breadcrumb">
-            <ol class="inline-flex items-center space-x-1 md:space-x-3 text-gray-500">
-                <li>
-                    <router-link to="/" class="hover:text-gray-700">Home</router-link>
-                </li>
-                <li>
-                    <span class="mx-2 text-gray-400">/</span>
-                    <router-link to="/orders" class="hover:text-gray-700">My Orders</router-link>
-                </li>
-                <li>
-                    <span class="mx-2 text-gray-400">/</span>
-                    <span class="text-gray-900 font-semibold">Order #{{ order?.id }}</span>
-                </li>
-            </ol>
-        </nav>
+    <div class="customer-page">
+        <router-link to="/orders" class="customer-button mb-3">
+            <i class="pi pi-arrow-left text-xs" aria-hidden="true"></i>
+            {{ t('orders.backToOrders') }}
+        </router-link>
 
-        <div v-if="loading" class="flex justify-center items-center min-h-[300px] ">
-            <svg class="animate-spin h-10 w-10 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none"
-                viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z">
-                </path>
-            </svg>
+        <p v-if="loading" class="customer-panel customer-empty" role="status">{{ t('orders.loading') }}</p>
+        <div v-else-if="!order" class="customer-panel customer-empty" role="status">
+            <p>{{ t('orders.detailFailed') }}</p>
+            <button type="button" class="customer-button mt-3" @click="loadOrder">{{ t('orders.retry') }}</button>
         </div>
-        <div v-else-if="error" class="text-center py-6 text-red-600">{{ error }}</div>
-        <div v-else-if="order">
-            <div
-                class="bg-white shadow rounded-lg p-6 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 border border-green-200">
+
+        <template v-else>
+            <header class="customer-heading order-detail-heading">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Order #{{ order.id }}</h2>
-                    <p class="text-gray-600">Placed on: <span class="font-medium">{{ order.date }}</span></p>
-                    <p class="text-gray-600 mt-1">
-                        Status:
-                        <span :class="[
-                            'px-3 py-1 rounded-full text-sm font-semibold',
-                            order.tracking.current_status === 'Delivered' ? 'bg-green-100 text-green-800' :
-                                order.tracking.current_status === 'Canceled' ? 'bg-red-100 text-red-800' :
-                                    'bg-yellow-100 text-yellow-800'
-                        ]">
-                            {{ order.tracking.current_status.toString().toUpperCase() }}
-                        </span>
-                    </p>
-                    <p class="text-gray-600">Tracking Code: <span class="font-medium">{{ order.tracking.tracking_number }}</span></p>
+                    <h1>{{ t('orders.reference', { id: order.id ?? route.params.orderId }) }}</h1>
+                    <p v-if="order.date">{{ order.date }}</p>
                 </div>
-                <div class="text-right">
-                    <p class="text-gray-600">Total Amount:</p>
-                    <p class="text-2xl font-bold text-gray-900">৳ {{ order.grand_total }}</p>
-                </div>
-            </div>
+                <span class="customer-status" :data-status="orderStatusKey(currentStatus)">{{ statusLabel(currentStatus) }}</span>
+            </header>
 
-            <div class="bg-white shadow rounded-lg p-6 mb-6 border border-green-200">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4 border-b border-green-200 pb-2">Medicines Ordered
-                </h3>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full border border-gray-200 rounded-lg text-left">
-                        <thead class="bg-green-50 text-gray-700 font-medium">
-                            <tr>
-                                <th class="px-4 py-3">Medicine</th>
-                                <th class="px-4 py-3">Quantity</th>
-                                <th class="px-4 py-3">Price</th>
-                                <th class="px-4 py-3 text-right">Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="item in order.items" :key="item.id"
-                                class="border-b border-gray-200 hover:bg-green-50 transition">
-                                <td class="px-4 py-3 font-medium">{{ item.name }}</td>
-                                <td class="px-4 py-3">{{ item.quantity }}</td>
-                                <td class="px-4 py-3">৳ {{ item.price }}</td>
-                                <td class="px-4 py-3 text-right font-semibold">৳ {{ item.subtotal }}</td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="3" class="px-4 py-3 text-right font-bold text-gray-900">Total</td>
-                                <td class="px-4 py-3 text-right font-bold text-gray-900">৳ {{ order.total_price }}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" class="px-4 py-3 text-right font-bold text-gray-900">Shipping Fee</td>
-                                <td class="px-4 py-3 text-right font-bold text-gray-900">৳ {{ cartStore.shippingRate }}</td>
-                            </tr>
-                            <tr v-if="order.discount && order.discount.amount > 0">
-                                <td colspan="3" class="px-4 py-3 text-right font-bold text-gray-900">Discount</td>
-                                <td class="px-4 py-3 text-right font-bold text-gray-900">৳ {{ order.discount.amount }}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" class="px-4 py-3 text-right font-bold text-gray-900">Grand Total</td>
-                                <td class="px-4 py-3 text-right font-bold text-gray-900">৳ {{ order.grand_total }}</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
+            <p v-if="order.tracking?.tracking_number" class="order-tracking-code">
+                <span class="customer-muted">{{ t('tracking.number') }}</span>
+                <strong>{{ order.tracking.tracking_number }}</strong>
+            </p>
 
-            <div class="bg-white shadow rounded-lg p-6 border border-green-200">
-                <h3 class="text-lg font-semibold text-gray-900 mb-3 border-b border-green-200 pb-2">Tracking History</h3>
-                <TimeLine :tracking="order.tracking.histories" :formatDate="formatDate" />
+            <div class="order-detail-grid">
+                <section class="customer-panel">
+                    <h2>{{ t('orders.orderedProducts') }}</h2>
+                    <ul v-if="items.length" class="order-detail-items">
+                        <li v-for="(item, index) in items" :key="item.id ?? index">
+                            <div>
+                                <p>{{ item.name }}</p>
+                                <p class="customer-muted text-sm">
+                                    {{ t('orders.quantityPrice', { quantity: item.quantity ?? '–', price: formatCurrency(item.price) }) }}
+                                </p>
+                            </div>
+                            <strong>{{ formatCurrency(item.subtotal) }}</strong>
+                        </li>
+                    </ul>
+                    <p v-else class="customer-muted mt-2 text-sm">{{ t('orders.noItems') }}</p>
+                    <dl class="order-detail-summary">
+                        <div><dt>{{ t('cart.subtotal') }}</dt><dd>{{ formatCurrency(order.total_price) }}</dd></div>
+                        <div v-if="shippingCost != null"><dt>{{ t('cart.shipping') }}</dt><dd>{{ formatCurrency(shippingCost) }}</dd></div>
+                        <div v-if="Number(order.discount?.amount) > 0">
+                            <dt>{{ t('cart.discount') }}</dt><dd>{{ formatCurrency(order.discount.amount) }}</dd>
+                        </div>
+                        <div class="order-grand-total"><dt>{{ t('cart.grand') }}</dt><dd>{{ formatCurrency(order.grand_total) }}</dd></div>
+                    </dl>
+                </section>
+
+                <section class="customer-panel">
+                    <h2 class="mb-3">{{ t('tracking.history') }}</h2>
+                    <TimeLine :tracking="histories" :format-date="formatDate" />
+                </section>
             </div>
-        </div>
+        </template>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { computed, ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
-import { useCartStore } from "@/stores/cart";
+import { orderStatusKey, useOrderStatus } from "@/composables/useOrderStatus";
 import TimeLine from "@/components/common/TimeLine.vue";
+import "@/assets/customer-pages.css";
 
+const { t, n, locale } = useI18n();
 const route = useRoute();
 const authStore = useAuthStore();
-const cartStore = useCartStore();
-
+const statusLabel = useOrderStatus();
 const order = ref(null);
 const loading = ref(true);
-const error = ref(null);
-const formatDate = (value) => (value ? new Date(value).toLocaleString("en-BD", { dateStyle: "medium", timeStyle: "short" }) : "-");
+const items = computed(() => Array.isArray(order.value?.items) ? order.value.items.filter(Boolean) : []);
+const histories = computed(() => Array.isArray(order.value?.tracking?.histories) ? order.value.tracking.histories : []);
+const currentStatus = computed(() => order.value?.tracking?.current_status || order.value?.status);
+const shippingCost = computed(() => order.value?.shipping_cost ?? order.value?.shipping_fee);
+const formatCurrency = value => value == null || !Number.isFinite(Number(value))
+    ? "–" : n(Number(value), { style: "currency", currency: "BDT", maximumFractionDigits: 2 });
+const formatDate = value => value && Number.isFinite(Date.parse(value))
+    ? new Date(value).toLocaleString(`${locale.value}-BD`, { dateStyle: "medium", timeStyle: "short" }) : "–";
 
-onMounted(async () => {
+async function loadOrder() {
     const orderId = route.params.orderId;
-    if (authStore.isAuthenticated) {
-        try {
-            order.value = await authStore.fetchOrderDetail(orderId);
-        } catch (err) {
-            error.value = "Failed to fetch order details.";
-        } finally {
-            loading.value = false;
-        }
-    } else {
-        error.value = "You must be logged in to view this order.";
-        loading.value = false;
+    if (!orderId) return;
+    loading.value = true;
+    order.value = null;
+    try {
+        const result = await authStore.fetchOrderDetail(orderId);
+        if (route.params.orderId === orderId) order.value = result;
+    } finally {
+        if (route.params.orderId === orderId) loading.value = false;
     }
-});
+}
+
+watch(() => route.params.orderId, loadOrder, { immediate: true });
 </script>
 
 <style scoped>
-table tbody tr:hover {
-    background-color: #f0fdf4;
+.order-detail-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 12px;
+}
+
+.order-tracking-code {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    margin-bottom: 12px;
+    font-size: .875rem;
+}
+
+.order-detail-grid {
+    display: grid;
+    align-items: start;
+    gap: 14px;
+}
+
+.order-detail-items,
+.order-detail-summary {
+    margin-top: 10px;
+    font-size: .875rem;
+}
+
+.order-detail-items li,
+.order-detail-summary > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 0;
+    border-top: 1px solid #e4ece6;
+}
+
+.order-detail-items strong {
+    flex: none;
+}
+
+.order-detail-summary dd {
+    font-weight: 650;
+}
+
+.order-grand-total {
+    font-weight: 750;
+}
+
+@media (min-width: 820px) {
+    .order-detail-grid {
+        grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    }
 }
 </style>

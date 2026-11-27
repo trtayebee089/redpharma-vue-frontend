@@ -124,19 +124,27 @@ export function useCheckout() {
     };
 
     const getTrackingDetails = async (tracking_code) => {
-        if (!tracking_code) return;
+        const code = tracking_code?.trim();
+        if (!code || loading.value) return;
+
+        loading.value = true;
+        error.value = null;
+        order.value = {};
+        tracking.value = {};
 
         try {
-            const response = await api.get(`/tracking/${tracking_code}`);
+            const response = await api.get(`/tracking/${encodeURIComponent(code)}`);
 
-            if (response.data.success) {
+            if (response.data.success && response.data.order?.reference_no) {
                 order.value = response.data.order;
                 tracking.value = response.data.tracking || { histories: [] };
             } else {
-                console.error("Failed to fetch tracking details:", response.data.message);
+                error.value = "not_found";
             }
-        } catch (error) {
-            console.error("Error fetching tracking details:", error);
+        } catch (requestError) {
+            error.value = requestError.response?.status === 404 ? "not_found" : "unavailable";
+        } finally {
+            loading.value = false;
         }
     }
 
