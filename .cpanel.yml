@@ -1,4 +1,4 @@
 ---
 deployment:
   tasks:
-    - /bin/bash scripts/deploy-cpanel.sh "$HOME/public_html"
+    - /usr/bin/install -m 0700 scripts/pull-cpanel-frontend.sh "$HOME/.redpharma-frontend-pull.sh"

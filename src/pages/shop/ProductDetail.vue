@@ -71,127 +71,129 @@
             </div>
           </div>
 
-          <!-- Unit Selection Dropdown -->
-          <div
-            v-if="showPriceInfo"
-            class="detail-unit-options mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4"
-          >
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2"
-                >Select Unit</label
-              >
-              <select
-                v-model="selectedUnit"
-                class="form-select select-unit-field w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 py-2 px-3 focus:border-green-500 bg-white"
-              >
-                <option value="piece">Piece</option>
-                <option
-                  v-if="Number(productDetail.piece_qty) > 1"
-                  value="strip"
+          <div class="detail-buy-panel">
+            <!-- Unit Selection Dropdown -->
+            <div
+              v-if="showPriceInfo"
+              class="detail-unit-options mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4"
+            >
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Select Unit</label
                 >
-                  Strip ({{ productDetail.piece_qty }} Pieces)
-                </option>
-                <option v-if="Number(productDetail.stripe_qty) > 1" value="box">
-                  Box ({{
-                    Number(productDetail.stripe_qty) *
-                    (Number(productDetail.piece_qty) || 1)
-                  }}
-                  Pieces)
-                </option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2"
-                >Unit Price</label
-              >
-              <p
-                class="detail-unit-price w-full flex items-center border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-50 text-lg font-bold text-gray-800"
-                style="min-height: 23px; line-height: 23.5px"
-              >
-                {{ formatPrice(currentUnitPrice) }} Tk
-              </p>
-            </div>
-          </div>
-
-          <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4 price-qty-stat">
-            <div>
-              <p class="block text-sm font-medium text-gray-700 mb-0 mt-5">
-                Total Price:
-              </p>
-              <div class="flex items-center flex-wrap gap-3 mt-0 price-field">
+                <select
+                  v-model="selectedUnit"
+                  class="form-select select-unit-field w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 py-2 px-3 focus:border-green-500 bg-white"
+                >
+                  <option value="piece">Piece</option>
+                  <option
+                    v-if="Number(productDetail.piece_qty) > 1"
+                    value="strip"
+                  >
+                    Strip ({{ productDetail.piece_qty }} Pieces)
+                  </option>
+                  <option v-if="Number(productDetail.stripe_qty) > 1" value="box">
+                    Box ({{
+                      Number(productDetail.stripe_qty) *
+                      (Number(productDetail.piece_qty) || 1)
+                    }}
+                    Pieces)
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Unit Price</label
+                >
                 <p
-                  class="text-2xl font-bold text-green-600"
-                  v-if="hasPromotion"
+                  class="detail-unit-price w-full flex items-center border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-50 text-lg font-bold text-gray-800"
+                  style="min-height: 23px; line-height: 23.5px"
                 >
-                  {{ formatPrice(displayPromotionPrice) }} Tk
+                  {{ formatPrice(currentUnitPrice) }} Tk
                 </p>
-
-                <p
-                  class="font-bold"
-                  :class="
-                  hasPromotion
-                    ? 'line-through text-gray-500 text-xl'
-                    : 'text-green-600 text-3xl'
-                "
-                >
-                  {{ formatPrice(displayRegularPrice) }} Tk
-                </p>
-
-                <span
-                  v-if="hasPromotion && product.discountPercentage"
-                  class="bg-green-50 text-green-700 font-semibold text-xs px-3 py-1 rounded-full shadow-sm border border-green-200"
-                >
-                  -{{ product.discountPercentage }}%
-                </span>
               </div>
             </div>
-          </div>
 
-          <div
-            class="detail-purchase flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mt-6"
-          >
-            <div
-              class="detail-quantity flex sm:inline-flex justify-between sm:justify-center items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-sm"
-            >
-              <!-- Decrease -->
-              <button
-                @click="updateQty(Number(quantity) - 1)"
-                :disabled="Number(quantity) <= 1 || isStockOut"
-                class="w-12 h-12 sm:w-10 sm:h-10 flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200"
-              >
-                <i class="pi pi-minus"></i>
-              </button>
+            <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4 price-qty-stat">
+              <div>
+                <p class="block text-sm font-medium text-gray-700 mb-0 mt-5">
+                  Total Price:
+                </p>
+                <div class="flex items-center flex-wrap gap-3 mt-0 price-field">
+                  <p
+                    class="text-2xl font-bold text-green-600"
+                    v-if="hasPromotion"
+                  >
+                    {{ formatPrice(displayPromotionPrice) }} Tk
+                  </p>
 
-              <!-- Qty Input -->
-              <input
-                type="number"
-                :value="quantity"
-                @input="handleManualInput"
-                @blur="handleBlur"
-                min="1"
-                :max="maxUnits ?? undefined"
-                class="w-16 sm:w-16 flex-1 text-center text-gray-800 font-medium bg-white border-l border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all rounded-none py-3 sm:py-2"
-              />
+                  <p
+                    class="font-bold"
+                    :class="
+                    hasPromotion
+                      ? 'line-through text-gray-500 text-xl'
+                      : 'text-green-600 text-3xl'
+                  "
+                  >
+                    {{ formatPrice(displayRegularPrice) }} Tk
+                  </p>
 
-              <!-- Increase -->
-              <button
-                @click="updateQty(Number(quantity) + 1)"
-                :disabled="isStockOut || (maxUnits != null && Number(quantity) >= maxUnits)"
-                :title="maxUnits != null && Number(quantity) >= maxUnits ? 'Maximum stock reached' : ''"
-                class="w-12 h-12 sm:w-10 sm:h-10 flex items-center justify-center text-gray-600 hover:bg-green-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200"
-              >
-                <i class="pi pi-plus"></i>
-              </button>
+                  <span
+                    v-if="hasPromotion && product.discountPercentage"
+                    class="bg-green-50 text-green-700 font-semibold text-xs px-3 py-1 rounded-full shadow-sm border border-green-200"
+                  >
+                    -{{ product.discountPercentage }}%
+                  </span>
+                </div>
+              </div>
             </div>
 
-            <button
-              @click="addToCart(productDetail)"
-              :disabled="isStockOut"
-              class="w-full sm:flex-1 md:w-auto md:flex-none flex items-center justify-center whitespace-nowrap px-6 py-3 sm:py-2 font-bold text-lg sm:text-base text-white shadow-md transition-all duration-200 focus:ring-2 focus:ring-offset-1 rounded-full bg-green-600 hover:bg-green-700 focus:ring-green-400 disabled:bg-red-600 disabled:cursor-not-allowed disabled:hover:bg-red-700"
+            <div
+              class="detail-purchase flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mt-6"
             >
-              <span v-if="!isStockOut">Add to Cart</span>
-              <span v-else>❌ Unavailable</span>
-            </button>
+              <div
+                class="detail-quantity flex sm:inline-flex justify-between sm:justify-center items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-sm"
+              >
+                <!-- Decrease -->
+                <button
+                  @click="updateQty(Number(quantity) - 1)"
+                  :disabled="Number(quantity) <= 1 || isStockOut"
+                  class="w-12 h-12 sm:w-10 sm:h-10 flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200"
+                >
+                  <i class="pi pi-minus"></i>
+                </button>
+
+                <!-- Qty Input -->
+                <input
+                  type="number"
+                  :value="quantity"
+                  @input="handleManualInput"
+                  @blur="handleBlur"
+                  min="1"
+                  :max="maxUnits ?? undefined"
+                  class="w-16 sm:w-16 flex-1 text-center text-gray-800 font-medium bg-white border-l border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all rounded-none py-3 sm:py-2"
+                />
+
+                <!-- Increase -->
+                <button
+                  @click="updateQty(Number(quantity) + 1)"
+                  :disabled="isStockOut || (maxUnits != null && Number(quantity) >= maxUnits)"
+                  :title="maxUnits != null && Number(quantity) >= maxUnits ? 'Maximum stock reached' : ''"
+                  class="w-12 h-12 sm:w-10 sm:h-10 flex items-center justify-center text-gray-600 hover:bg-green-500 hover:text-white transition-colors disabled:text-gray-400 disabled:bg-gray-200"
+                >
+                  <i class="pi pi-plus"></i>
+                </button>
+              </div>
+
+              <button
+                @click="addToCart(productDetail)"
+                :disabled="isStockOut"
+                class="w-full sm:flex-1 md:w-auto md:flex-none flex items-center justify-center whitespace-nowrap px-6 py-3 sm:py-2 font-bold text-lg sm:text-base text-white shadow-md transition-all duration-200 focus:ring-2 focus:ring-offset-1 rounded-full bg-green-600 hover:bg-green-700 focus:ring-green-400 disabled:bg-red-600 disabled:cursor-not-allowed disabled:hover:bg-red-700"
+              >
+                <span v-if="!isStockOut">Add to Cart</span>
+                <span v-else>❌ Unavailable</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -317,7 +319,7 @@
     </div>
 
     <!-- Related Medicines -->
-    <div>
+    <div class="detail-related">
       <h2 v-if="alternativeProducts.length" class="detail-related-title text-xl font-semibold mb-4">
         Related Medicines ({{ alternativeProducts.length }})
       </h2>
@@ -628,25 +630,36 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.detail-summary,
-.detail-price-panel {
-  border-color: #dce8e0;
-  border-radius: 1rem;
-  box-shadow: 0 3px 12px rgb(25 65 44 / 6%);
+.detail-summary {
+  gap: clamp(1rem, 2.25vw, 2rem);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
-.detail-summary {
-  gap: clamp(1rem, 2.5vw, 2.25rem);
+.detail-gallery,
+.detail-overview,
+.detail-price-panel {
+  border: 1px solid #dce9e0;
+  border-radius: 1.125rem;
 }
 
 .detail-gallery {
-  border-color: #e4ede7;
-  border-radius: 0.875rem;
-  background: #f4f8f5;
+  min-height: clamp(15rem, 45vw, 22rem);
+  background: radial-gradient(ellipse at 48% 42%, #fff 22%, #edf6f0 78%);
+}
+
+.detail-gallery :deep(img) {
+  max-height: 26rem;
 }
 
 .detail-overview {
+  display: block;
   min-width: 0;
+  padding: clamp(1rem, 2.5vw, 2rem);
+  background: #fff;
+  box-shadow: 0 3px 12px rgb(25 65 44 / 5%);
 }
 
 .detail-heading {
@@ -657,7 +670,8 @@ onBeforeUnmount(() => {
 
 .detail-heading h1 {
   color: #17382a;
-  line-height: 1.18;
+  font-size: clamp(1.65rem, 3vw, 2.75rem);
+  line-height: 1.15;
   overflow-wrap: anywhere;
 }
 
@@ -685,32 +699,42 @@ onBeforeUnmount(() => {
   color: #3c574a;
 }
 
+.detail-buy-panel {
+  display: grid;
+  gap: 0.875rem;
+  margin-top: 1.25rem;
+  padding: clamp(0.875rem, 1.65vw, 1.25rem);
+  border: 1px solid #d8e9de;
+  border-radius: 0.875rem;
+  background: #f2f9f4;
+}
+
 .detail-unit-options {
   gap: 0.75rem 1rem;
+  margin-top: 0;
 }
 
 .detail-unit-options select,
 .detail-unit-price {
   min-height: 2.625rem;
-  border-color: #d8e4dc;
+  border-color: #d5e3da;
   border-radius: 0.5rem;
   box-shadow: none;
 }
 
 .detail-unit-price {
-  background: #f5f8f6;
+  background: #fff;
   color: #274737;
 }
 
 .price-qty-stat {
   display: block;
-  margin-top: 1.25rem;
-  padding-top: 0.875rem;
-  border-top: 1px solid #e7efe9;
+  margin-top: 0;
 }
 
 .price-qty-stat > div > p {
   margin-top: 0;
+  color: #466153;
 }
 
 .price-field > p:not(.line-through) {
@@ -718,8 +742,8 @@ onBeforeUnmount(() => {
 }
 
 .detail-purchase {
-  gap: 0.75rem;
-  margin-top: 0.875rem;
+  gap: 0.625rem;
+  margin-top: 0;
 }
 
 .detail-purchase > button {
@@ -729,9 +753,9 @@ onBeforeUnmount(() => {
 }
 
 .detail-quantity {
-  border-color: #d8e4dc;
+  border-color: #d5e3da;
   border-radius: 0.625rem;
-  background: #f3f7f4;
+  background: #fff;
   box-shadow: none;
 }
 
@@ -746,6 +770,7 @@ onBeforeUnmount(() => {
 
 .detail-price-panel {
   padding: clamp(1rem, 2vw, 1.5rem);
+  box-shadow: none;
 }
 
 .detail-price-grid {
@@ -763,17 +788,47 @@ onBeforeUnmount(() => {
   margin-bottom: 0.625rem;
 }
 
+.detail-related {
+  padding-top: 1rem;
+  border-top: 1px solid #e2ece5;
+}
+
 .detail-related-title {
   color: #244135;
 }
 
-@media (width < 768px) {
-  .detail-gallery {
-    min-height: 215px;
+@media (width < 1100px) {
+  .detail-summary {
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .detail-gallery :deep(img) {
-    max-height: 20rem;
+  .detail-summary > div {
+    grid-column: auto;
+  }
+}
+
+@media (width >= 1100px) {
+  .detail-summary {
+    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.25fr);
+  }
+
+  .detail-summary > div {
+    grid-column: auto;
+  }
+
+  .detail-gallery {
+    min-height: 24rem;
+  }
+}
+
+@media (width >= 1360px) {
+  .detail-buy-panel {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+  }
+
+  .detail-unit-options {
+    grid-column: 1 / -1;
   }
 }
 </style>

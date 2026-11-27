@@ -1,9 +1,7 @@
-# cPanel storefront deployment
+# Automatic storefront deployment
 
-The `cpanel-production` branch carries the reviewed storefront source and the prebuilt files for the next live release under `release/`. cPanel does not need Node.js to deploy these files.
+Push source changes to `cpanel-production`. GitHub Actions runs the tests, builds the Vue storefront, and publishes the build to `cpanel-ready`. The cPanel cron job checks for a build every five minutes and applies it to `public_html`. Deployment uses the public repository and needs no cPanel credentials in GitHub.
 
-1. Commit the new storefront entry page and its assets to `release/` on `cpanel-production` and push the branch to GitHub.
-2. In cPanel, open **Git Version Control**, select **RedPharma Storefront**, and open **Pull or Deploy**.
-3. Select **Update from Remote**, then **Deploy HEAD Commit**.
+If the build fails, the currently published website stays live. Actions logs show build and publish errors. cPanel deployment status is recorded in `~/.redpharma-frontend-builds`, including the prior index page for rollback.
 
-Deployments publish assets before switching the storefront entry page. The prior entry page is saved in `~/.redpharma-storefront-backups/index.previous.html`, and existing assets remain available for rollback.
+For a fresh cPanel setup or to update the server-side pull script, use **Git Version Control → RedPharma Storefront → Update from Remote → Deploy HEAD Commit** on `cpanel-production`. The deployment command installs the pull script in the account home directory. Configure **Cron Jobs** to run `/bin/bash ~/.redpharma-frontend-pull.sh` every five minutes.

@@ -1,3 +1,5 @@
 .cpanel.yml text eol=lf
 /scripts/deploy-cpanel.sh text eol=lf
 /release/index.html text eol=lf
+/scripts/publish-cpanel-release.sh text eol=lf
+/scripts/pull-cpanel-frontend.sh text eol=lf
