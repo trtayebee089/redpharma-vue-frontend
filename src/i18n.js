@@ -19,12 +19,10 @@ const messages = {
             next: "Next",
         },
         header: {
-            searchPlaceHolders: [
-                "Search medicines... (Ex: Napa)",
-                "Search by brand... (Ex: Acme Pharma)",
-                "Search by category... (Ex: Pain Relief)",
-                "Find your prescription... (Ex: Antibiotics)"
-            ],
+            search: "Search medicines or brands",
+            clearSearch: "Clear search",
+            switchLanguage: "Switch to Bengali",
+            openMenu: "Main menu",
             buttons: {
                 coverage: "Coverage",
                 login: "Login / Sign Up",
@@ -297,12 +295,10 @@ const messages = {
             },
         },
         header: {
-            searchPlaceHolders: [
-                "ওষুধ খুঁজুন... (যেমন: Napa)",
-                "ব্র্যান্ড অনুসারে খুঁজুন... (যেমন: Beximco)",
-                "ক্যাটাগরি অনুসারে খুঁজুন... (যেমন: Pain Relief)",
-                "আপনার প্রেসক্রিপশন খুঁজুন... (যেমন: Antibiotics)"
-            ],
+            search: "ওষুধ বা ব্র্যান্ড খুঁজুন",
+            clearSearch: "অনুসন্ধান মুছুন",
+            switchLanguage: "ইংরেজিতে পরিবর্তন করুন",
+            openMenu: "প্রধান মেনু",
             buttons: {
                 coverage: "কভারেজ",
                 login: "লগইন / সাইন আপ",
