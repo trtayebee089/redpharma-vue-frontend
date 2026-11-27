@@ -279,9 +279,10 @@ onMounted(() => Promise.all([fetchBestSellingProducts(), fetchFeaturedProducts()
 }
 
 .home-category-media {
+  position: relative;
   display: grid;
   width: 100%;
-  aspect-ratio: 1.6;
+  aspect-ratio: 1.45;
   overflow: hidden;
   place-items: center;
   border-radius: .52rem;
@@ -289,6 +290,8 @@ onMounted(() => Promise.all([fetchBestSellingProducts(), fetchFeaturedProducts()
 }
 
 .home-category-media img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
