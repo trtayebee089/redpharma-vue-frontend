@@ -213,6 +213,7 @@ const messages = {
         footer: {
             title: "Quality Medicines, Trusted Care",
             description: "RedPharma BD is your trusted online pharmacy in Bangladesh. Fast delivery, genuine medicines, and top healthcare products.",
+            addressLine: "#303, Shersha Road, Laxmipur, Rajpara, Rajshahi",
             headings: {
                 quick_actions: "Quick Actions",
                 services: "Our Services",
@@ -443,6 +444,7 @@ const messages = {
         footer: {
             title: "গুণগতমানসম্পন্ন ওষুধ, বিশ্বাসযোগ্য যত্ন",
             description: "RedPharma BD হলো বাংলাদেশের আপনার বিশ্বাসযোগ্য অনলাইন ফার্মেসি। দ্রুত ডেলিভারি, আসল ওষুধ, এবং সেরা স্বাস্থ্যসেবা পণ্য।",
+            addressLine: "#৩০৩, শেরশাহ রোড, লক্ষ্মীপুর, রাজপাড়া, রাজশাহী",
             headings: {
                 quick_actions: "দ্রুত অ্যাকশন",
                 services: "আমাদের সেবা",

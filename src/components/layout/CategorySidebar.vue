@@ -1,55 +1,113 @@
+<script setup>
+import { useRoute } from 'vue-router';
+import CategoryImage from '@/components/common/CategoryImage.vue';
+import { useCategories } from '@/composables/useCategories.js';
+
+const route = useRoute();
+const { categories } = useCategories();
+</script>
+
 <template>
-    <aside class="hidden lg:block w-64 bg-gray-100 shadow-red-400 pt-4 category-sidebar shadow-right">
-        <ul class="pt-4">
-            <li v-for="category in categories" :key="category.id" class="last:border-b-0">
-                <router-link :to="category.navigationPath"
-                    class="flex items-center justify-between px-4 py-3 text-gray-700 hover:bg-red-200 transition-colors hover:font-bold hover:text-red-950"
-                    :class="{
-                        'bg-red-200 font-bold text-red-950': route.params.slug === category.slug
-                    }">
-                    <div class="flex items-center">
-                        <CategoryImage v-if="category.image" :src="category.image" alt="" class="w-6 h-6 mr-3" loading="lazy" />
-                        <span>{{ category . name }}</span>
-                    </div>
-                    <i class="pi pi-chevron-right text-sm"></i>
-                </router-link>
-            </li>
-        </ul>
+    <aside class="category-sidebar">
+        <nav :aria-label="$t('header.menu.category')">
+            <ul class="category-list">
+                <li v-for="category in categories" :key="category.id">
+                    <RouterLink
+                        :to="category.navigationPath"
+                        class="category-link"
+                        :class="{ 'is-selected': route.params.slug === category.slug }"
+                    >
+                        <span class="category-thumbnail" aria-hidden="true">
+                            <CategoryImage v-if="category.image" :src="category.image" alt="" loading="lazy" />
+                        </span>
+                        <span>{{ category.name }}</span>
+                        <i class="pi pi-chevron-right category-chevron" aria-hidden="true"></i>
+                    </RouterLink>
+                </li>
+            </ul>
+        </nav>
     </aside>
 </template>
 
-<script setup>
-    import CategoryImage from "@/components/common/CategoryImage.vue";
-    import {
-        useCategories
-    } from "@/composables/useCategories.js";
-    const {
-        categories,
-        loading,
-        error
-    } = useCategories();
-    import {
-        useRoute
-    } from 'vue-router';
-
-    const route = useRoute();
-</script>
 <style scoped>
-    .category-sidebar {
-        position: sticky;
-        top: 70px;
-        height: calc(100vh - 70px);
-        overflow-y: auto;
-        z-index: 10;
-        width: 16rem;
-    }
-    @media (max-width: 1023px) {
-        .category-sidebar {
-            display: none !important;
-        }
-    }
+.category-sidebar {
+    position: sticky;
+    top: 70px;
+    z-index: 10;
+    flex: 0 0 16rem;
+    width: 16rem;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
+    border-inline-end: 1px solid #e1e9e5;
+    background: #f8faf9;
+}
 
-    .category-sidebar.shadow-right {
-        box-shadow: 1px 0px 11px 0px rgb(193 193 193 / 50%);
+.category-list {
+    display: grid;
+    gap: 3px;
+    padding: 1.5rem 0.625rem 1rem;
+}
+
+.category-link {
+    display: grid;
+    grid-template-columns: 1.75rem minmax(0, 1fr) 0.75rem;
+    align-items: center;
+    gap: 0.625rem;
+    min-height: 2.75rem;
+    padding: 0.375rem 0.625rem;
+    border-radius: 0.5rem;
+    color: #30423b;
+    font-size: 0.9375rem;
+    line-height: 1.35;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.category-link:hover {
+    background: #edf4ef;
+    color: #174e32;
+}
+
+.category-link:focus-visible {
+    outline: 2px solid #21834c;
+    outline-offset: -2px;
+}
+
+.category-link.is-selected {
+    background: #e2f2e8;
+    box-shadow: inset 3px 0 #21834c;
+    color: #174e32;
+    font-weight: 650;
+}
+
+.category-thumbnail img {
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 1px;
+    border: 1px solid #e1e9e5;
+    border-radius: 0.375rem;
+    background: #fff;
+    object-fit: cover;
+}
+
+.category-chevron {
+    justify-self: end;
+    color: #65776d;
+    font-size: 0.7rem;
+}
+
+.category-link.is-selected .category-chevron {
+    color: #21834c;
+}
+
+@media (width < 1024px) {
+    .category-sidebar {
+        display: none;
     }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .category-link {
+        transition: none;
+    }
+}
 </style>

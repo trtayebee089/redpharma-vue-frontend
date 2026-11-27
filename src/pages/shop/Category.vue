@@ -1,55 +1,51 @@
 <template>
-    <div v-if="isLoading" class="flex justify-center items-center min-h-[300px] ">
-        <svg class="animate-spin h-10 w-10 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none"
-            viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z">
-            </path>
-        </svg>
+    <div v-if="isLoading" class="category-loading" role="status" aria-label="Loading products">
+        <span class="category-spinner" aria-hidden="true"></span>
     </div>
 
-    <div v-else class="pt-6">
-        <BreadCrumb :crumbs="[
-            { label: 'Home', to: '/' }, { label: 'Category', to: '/categories' }, { label: category?.name }
-        ]" :title="category?.name" :subtitle="`Showing ${filteredProducts.length} products in ${category?.name}`"
-            :description="category?.description" />
-
-        <section
-            class="relative fade-up flex flex-col md:flex-row gap-6 mt-10 transform transition-transform duration-300"
-            v-if="category">
-            <div class="flex-1">
-                <div
-                    class="grid grid-cols-1 min-[321px]:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                    <ProductGridItem v-for="product in filteredProducts" :key="product.id" :product="product" />
-                </div>
-
-
-                <div class="flex justify-center mt-6 space-x-2" v-if="pagination && pagination.last_page > 1">
-                    <button @click="changePage(pagination.current_page - 1)" :disabled="pagination.current_page === 1"
-                        class="px-3 py-1 rounded border bg-white text-gray-700 disabled:opacity-50">
-                        Prev
-                    </button>
-
-                    <template v-for="page in pageNumbersToShow" :key="page">
-                        <span v-if="page === '...'">...</span>
-                        <button v-else @click="changePage(page)" :class="page === pagination.current_page ?
-                            'px-3 py-1 rounded border bg-green-600 text-white' :
-                            'px-3 py-1 rounded border bg-white text-gray-700'">
-                            {{ page }}
-                        </button>
-                    </template>
-
-                    <button @click="changePage(pagination.current_page + 1)"
-                        :disabled="pagination.current_page === pagination.last_page"
-                        class="px-3 py-1 rounded border bg-white text-gray-700 disabled:opacity-50">
-                        Next
-                    </button>
-                </div>
-
-                <p v-if="filteredProducts.length === 0" class="mt-4 text-gray-600">
-                    No products found in this category.
-                </p>
+    <div v-else class="category-page">
+        <header v-if="category?.name" class="category-hero">
+            <div class="category-hero-body">
+                <nav aria-label="Breadcrumb" class="category-breadcrumb">
+                    <ol>
+                        <li><RouterLink to="/">Home</RouterLink></li>
+                        <li><RouterLink to="/categories">Category</RouterLink></li>
+                        <li aria-current="page">{{ category.name }}</li>
+                    </ol>
+                </nav>
+                <h1>{{ category.name }}</h1>
+                <p v-if="category.description" class="category-description">{{ category.description }}</p>
             </div>
+            <CategoryImage v-if="category.image" :src="category.image" alt="" class="category-hero-image" />
+        </header>
+
+        <section v-if="category" aria-label="Products" class="category-catalog">
+            <p v-if="filteredProducts.length" class="category-results" role="status">
+                Showing <strong>{{ filteredProducts.length }}</strong> of
+                <strong>{{ pagination?.total ?? filteredProducts.length }}</strong> products
+            </p>
+
+            <div v-if="filteredProducts.length" class="category-grid">
+                <ProductGridItem v-for="product in filteredProducts" :key="product.id" :product="product"
+                    class="category-product-card" />
+            </div>
+            <p v-else class="category-empty">No products found in this category.</p>
+
+            <nav v-if="pagination && pagination.last_page > 1" class="category-pagination" aria-label="Product pages">
+                <button type="button" @click="changePage(pagination.current_page - 1)"
+                    :disabled="pagination.current_page === 1">Prev</button>
+
+                <template v-for="(page, index) in pageNumbersToShow" :key="index">
+                    <span v-if="page === '...'">…</span>
+                    <button v-else type="button" @click="changePage(page)"
+                        :aria-current="page === pagination.current_page ? 'page' : undefined">
+                        {{ page }}
+                    </button>
+                </template>
+
+                <button type="button" @click="changePage(pagination.current_page + 1)"
+                    :disabled="pagination.current_page === pagination.last_page">Next</button>
+            </nav>
         </section>
 
         <transition name="slide-fade">
@@ -86,7 +82,7 @@ import {
 } from "vue-router";
 import ProductGridItem from "@/components/products/ProductGridItem.vue";
 import FilterOptions from "@/components/products/FilterOptions.vue";
-import BreadCrumb from "@/components/common/BreadCrumb.vue";
+import CategoryImage from "@/components/common/CategoryImage.vue";
 import {
     useCategories
 } from "@/composables/useCategories.js";
@@ -179,3 +175,216 @@ watch(sortOption, async () => {
     }
 });
 </script>
+
+<style scoped>
+.category-page {
+    padding-block: clamp(0.75rem, 2vw, 1.5rem) 1rem;
+}
+
+.category-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding: clamp(1.125rem, 3vw, 2rem);
+    border: 1px solid #d4e9dd;
+    border-radius: 1.125rem;
+    background: linear-gradient(115deg, #f3faf6 15%, #e2f4e9 100%);
+    color: #163b2b;
+}
+
+.category-hero-body {
+    min-width: 0;
+}
+
+.category-hero h1 {
+    margin-top: 0.625rem;
+    font-size: clamp(1.65rem, 3vw, 2.85rem);
+    font-weight: 750;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+}
+
+.category-breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 0.55rem;
+    color: #426153;
+    font-size: 0.8125rem;
+}
+
+.category-breadcrumb li + li::before {
+    margin-inline-end: 0.55rem;
+    content: "/";
+    color: #668374;
+}
+
+.category-breadcrumb li[aria-current] {
+    color: #214a37;
+    font-weight: 650;
+}
+
+.category-breadcrumb a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+.category-description {
+    max-width: 50ch;
+    margin-top: 0.625rem;
+    color: #3e5f50;
+}
+
+.category-hero-image {
+    flex: 0 0 auto;
+    width: clamp(3.75rem, 13vw, 7rem);
+    aspect-ratio: 1;
+    padding: 0.25rem;
+    border: 1px solid #cfe5d9;
+    border-radius: 1rem;
+    background: #fff;
+    object-fit: contain;
+}
+
+.category-catalog {
+    margin-top: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.category-results {
+    margin-bottom: 0.75rem;
+    color: #53645d;
+    font-size: 0.875rem;
+}
+
+.category-results strong {
+    color: #263f35;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(0.625rem, 1.3vw, 1.1rem);
+}
+
+.category-grid :deep(.category-product-card) {
+    min-width: 0;
+    border-color: #e0e8e4;
+    border-radius: 0.875rem;
+    box-shadow: 0 1px 2px rgb(23 53 40 / 6%);
+}
+
+.category-grid :deep(.category-product-card:hover) {
+    border-color: #bfd9cb;
+    box-shadow: 0 5px 15px rgb(23 53 40 / 9%);
+}
+
+.category-grid :deep(.category-product-card > a:first-of-type) {
+    margin: 0.375rem 0.375rem 0;
+    border-radius: 0.625rem;
+    background: #f6f8f7;
+}
+
+.category-grid :deep(.category-product-card h5) {
+    display: -webkit-box;
+    overflow: hidden;
+    white-space: normal;
+    line-height: 1.35;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.category-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    margin-top: 1.5rem;
+}
+
+.category-pagination button {
+    min-width: 2.625rem;
+    min-height: 2.625rem;
+    padding-inline: 0.625rem;
+    border: 1px solid #d6e3dc;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #284537;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.category-pagination button:not(:disabled):hover {
+    border-color: #9ecbaf;
+    background: #eff8f2;
+}
+
+.category-pagination button[aria-current="page"] {
+    border-color: #137346;
+    background: #137346;
+    color: #fff;
+}
+
+.category-pagination button[aria-current="page"]:hover {
+    border-color: #0e5d38;
+    background: #0e5d38;
+}
+
+.category-pagination button:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.category-page :deep(a:focus-visible),
+.category-page :deep(button:focus-visible) {
+    outline: 2px solid #137346;
+    outline-offset: 2px;
+}
+
+.category-empty {
+    padding: 1rem 1.25rem;
+    border: 1px solid #e0e8e4;
+    border-radius: 0.75rem;
+    color: #53645d;
+}
+
+.category-loading {
+    display: grid;
+    min-height: 300px;
+    place-items: center;
+}
+
+.category-spinner {
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 3px solid #dceee3;
+    border-top-color: #137346;
+    border-radius: 50%;
+    animation: category-spin 0.75s linear infinite;
+}
+
+@keyframes category-spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (width < 360px) {
+    .category-grid { grid-template-columns: 1fr; }
+}
+
+@media (width >= 768px) {
+    .category-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (width >= 1180px) {
+    .category-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (width >= 1440px) {
+    .category-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .category-spinner { animation: none; }
+}
+</style>
