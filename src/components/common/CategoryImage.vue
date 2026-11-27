@@ -1,22 +1,30 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { categoryImageSources } from '@/utils/categoryImage.js';
 
 const props = defineProps({ src: String });
 const fallback = '/logo.png';
-const source = ref(fallback);
-const failed = ref(false);
+const candidateIndex = ref(0);
+const choices = computed(() => [...categoryImageSources(props.src), fallback]);
+const source = computed(() => choices.value[candidateIndex.value]);
 
-watch(() => props.src, (src) => {
-    source.value = src || fallback;
-    failed.value = false;
-}, { immediate: true });
+watch(() => props.src, () => {
+    candidateIndex.value = 0;
+}, { flush: 'sync' });
 
-function handleError() {
-    if (source.value !== fallback) source.value = fallback;
-    else failed.value = true;
+function handleError(event) {
+    if (event.currentTarget.getAttribute('src') === source.value) {
+        candidateIndex.value += 1;
+    }
 }
 </script>
 
 <template>
-    <img :src="source" :style="failed ? { visibility: 'hidden' } : undefined" @error="handleError" />
+    <img
+        v-if="source"
+        :key="source"
+        :src="source"
+        :style="source === fallback ? { objectFit: 'contain' } : undefined"
+        @error="handleError"
+    />
 </template>
