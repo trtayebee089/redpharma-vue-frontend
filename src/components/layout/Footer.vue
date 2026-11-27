@@ -85,7 +85,7 @@ const linkGroups = [
     border-top: 4px solid #10b981;
     background: #112822;
     color: #ecfdf5;
-    padding-bottom: 3.5rem;
+    padding-bottom: calc(var(--mobile-nav-height) + env(safe-area-inset-bottom));
     font-size: 0.875rem;
     line-height: 1.5;
 }

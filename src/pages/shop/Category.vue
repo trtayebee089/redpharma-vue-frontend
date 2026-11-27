@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isLoading" class="category-loading" role="status" aria-label="Loading products">
+    <div v-if="isLoading" class="category-loading" role="status" :aria-label="t('catalog.loading')">
         <span class="category-spinner" aria-hidden="true"></span>
     </div>
 
@@ -8,12 +8,12 @@
             <div class="category-hero-body">
                 <nav aria-label="Breadcrumb" class="category-breadcrumb">
                     <ol>
-                        <li><RouterLink to="/">Home</RouterLink></li>
-                        <li><RouterLink to="/categories">Category</RouterLink></li>
-                        <li aria-current="page">{{ category.name }}</li>
+                        <li><RouterLink to="/">{{ t('header.menu.home') }}</RouterLink></li>
+                        <li><RouterLink to="/categories">{{ t('catalog.category') }}</RouterLink></li>
+                        <li aria-current="page">{{ categoryName(category) }}</li>
                     </ol>
                 </nav>
-                <h1>{{ category.name }}</h1>
+                <h1>{{ categoryName(category) }}</h1>
                 <p v-if="category.description" class="category-description">{{ category.description }}</p>
             </div>
             <CategoryImage v-if="category.image" :src="category.image" alt="" class="category-hero-image" />
@@ -21,30 +21,32 @@
 
         <section v-if="category" aria-label="Products" class="category-catalog">
             <p v-if="filteredProducts.length" class="category-results" role="status">
-                Showing <strong>{{ filteredProducts.length }}</strong> of
-                <strong>{{ pagination?.total ?? filteredProducts.length }}</strong> products
+                <i18n-t keypath="catalog.showing" scope="global">
+                    <template #shown><strong>{{ n(filteredProducts.length) }}</strong></template>
+                    <template #total><strong>{{ n(pagination?.total ?? filteredProducts.length) }}</strong></template>
+                </i18n-t>
             </p>
 
             <div v-if="filteredProducts.length" class="category-grid">
                 <ProductGridItem v-for="product in filteredProducts" :key="product.id" :product="product"
                     class="category-product-card" />
             </div>
-            <p v-else class="category-empty">No products found in this category.</p>
+            <p v-else class="category-empty">{{ t('catalog.empty') }}</p>
 
-            <nav v-if="pagination && pagination.last_page > 1" class="category-pagination" aria-label="Product pages">
+            <nav v-if="pagination && pagination.last_page > 1" class="category-pagination" :aria-label="t('catalog.pages')">
                 <button type="button" @click="changePage(pagination.current_page - 1)"
-                    :disabled="pagination.current_page === 1">Prev</button>
+                    :disabled="pagination.current_page === 1">{{ t('catalog.previous') }}</button>
 
                 <template v-for="(page, index) in pageNumbersToShow" :key="index">
                     <span v-if="page === '...'">…</span>
                     <button v-else type="button" @click="changePage(page)"
                         :aria-current="page === pagination.current_page ? 'page' : undefined">
-                        {{ page }}
+                        {{ n(page) }}
                     </button>
                 </template>
 
                 <button type="button" @click="changePage(pagination.current_page + 1)"
-                    :disabled="pagination.current_page === pagination.last_page">Next</button>
+                    :disabled="pagination.current_page === pagination.last_page">{{ t('catalog.next') }}</button>
             </nav>
         </section>
 
@@ -83,10 +85,14 @@ import {
 import ProductGridItem from "@/components/products/ProductGridItem.vue";
 import FilterOptions from "@/components/products/FilterOptions.vue";
 import CategoryImage from "@/components/common/CategoryImage.vue";
+import { useCategoryNames } from "@/composables/useCategoryNames.js";
+import { useI18n } from "vue-i18n";
 import {
     useCategories
 } from "@/composables/useCategories.js";
 
+const { t, n } = useI18n();
+const categoryName = useCategoryNames();
 const route = useRoute();
 const router = useRouter();
 

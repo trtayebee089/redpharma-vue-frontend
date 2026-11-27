@@ -19,6 +19,7 @@ watch(
     () => langStore.lang,
     (newLang) => {
         locale.value = newLang;
+        document.documentElement.lang = newLang;
     }, {
     immediate: true
 }

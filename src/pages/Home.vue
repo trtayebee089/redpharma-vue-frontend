@@ -10,9 +10,11 @@ import PrescriptionUpload from '@/components/common/PrescriptionUpload.vue';
 import HeroSlider from '@/components/layout/HeroSlider.vue';
 import HomeProductRail from '@/components/products/HomeProductRail.vue';
 import { useCategories } from '@/composables/useCategories.js';
+import { useCategoryNames } from '@/composables/useCategoryNames.js';
 import { useProducts } from '@/composables/useProducts.js';
 
 const { t } = useI18n();
+const categoryName = useCategoryNames();
 const { categories, loading, fetchCategoryDetails } = useCategories();
 const { featured, bestSelling, fetchFeaturedProducts, fetchBestSellingProducts } =
   useProducts({ fetchOnMount: false });
@@ -90,7 +92,7 @@ onMounted(() => Promise.all([fetchBestSellingProducts(), fetchFeaturedProducts()
             <span class="home-category-media">
               <CategoryImage :src="category.image" alt="" loading="lazy" decoding="async" />
             </span>
-            <span class="home-category-name">{{ category.name }}</span>
+            <span class="home-category-name">{{ categoryName(category) }}</span>
           </RouterLink>
         </SwiperSlide>
       </Swiper>
@@ -134,7 +136,7 @@ onMounted(() => Promise.all([fetchBestSellingProducts(), fetchFeaturedProducts()
     <HomeProductRail
       v-for="(category, index) in populatedCategories"
       :key="category.slug"
-      :title="category.name"
+      :title="categoryName(category)"
       :image="category.image"
       :category-path="category.navigationPath"
       :products="categoryProducts[category.slug]"
@@ -179,6 +181,17 @@ onMounted(() => Promise.all([fetchBestSellingProducts(), fetchFeaturedProducts()
   font-weight: 750;
   line-height: 1.08;
   letter-spacing: -.032em;
+}
+
+.home-intro h1:lang(bn) {
+  max-width: none;
+  letter-spacing: normal;
+  line-height: 1.2;
+}
+
+.home-section-heading h2:lang(bn) {
+  letter-spacing: normal;
+  line-height: 1.35;
 }
 
 .home-intro p {

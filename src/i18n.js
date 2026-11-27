@@ -2,6 +2,22 @@ import { createI18n } from "vue-i18n";
 
 const messages = {
     en: {
+        mobileNav: {
+            navigation: "Mobile navigation",
+            categories: "Categories",
+            account: "Account",
+            cartWithCount: "Cart ({count})",
+        },
+        catalog: {
+            category: "Category",
+            productCount: "{count} products",
+            showing: "Showing {shown} of {total} products",
+            empty: "No products found in this category.",
+            loading: "Loading products",
+            pages: "Product pages",
+            previous: "Prev",
+            next: "Next",
+        },
         header: {
             searchPlaceHolders: [
                 "Search medicines... (Ex: Napa)",
@@ -132,6 +148,7 @@ const messages = {
                 platform: "Browse healthcare products with the RedPharma app.",
                 previous: "Previous slide",
                 next: "Next slide",
+                goToSlide: "Go to slide {index}",
             },
             featured_products: "Featured Products",
             best_selling: "Best Selling Products",
@@ -249,6 +266,36 @@ const messages = {
         contact_us: "Contact Us",
     },
     bn: {
+        mobileNav: {
+            navigation: "মোবাইল নেভিগেশন",
+            categories: "বিভাগ",
+            account: "অ্যাকাউন্ট",
+            cartWithCount: "কার্ট ({count})",
+        },
+        catalog: {
+            category: "বিভাগ",
+            productCount: "{count}টি পণ্য",
+            showing: "{total}টি পণ্যের মধ্যে {shown}টি দেখানো হচ্ছে",
+            empty: "এই বিভাগে কোনো পণ্য পাওয়া যায়নি।",
+            loading: "পণ্য লোড হচ্ছে",
+            pages: "পণ্যের পৃষ্ঠা",
+            previous: "আগের",
+            next: "পরের",
+            categoryNames: {
+                "baby-care": "শিশুর যত্ন",
+                "dental-care": "দাঁতের যত্ন",
+                "diabetic-care": "ডায়াবেটিসের যত্ন",
+                diapers: "ডায়াপার",
+                "herbal-medicine": "ভেষজ ওষুধ",
+                "hygiene-freshness": "পরিচ্ছন্নতা ও সতেজতা",
+                "personal-care": "ব্যক্তিগত যত্ন",
+                "prescription-medicine": "প্রেসক্রিপশনের ওষুধ",
+                "sexual-wellness": "যৌন স্বাস্থ্য",
+                "skin-care": "ত্বকের যত্ন",
+                supplement: "সাপ্লিমেন্ট",
+                "womens-choice": "নারীদের পছন্দ",
+            },
+        },
         header: {
             searchPlaceHolders: [
                 "ওষুধ খুঁজুন... (যেমন: Napa)",
@@ -377,6 +424,7 @@ const messages = {
                 platform: "রেডফার্মা অ্যাপে স্বাস্থ্যপণ্য দেখুন।",
                 previous: "আগের স্লাইড",
                 next: "পরের স্লাইড",
+                goToSlide: "{index} নম্বর স্লাইডে যান",
             },
             best_selling: "সর্বাধিক বিক্রিত পণ্য",
             view_all: "সব দেখুন",

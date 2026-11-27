@@ -28,7 +28,11 @@ const slides = [
             :navigation="true"
             :pagination="{ clickable: true }"
             :autoplay="animate ? { delay: 4500, disableOnInteraction: true, pauseOnMouseEnter: true } : false"
-            :a11y="{ prevSlideMessage: t('home.carousel.previous'), nextSlideMessage: t('home.carousel.next') }"
+            :a11y="{
+                prevSlideMessage: t('home.carousel.previous'),
+                nextSlideMessage: t('home.carousel.next'),
+                paginationBulletMessage: t('home.carousel.goToSlide', { index: '{{index}}' }),
+            }"
         >
             <SwiperSlide v-for="(slide, index) in slides" :key="slide.image">
                 <img

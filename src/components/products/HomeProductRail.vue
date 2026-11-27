@@ -97,6 +97,11 @@ function syncCarousel(swiper) {
     letter-spacing: -.018em;
 }
 
+.rail-heading h2:lang(bn) {
+    letter-spacing: normal;
+    line-height: 1.35;
+}
+
 .rail-category-image {
     width: 2rem;
     height: 2rem;
