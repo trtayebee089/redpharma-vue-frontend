@@ -7,7 +7,7 @@
 
             <div ref="searchContainer" class="header-search">
                 <i class="pi pi-search header-search-icon" aria-hidden="true"></i>
-                <input ref="searchInput" type="text" v-model="searchQuery" :placeholder="$t('header.search')"
+                <input ref="searchInput" type="text" v-model="searchQuery" :placeholder="searchPlaceholder || $t('header.search')"
                     :aria-label="$t('header.search')" class="header-search-input"
                     role="combobox" aria-autocomplete="list" autocomplete="off"
                     :aria-expanded="shouldShowSearchPanel"
@@ -115,7 +115,7 @@ import usFlag from '@/assets/icons/us-flag.png';
 import bdFlag from '@/assets/icons/bd-flag.png';
 
 import { useI18n } from "vue-i18n";
-const { t, n } = useI18n();
+const { t, n, tm, rt, locale } = useI18n();
 
 const flags = {
     en: usFlag,
@@ -146,6 +146,50 @@ const searchContainer = ref(null);
 const searchPanelOpen = ref(false);
 const searchRequestPending = ref(false);
 const activeSearchIndex = ref(-1);
+const searchPlaceholder = ref("");
+let placeholderTimer;
+let reducedMotion;
+
+function startPlaceholderAnimation() {
+    clearTimeout(placeholderTimer);
+    searchPlaceholder.value = t("header.search");
+    if (reducedMotion?.matches) return;
+
+    const segmenter = typeof Intl.Segmenter === "function"
+        ? new Intl.Segmenter(locale.value, { granularity: "grapheme" })
+        : null;
+    const phrases = tm("header.searchPlaceHolders").map(message => {
+        const text = rt(message);
+        return segmenter ? Array.from(segmenter.segment(text), part => part.segment) : Array.from(text);
+    });
+    if (!phrases.length) return;
+
+    let phraseIndex = 0;
+    let length = phrases[0].length;
+    let deleting = true;
+    searchPlaceholder.value = phrases[0].join("");
+
+    function animate() {
+        const phrase = phrases[phraseIndex];
+        length += deleting ? -1 : 1;
+        searchPlaceholder.value = phrase.slice(0, length).join("");
+
+        let delay = deleting ? 34 : 64;
+        if (length === 0) {
+            phraseIndex = (phraseIndex + 1) % phrases.length;
+            deleting = false;
+            delay = 230;
+        } else if (length === phrase.length) {
+            deleting = true;
+            delay = 1700;
+        }
+        placeholderTimer = setTimeout(animate, delay);
+    }
+
+    placeholderTimer = setTimeout(animate, 1700);
+}
+
+watch(locale, startPlaceholderAnimation);
 
 const clearSearch = () => {
     clearTimeout(debounceTimeout);
@@ -318,25 +362,30 @@ const addToCart = (product) => {
 onMounted(() => {
     window.addEventListener("scroll", handleScroll);
     document.addEventListener("pointerdown", handleSearchOutsideClick);
+    reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    reducedMotion.addEventListener("change", startPlaceholderAnimation);
+    startPlaceholderAnimation();
 });
 
 onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll)
     document.removeEventListener("pointerdown", handleSearchOutsideClick);
+    reducedMotion?.removeEventListener("change", startPlaceholderAnimation);
+    clearTimeout(placeholderTimer);
     clearTimeout(debounceTimeout);
 })
 </script>
 
 <style scoped>
 .site-header {
-    background: #f7fbf8;
-    border-bottom: 1px solid #dce8e0;
-    box-shadow: 0 1px 3px rgb(20 61 42 / 4%);
+    background: #e7f7ed;
+    border-bottom: 1px solid #b5d9c0;
+    box-shadow: 0 2px 5px rgb(20 61 42 / 8%);
     transition: box-shadow 180ms ease;
 }
 
 .site-header-scrolled {
-    box-shadow: 0 4px 14px rgb(20 61 42 / 9%);
+    box-shadow: 0 5px 16px rgb(20 61 42 / 14%);
 }
 
 .header-row {
@@ -374,7 +423,7 @@ onUnmounted(() => {
     width: 100%;
     height: 42px;
     padding: 0 40px;
-    border: 1px solid #d4e2d9;
+    border: 1px solid #80b895;
     border-radius: 10px;
     background: #fff;
     color: #183b2c;
@@ -383,7 +432,8 @@ onUnmounted(() => {
 }
 
 .header-search-input::placeholder {
-    color: #536a5d;
+    color: #176742;
+    font-weight: 600;
     opacity: 1;
 }
 
@@ -398,7 +448,7 @@ onUnmounted(() => {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    color: #286447;
+    color: #176742;
 }
 
 .header-search-icon {
@@ -432,10 +482,10 @@ onUnmounted(() => {
     justify-content: center;
     gap: 8px;
     padding: 0 12px;
-    border: 1px solid #d4e2d9;
+    border: 1px solid #afd2b9;
     border-radius: 9px;
     background: #fff;
-    color: #244e3a;
+    color: #153e2a;
     font-size: .875rem;
     font-weight: 600;
     line-height: 1.3;
@@ -446,8 +496,8 @@ onUnmounted(() => {
 
 .header-control:hover,
 .header-search-clear:hover {
-    border-color: #afd1bd;
-    background: #eef7f1;
+    border-color: #80b895;
+    background: #dbf1e2;
 }
 
 .header-icon-control {

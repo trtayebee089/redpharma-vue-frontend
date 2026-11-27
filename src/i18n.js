@@ -20,6 +20,12 @@ const messages = {
         },
         header: {
             search: "Search medicines or brands",
+            searchPlaceHolders: [
+                "Search medicines…",
+                "Search by brand…",
+                "Search by category…",
+                "Find your prescription…",
+            ],
             clearSearch: "Clear search",
             switchLanguage: "Switch to Bengali",
             openMenu: "Main menu",
@@ -197,16 +203,32 @@ const messages = {
         },
         cart: {
             title: "My Shopping Cart",
-            description: "Review your selected items, adjust quantities, and proceed to checkout.",
             summary: "Order Summary",
+            emptyTitle: "Your cart is empty",
+            itemCount: "{count} item | {count} items",
+            browseCategories: "Browse Categories",
+            deliveryDetails: "Delivery details",
             subtotal: "Subtotal",
             shipping: "Shipping Fee",
             grand: "Grand Total",
+            available: "Available: {count}",
+            removeProduct: "Remove {name}",
+            decreaseQuantity: "Decrease quantity",
+            increaseQuantity: "Increase quantity",
+            maximumStock: "Maximum stock reached",
+            applyDiscount: "Apply Discount ({rate}%)",
+            discount: "Discount",
+            paymentMethod: "Payment Method",
+            cashOnDelivery: "Cash on Delivery",
             alert: "Your cart is empty. Please Add some products first for checkout.",
             form: {
                 name: "Full name",
                 phone: "Phone Number",
-                address: "Shipping Address"
+                address: "Shipping Address",
+                division: "Division",
+                district: "District",
+                selectDivision: "Select Division",
+                selectDistrict: "Select District",
             },
             table: {
                 thead: {
@@ -296,6 +318,12 @@ const messages = {
         },
         header: {
             search: "ওষুধ বা ব্র্যান্ড খুঁজুন",
+            searchPlaceHolders: [
+                "ওষুধ খুঁজুন…",
+                "ব্র্যান্ড অনুসারে খুঁজুন…",
+                "বিভাগ অনুসারে খুঁজুন…",
+                "আপনার প্রেসক্রিপশন খুঁজুন…",
+            ],
             clearSearch: "অনুসন্ধান মুছুন",
             switchLanguage: "ইংরেজিতে পরিবর্তন করুন",
             openMenu: "প্রধান মেনু",
@@ -477,16 +505,32 @@ const messages = {
             }
         },
         cart: {
-            title: "আমার শপিং কার্ট",
-            description: "আপনার নির্বাচিত আইটেমগুলি পর্যালোচনা করুন, পরিমাণ সমন্বয় করুন, এবং চেকআউট করুন।",
-            summary: "অর্ডার সংক্ষিপ্তসার",
-            subtotal: "মোট অংশ",
-            shipping: "শিপিং ফি",
-            grand: "মোট মূল্য",
+            title: "আমার কার্ট",
+            summary: "অর্ডারের সারাংশ",
+            emptyTitle: "আপনার কার্ট খালি",
+            itemCount: "{count}টি পণ্য",
+            browseCategories: "বিভাগ দেখুন",
+            deliveryDetails: "ডেলিভারির তথ্য",
+            subtotal: "পণ্যের মোট মূল্য",
+            shipping: "ডেলিভারি চার্জ",
+            grand: "সর্বমোট",
+            available: "মজুত: {count}",
+            removeProduct: "{name} সরান",
+            decreaseQuantity: "পরিমাণ কমান",
+            increaseQuantity: "পরিমাণ বাড়ান",
+            maximumStock: "মজুতের সীমায় পৌঁছেছে",
+            applyDiscount: "ছাড় প্রয়োগ করুন ({rate}%)",
+            discount: "ছাড়",
+            paymentMethod: "পেমেন্ট পদ্ধতি",
+            cashOnDelivery: "পণ্য হাতে পেয়ে পরিশোধ",
             form: {
                 name: "পূর্ণ নাম",
                 phone: "ফোন নম্বর",
-                address: "শিপিং ঠিকানা"
+                address: "ডেলিভারির ঠিকানা",
+                division: "বিভাগ",
+                district: "জেলা",
+                selectDivision: "বিভাগ বেছে নিন",
+                selectDistrict: "জেলা বেছে নিন",
             },
             table: {
                 thead: {
@@ -494,7 +538,7 @@ const messages = {
                     price: "একক মূল্য",
                     qty: "পরিমাণ",
                     total: "মোট মূল্য",
-                    action: "ক্রিয়া"
+                    action: "পদক্ষেপ"
                 }
             }
         },
@@ -642,8 +686,11 @@ const extraMessages = {
             profileUpdating: "Updating profile...",
             editProfile: "Edit Profile",
             profileSubtitle: "Manage your personal information and account settings",
-            avatarHelp: "Click the image to change your avatar",
+            personalDetails: "Personal details",
+            changePhoto: "Change profile photo",
+            avatarHelp: "Select your photo to change it",
             saveChanges: "Save Changes",
+            profileSaved: "Profile updated successfully!",
         },
         orders: {
             title: "My Orders",
@@ -836,8 +883,11 @@ const extraMessages = {
             profileUpdating: "প্রোফাইল আপডেট হচ্ছে...",
             editProfile: "প্রোফাইল সম্পাদনা",
             profileSubtitle: "আপনার ব্যক্তিগত তথ্য ও অ্যাকাউন্ট সেটিংস পরিচালনা করুন",
-            avatarHelp: "অ্যাভাটার পরিবর্তন করতে ছবিতে ক্লিক করুন",
+            personalDetails: "ব্যক্তিগত তথ্য",
+            changePhoto: "প্রোফাইলের ছবি পরিবর্তন করুন",
+            avatarHelp: "ছবি পরিবর্তন করতে সেটি নির্বাচন করুন",
             saveChanges: "পরিবর্তন সংরক্ষণ করুন",
+            profileSaved: "প্রোফাইল আপডেট হয়েছে!",
         },
         orders: {
             title: "আমার অর্ডার",

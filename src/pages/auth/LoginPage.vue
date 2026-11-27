@@ -1,12 +1,12 @@
 <template>
-    <main class="flex min-h-[calc(100vh-96px)] items-center justify-center bg-gray-50 px-4 py-12">
-        <section class="w-full max-w-md rounded-2xl bg-white p-6 shadow-sm md:p-8">
-            <div class="text-center">
+    <div class="account-login-page flex items-center justify-center py-4 md:py-10">
+        <section class="w-full max-w-md rounded-2xl border border-[#dce8e0] bg-white p-5 shadow-sm md:p-8">
+            <div class="rounded-xl bg-[#f1f8f3] px-3 py-4 text-center">
                 <div class="mx-auto flex h-14 w-30 items-center justify-center rounded-2xl bg-green-50">
                     <img :src="mainLogo" alt="RedPharma" class="h-9 w-full object-contain" />
                 </div>
-                <h1 class="mt-5 text-2xl font-bold tracking-tight text-gray-900">{{ t('auth.welcomeBack') }}</h1>
-                <p class="mt-2 text-sm text-gray-500">{{ t('auth.loginSubtitle') }}</p>
+                <h1 class="mt-4 text-2xl font-bold text-[#173e2c]">{{ t('auth.welcomeBack') }}</h1>
+                <p class="mt-2 text-sm text-[#496154]">{{ t('auth.loginSubtitle') }}</p>
             </div>
 
             <form class="mt-8 space-y-5" @submit.prevent="submitLogin">
@@ -62,7 +62,7 @@
                 <router-link to="/register" class="font-semibold text-green-600 hover:underline">{{ t('auth.signUp') }}</router-link>
             </p>
         </section>
-    </main>
+    </div>
 </template>
 
 <script setup>
@@ -91,3 +91,13 @@ const submitLogin = async () => {
     }
 };
 </script>
+
+<style scoped>
+.account-login-page button[type="submit"] {
+    background: #176742;
+}
+
+.account-login-page button[type="submit"]:hover:enabled {
+    background: #105335;
+}
+</style>

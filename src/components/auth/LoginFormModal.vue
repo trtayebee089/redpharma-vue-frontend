@@ -1,7 +1,8 @@
 <template>
-    <Modal v-if="show" :isOpen="show" panelClass="max-w-[430px] rounded-2xl border border-gray-100 shadow-xl"
+    <Modal v-if="show" :isOpen="show"
+        panelClass="max-w-[430px] max-h-[calc(100dvh-3rem)] overflow-y-auto rounded-2xl border border-[#dce8e0] shadow-xl"
         @close="closeModal">
-        <div class="flex min-h-[480px] items-center justify-center bg-white">
+        <div class="account-login flex items-center justify-center bg-white">
             <transition enter-active-class="transition duration-300 ease-out" enter-from-class="opacity-0 scale-95"
                 enter-to-class="opacity-100 scale-100" leave-active-class="transition duration-200 ease-in"
                 leave-from-class="opacity-100 scale-100" leave-to-class="opacity-0 scale-95" mode="out-in">
@@ -33,10 +34,10 @@
                 </div>
 
                 <div v-else key="form" class="w-full px-5 py-8 sm:px-8 sm:py-10">
-                    <div class="text-center">
+                    <div class="account-login-heading text-center">
                         <div
-                            class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-green-50 ring-1 ring-green-100">
-                            <img :src="mainLogo" alt="RedPharma" class="h-9 w-9 object-contain" />
+                            class="mx-auto flex h-14 w-24 items-center justify-center rounded-xl bg-white ring-1 ring-[#dce8e0]">
+                            <img :src="mainLogo" alt="RedPharma" class="h-9 w-20 object-contain" />
                         </div>
                         <h2 class="mt-5 text-2xl font-bold tracking-tight text-gray-900">
                             {{ t('auth.welcomeBack') }}
@@ -213,3 +214,24 @@ watch(
     }
 );
 </script>
+
+<style scoped>
+.account-login-heading {
+    padding: 12px;
+    border-radius: 12px;
+    background: #f1f8f3;
+}
+
+.account-login-heading :is(h2, p) {
+    color: #173e2c;
+    letter-spacing: normal;
+}
+
+.account-login form button[type="submit"] {
+    background: #176742;
+}
+
+.account-login form button[type="submit"]:hover:enabled {
+    background: #105335;
+}
+</style>
