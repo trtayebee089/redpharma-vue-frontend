@@ -114,7 +114,25 @@ const messages = {
                 title: "What Our Customers Say",
                 description: "Real experiences from our valued customers."
             },
-            product_categories: "Product Categories",
+            product_categories: "Shop by Category",
+            welcome: {
+                title: "Medicines & everyday care",
+                description: "Shop for medicines, personal care, and health essentials in one place.",
+                browse: "Browse Categories",
+            },
+            support: {
+                title: "Need help with an order?",
+                description: "Call RedPharma or send us a message for assistance.",
+                call: "Call Us",
+            },
+            carousel: {
+                promotions: "RedPharma promotions",
+                shop: "Shop baby care, skin care, and prescription medicines with RedPharma.",
+                app: "Find RedPharma on Google Play.",
+                platform: "Browse healthcare products with the RedPharma app.",
+                previous: "Previous slide",
+                next: "Next slide",
+            },
             featured_products: "Featured Products",
             best_selling: "Best Selling Products",
             health_articles: "Health Articles",
@@ -341,7 +359,27 @@ const messages = {
                 title: "আমাদের গ্রাহকরা যা বলেন",
                 description: "আমাদের গ্রাহকদের কাছ থেকে আসল অভিজ্ঞতা।"
             },
-            product_categories: "পণ্যের বিভাগসমূহ",
+            product_categories: "বিভাগ অনুযায়ী কিনুন",
+            welcome: {
+                title: "ওষুধ ও দৈনন্দিন যত্ন",
+                description: "ওষুধ, ব্যক্তিগত যত্ন ও প্রয়োজনীয় স্বাস্থ্যপণ্য কিনুন এক জায়গায়।",
+                browse: "বিভাগ দেখুন",
+            },
+            support: {
+                title: "অর্ডার নিয়ে সাহায্য দরকার?",
+                description: "সহায়তার জন্য রেডফার্মাকে কল করুন অথবা মেসেজ পাঠান।",
+                call: "কল করুন",
+            },
+            carousel: {
+                promotions: "রেডফার্মার প্রচারচিত্র",
+                shop: "রেডফার্মায় বেবি কেয়ার, স্কিন কেয়ার ও প্রেসক্রিপশনের ওষুধ কিনুন।",
+                app: "গুগল প্লেতে রেডফার্মা অ্যাপ খুঁজুন।",
+                platform: "রেডফার্মা অ্যাপে স্বাস্থ্যপণ্য দেখুন।",
+                previous: "আগের স্লাইড",
+                next: "পরের স্লাইড",
+            },
+            best_selling: "সর্বাধিক বিক্রিত পণ্য",
+            view_all: "সব দেখুন",
             featured_products: "বৈশিষ্ট্যযুক্ত পণ্যসমূহ",
             health_articles: "স্বাস্থ্য সম্পর্কিত নিবন্ধসমূহ",
             impact_counter: 'পরিসংখ্যানের আলোকে আমাদের অর্জন'

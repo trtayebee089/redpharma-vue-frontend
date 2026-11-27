@@ -1,698 +1,402 @@
-<template>
-  <!-- Banner Slider -->
-  <HeroSlider />
-
-  <!-- Categories Slider -->
-  <section
-    class="mt-4 md:mt-10 relative fade-up container mx-auto px-4 md:px-6"
-  >
-    <div class="category-slider">
-      <h2
-        class="text-xl md:text-2xl lg:text-3xl font-bold mb-5 text-gray-800 relative inline-block"
-        :class="[langStore.langClass]"
-      >
-        {{ $t("home.product_categories") }}
-        <span
-          class="absolute left-0 bottom-0 w-16 h-1 bg-green-500 rounded-full"
-        ></span>
-      </h2>
-
-      <div v-if="!loading && categories.length">
-        <Swiper
-          :modules="[Pagination, Autoplay]"
-          :slides-per-view="2"
-          :space-between="16"
-          :loop="true"
-          :autoplay="{
-            delay: 3000,
-            disableOnInteraction: false,
-          }"
-          :breakpoints="{
-            640: { slidesPerView: 3, spaceBetween: 16 },
-            768: { slidesPerView: 4, spaceBetween: 20 },
-            1024: { slidesPerView: 4, spaceBetween: 24 },
-            1280: { slidesPerView: 6, spaceBetween: 24 },
-          }"
-          class="pt-5 pb-10"
-        >
-          <SwiperSlide
-            v-for="(category, index) in loading ? Array(6) : categories"
-            :key="index"
-            class="overflow-visible flex justify-center"
-          >
-            <!-- Loaded Category -->
-            <router-link
-              v-if="!loading"
-              :to="category.navigationPath"
-              class="group block bg-white rounded-xl overflow-hidden hover:shadow-lg transition border border-gray-200"
-            >
-              <div class="w-full aspect-square bg-gray-50">
-                <CategoryImage
-                  :src="category.image"
-                  alt=""
-                  class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  loading="lazy"
-                />
-              </div>
-            </router-link>
-          </SwiperSlide>
-        </Swiper>
-      </div>
-
-      <!-- Loading placeholder -->
-      <div v-else class="text-center text-gray-300">
-        <Swiper
-          :modules="[Pagination, Autoplay]"
-          :slides-per-view="2"
-          :space-between="16"
-          :loop="true"
-          :autoplay="{
-            delay: 3000,
-            disableOnInteraction: false,
-          }"
-          :breakpoints="{
-            640: { slidesPerView: 3, spaceBetween: 16 },
-            768: { slidesPerView: 4, spaceBetween: 20 },
-            1024: { slidesPerView: 4, spaceBetween: 24 },
-            1280: { slidesPerView: 6, spaceBetween: 24 },
-          }"
-          class="pt-5 pb-10"
-        >
-          <SwiperSlide
-            v-for="(category, index) in Array(6)"
-            :key="index"
-            class="overflow-visible flex justify-center"
-          >
-            <div
-              class="w-full aspect-square bg-gray-200 rounded-xl overflow-hidden relative"
-            >
-              <div
-                class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"
-              ></div>
-            </div>
-          </SwiperSlide>
-        </Swiper>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA SECTION -->
-  <section
-    class="mt-8 md:mt-10 relative fade-up container mx-auto px-4 md:px-6"
-  >
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-stretch">
-      <PrescriptionUpload />
-
-      <!-- Quick Contact / Social Stack -->
-      <div class="flex flex-col gap-3 h-full md:max-h-[198px]">
-        <!-- Row 1 -->
-        <div
-          class="grid grid-cols-3 gap-2 sm:gap-3 flex-1 min-h-[50px] md:min-h-[64px]"
-        >
-          <!-- Call (Blue) -->
-          <a
-            href="tel:+8801997202010"
-            class="group rounded-xl shadow-sm border border-blue-200 
-             bg-gradient-to-r from-blue-50 to-blue-100/40
-             p-2 sm:px-3 sm:py-2 flex items-center justify-center gap-2 
-             transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 
-             hover:border-blue-300 text-center overflow-hidden"
-          >
-            <div
-              class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 
-                  flex items-center justify-center 
-                  group-hover:bg-blue-600 group-hover:text-white transition"
-            >
-              <i class="pi pi-phone text-sm"></i>
-            </div>
-            <h3
-              class="font-bold text-gray-800 text-xs sm:text-sm group-hover:text-blue-700"
-            >
-              Call Us
-            </h3>
-          </a>
-
-          <!-- WhatsApp (Green brand) -->
-          <a
-            href="https://wa.me/8801997202010"
-            target="_blank"
-            class="group rounded-xl shadow-sm border border-green-200 
-             bg-gradient-to-r from-green-50 to-green-100/40
-             p-2 sm:px-3 sm:py-2 flex items-center justify-center gap-2 
-             transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 
-             hover:border-green-300 text-center overflow-hidden"
-          >
-            <div
-              class="w-8 h-8 rounded-full bg-green-100 text-green-600 
-                  flex items-center justify-center 
-                  group-hover:bg-green-600 group-hover:text-white transition"
-            >
-              <i class="pi pi-whatsapp text-sm"></i>
-            </div>
-            <h3
-              class="font-bold text-gray-800 text-xs sm:text-sm group-hover:text-green-700"
-            >
-              WhatsApp
-            </h3>
-          </a>
-
-          <!-- Facebook (Brand blue) -->
-          <a
-            href="https://www.facebook.com/redpharmabd/"
-            target="_blank"
-            class="group rounded-xl shadow-sm border border-[#1877F2]/30 
-             bg-gradient-to-r from-[#E7F0FE] to-[#F5F9FF]
-             p-2 sm:px-3 sm:py-2 flex items-center justify-center gap-2 
-             transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 
-             hover:border-[#1877F2]/50 text-center overflow-hidden"
-          >
-            <div
-              class="w-8 h-8 rounded-full bg-[#E7F0FE] text-[#1877F2] 
-                  flex items-center justify-center 
-                  group-hover:bg-[#1877F2] group-hover:text-white transition"
-            >
-              <i class="pi pi-facebook text-sm"></i>
-            </div>
-            <h3
-              class="font-bold text-gray-800 text-xs sm:text-sm group-hover:text-[#1877F2]"
-            >
-              Facebook
-            </h3>
-          </a>
-        </div>
-
-        <!-- Row 2: Message Box (keep green but refined) -->
-        <div
-          class="flex-1 rounded-xl border border-orange-200 
-         bg-gradient-to-r from-orange-50 to-orange-100/40
-         p-2 sm:p-3 flex flex-col justify-center items-center 
-         text-center shadow-sm"
-        >
-          <div class="flex items-center gap-2 mb-1">
-            <i class="pi pi-info-circle text-orange-600 text-sm"></i>
-            <span class="text-sm font-bold text-gray-800">
-              Need Medicines Urgently?
-            </span>
-          </div>
-          <p class="text-md text-gray-600 leading-snug lg:max-w-[80%]">
-            Call us directly to order or message us on WhatsApp
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Best Selling Products Slider -->
-  <section
-    class="mt-10 relative featured-product-slider fade-up container mx-auto px-4 md:px-6"
-  >
-    <div class="category-slider">
-      <h2
-        class="text-2xl md:text-3xl font-bold mb-5 text-gray-800 relative inline-block"
-        :class="[langStore.langClass]"
-      >
-        {{ $t("home.best_selling")
-
-
-        }}<span
-          class="absolute left-0 bottom-0 w-16 h-1 bg-green-500 rounded-full"
-        ></span>
-      </h2>
-
-      <Swiper
-        :modules="[Navigation, Pagination, Autoplay]"
-        :slides-per-view="2"
-        :space-between="16"
-        :breakpoints="{
-          0: { slidesPerView: 2, spaceBetween: 16 },
-          640: { slidesPerView: 2, spaceBetween: 16 },
-          768: { slidesPerView: 3, spaceBetween: 20 },
-          1024: { slidesPerView: 3, spaceBetween: 24 },
-          1280: { slidesPerView: 5, spaceBetween: 24 },
-        }"
-        :loop="true"
-        :autoplay="{
-          delay: 2800,
-          disableOnInteraction: false,
-        }"
-        :navigation="{
-          prevEl: '.swiper-button-prev',
-          nextEl: '.swiper-button-next',
-        }"
-        class="pb-4 pt-5"
-      >
-        <SwiperSlide
-          v-for="product in bestSelling"
-          :key="product.id"
-          class="overflow-visible"
-        >
-          <ProductGridItem :product="product" />
-        </SwiperSlide>
-      </Swiper>
-    </div>
-  </section>
-
-  <!-- Products Slider -->
-  <section
-    class="mt-10 relative featured-product-slider fade-up container mx-auto px-4 md:px-6"
-  >
-    <div class="category-slider">
-      <h2
-        class="text-2xl md:text-3xl font-bold mb-5 text-gray-800 relative inline-block"
-        :class="[langStore.langClass]"
-      >
-        {{ $t("home.featured_products")
-
-
-        }}<span
-          class="absolute left-0 bottom-0 w-16 h-1 bg-green-500 rounded-full"
-        ></span>
-      </h2>
-
-      <Swiper
-        :modules="[Navigation, Pagination, Autoplay]"
-        :slides-per-view="2"
-        :space-between="16"
-        :breakpoints="{
-          0: { slidesPerView: 2, spaceBetween: 16 },
-          640: { slidesPerView: 2, spaceBetween: 16 },
-          768: { slidesPerView: 3, spaceBetween: 20 },
-          1024: { slidesPerView: 3, spaceBetween: 24 },
-          1280: { slidesPerView: 5, spaceBetween: 24 },
-        }"
-        :loop="true"
-        :autoplay="{
-          delay: 2500,
-          disableOnInteraction: false,
-        }"
-        :navigation="{
-          prevEl: '.swiper-button-prev',
-          nextEl: '.swiper-button-next',
-        }"
-        class="pb-4 pt-5"
-      >
-        <SwiperSlide
-          v-for="product in featured"
-          :key="product.id"
-          class="overflow-visible"
-        >
-          <ProductGridItem :product="product" />
-        </SwiperSlide>
-      </Swiper>
-    </div>
-  </section>
-
-  <!-- Top Products By Category Section -->
-  <section class="mt-10 relative fade-up">
-    <div
-      v-for="(item, index) in layoutItems"
-      :key="index"
-      :class="[
-        'transition-all duration-300',
-        index % 2 === 0 ? '' : 'bg-white',
-      ]"
-    >
-      <div
-        v-if="
-          item.type === 'category' &&
-          categoryProducts[item.category.slug]?.length > 3
-        "
-        class="p-5 md:p-8 rounded-xl container mx-auto px-4 md:px-6"
-      >
-        <div class="flex items-center gap-3 mb-5">
-          <div class="flex items-center gap-3">
-            <CategoryImage
-              v-if="item.category.image"
-              :src="item.category.image"
-              :alt="item.category.name"
-              class="w-8 h-8 object-cover rounded-sm border border-gray-200 shadow-sm p-1 bg-white"
-            />
-            <h2
-              class="text-xl md:text-2xl font-bold text-gray-800 relative inline-block"
-            >
-              {{ item.category?.name }}
-              <span
-                class="absolute left-0 bottom-0 w-16 h-1 rounded-full"
-                :style="{
-                  backgroundColor: item.category?.bg_color
-                    ? '#' + item.category.bg_color.replace('#', '')
-                    : '#16a34a', // default color (green)
-                }"
-              ></span>
-            </h2>
-          </div>
-          <router-link
-            :to="item.category.navigationPath"
-            class="ml-auto text-green-800 font-medium hover:underline"
-          >
-            {{ $t("home.view_all") }}
-          </router-link>
-        </div>
-
-        <!-- Product Swiper -->
-        <Swiper
-          :modules="[Navigation, Pagination, Autoplay]"
-          :slides-per-view="2"
-          :space-between="16"
-          :breakpoints="{
-            0: { slidesPerView: 2, spaceBetween: 16 },
-            640: { slidesPerView: 2, spaceBetween: 16 },
-            768: { slidesPerView: 3, spaceBetween: 20 },
-            1024: { slidesPerView: 3, spaceBetween: 24 },
-            1280: { slidesPerView: 5, spaceBetween: 24 },
-          }"
-          :loop="true"
-          :autoplay="getAutoplay(index)"
-          class="pb-4 pt-5"
-        >
-          <SwiperSlide
-            v-for="product in categoryProducts[item.category.slug]"
-            :key="product.id"
-            class="overflow-visible"
-          >
-            <ProductGridItem :product="product" />
-          </SwiperSlide>
-        </Swiper>
-      </div>
-    </div>
-  </section>
-</template>
-
 <script setup>
-import About from "../pages/About.vue";
-import { Swiper, SwiperSlide } from "swiper/vue";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
-import "swiper/css/autoplay";
-import orderMedicineImg from "../assets/images/app-mockuo.png";
-import BlogGridItem from "../components/blog/BlogGridItem.vue";
-import { Pagination, Navigation, Autoplay } from "swiper/modules";
-import ProductGridItem from "@/components/products/ProductGridItem.vue";
-import { useI18n } from "vue-i18n";
-import { useLanguageStore } from "@/stores/language";
-import { computed, onMounted, reactive, ref } from "vue";
-import { useCategories } from "@/composables/useCategories.js";
-import CategoryImage from "@/components/common/CategoryImage.vue";
-import { useProducts } from "@/composables/useProducts";
-import slider1 from "@/assets/images/slide-1.jpg";
-import slider2 from "@/assets/images/slide-2.jpg";
-import slider3 from "@/assets/images/slide-3.jpg";
-import PrescriptionUpload from "../components/common/PrescriptionUpload.vue";
-import HeroSlider from "@/components/layout/HeroSlider.vue";
+import { computed, onMounted, reactive, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { A11y, Autoplay, Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import CategoryImage from '@/components/common/CategoryImage.vue';
+import PrescriptionUpload from '@/components/common/PrescriptionUpload.vue';
+import HeroSlider from '@/components/layout/HeroSlider.vue';
+import HomeProductRail from '@/components/products/HomeProductRail.vue';
+import { useCategories } from '@/composables/useCategories.js';
+import { useProducts } from '@/composables/useProducts.js';
 
-const {
-  categories,
-  products,
-  loading,
-  error,
-  fetchCategories,
-  fetchCategoryDetails,
-} = useCategories();
-const {
-  featured,
-  bestSelling,
-  fetchFeaturedProducts,
-  fetchBestSellingProducts,
-} = useProducts();
-
-const { t, tm } = useI18n();
-const langStore = useLanguageStore();
-
-const articles = [
-  {
-    title: "5 Tips for a Healthy Lifestyle",
-    image:
-      "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
-    link: "/blog/healthy-lifestyle",
-    excerpt: "Simple tips to keep your body and mind in balance...",
-  },
-  {
-    title: "The Importance of Regular Exercise",
-    image:
-      "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
-    link: "/blog/regular-exercise",
-    excerpt: "Discover why exercise is crucial for long-term health...",
-  },
-  {
-    title: "How Nutrition Impacts Your Wellbeing",
-    image:
-      "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
-    link: "/blog/nutrition-impact",
-    excerpt: "Explore how good nutrition fuels your body...",
-  },
-  {
-    title: "Managing Stress in Daily Life",
-    image:
-      "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
-    link: "/blog/stress-management",
-    excerpt: "Practical techniques to reduce stress...",
-  },
-];
-
-const testimonials = [
-  {
-    name: "Rahul Ahmed",
-    role: "Rajshahi",
-    quote:
-      "Very smooth experience! Medicines arrived on time and the packaging was secure. Highly recommend!",
-    image: "https://randomuser.me/api/portraits/men/56.jpg",
-  },
-  {
-    name: "Md Mizanur Rahman",
-    role: "Dhaka",
-    quote:
-      "The consultation option is a life saver. Doctors are really helpful and friendly.",
-    image: "https://randomuser.me/api/portraits/men/12.jpg",
-  },
-  {
-    name: "Tanvir Hossain",
-    role: "Rajshahi",
-    quote:
-      "Loved the quick delivery and the easy ordering process. Customer support was excellent.",
-    image: "https://randomuser.me/api/portraits/men/65.jpg",
-  },
-];
-
-function hexToRgba(hex, opacity = 1) {
-  if (!hex || typeof hex !== "string") return `rgba(22, 163, 74, ${opacity})`;
-  hex = hex.replace("#", "");
-  if (hex.length === 3)
-    hex = hex
-      .split("")
-      .map((h) => h + h)
-      .join("");
-  const r = parseInt(hex.substring(0, 2), 16);
-  const g = parseInt(hex.substring(2, 4), 16);
-  const b = parseInt(hex.substring(4, 6), 16);
-  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-}
+const { t } = useI18n();
+const { categories, loading, fetchCategoryDetails } = useCategories();
+const { featured, bestSelling, fetchFeaturedProducts, fetchBestSellingProducts } =
+  useProducts({ fetchOnMount: false });
 
 const categoryProducts = reactive({});
+const populatedCategories = computed(() => categories.value.filter(
+  category => categoryProducts[category.slug]?.length > 3,
+));
+const animateCarousels = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const categoryBreakpoints = {
+  540: { slidesPerView: 3, spaceBetween: 12 },
+  768: { slidesPerView: 4, spaceBetween: 14 },
+  1240: { slidesPerView: 6, spaceBetween: 16 },
+};
+const contacts = [
+  { label: 'home.support.call', icon: 'pi-phone', href: 'tel:+8801997202010' },
+  { label: 'WhatsApp', icon: 'pi-whatsapp', href: 'https://wa.me/8801997202010', external: true },
+  { label: 'Facebook', icon: 'pi-facebook', href: 'https://www.facebook.com/redpharmabd/', external: true },
+];
 
-const layoutItems = ref([]);
-
-const getAutoplay = (index) => ({
-  delay: Math.floor(Math.random() * (4000 - 2500 + 1)) + 2500,
-  disableOnInteraction: false,
-});
-
-const stats = ref([
-  { value: 972756, label: "Reg. Users", displayValue: 0 },
-  { value: 140545, label: "Orders Delivered", displayValue: 0 },
-  { value: 10134, label: "Operating Hours", displayValue: 0 },
-  { value: 2345134, label: "Cost Saved", displayValue: 0 },
-  { value: 5000, label: "Medicines Available", displayValue: 0 },
-]);
-
-onMounted(async () => {
-  try {
-    loading.value = true;
-    await fetchCategories();
-    await fetchFeaturedProducts();
-    await fetchBestSellingProducts();
-    layoutItems.value = [];
-
-    categories.value.forEach((cat, index) => {
-      layoutItems.value.push({ type: "category", category: cat });
-      fetchCategoryDetails(cat.slug).then((products) => {
-        categoryProducts[cat.slug] = products;
-      });
+watch(categories, (list) => {
+  for (const category of list) {
+    const slug = category.slug;
+    if (slug in categoryProducts) continue;
+    categoryProducts[slug] = [];
+    fetchCategoryDetails(slug).then(products => {
+      categoryProducts[slug] = products ?? [];
     });
-  } finally {
-    // loading.value = false;
-    loading.value = true;
   }
+}, { immediate: true });
 
-  stats.value.forEach((stat) => {
-    let start = 0;
-    const end = stat.value;
-    const duration = 1500;
-    const increment = end / (duration / 16);
-
-    const counter = setInterval(() => {
-      start += increment;
-      if (start >= end) {
-        stat.displayValue = end.toLocaleString();
-        clearInterval(counter);
-      } else {
-        stat.displayValue = Math.floor(start).toLocaleString();
-      }
-    }, 16);
-  });
-});
+onMounted(() => Promise.all([fetchBestSellingProducts(), fetchFeaturedProducts()]));
 </script>
 
+<template>
+  <div class="store-home">
+    <section class="home-hero" aria-labelledby="home-title">
+      <div class="home-intro">
+        <h1 id="home-title">{{ t('home.welcome.title') }}</h1>
+        <p>{{ t('home.welcome.description') }}</p>
+        <div class="home-intro-actions">
+          <RouterLink to="/categories" class="home-primary-action">
+            {{ t('home.welcome.browse') }} <i class="pi pi-arrow-right" aria-hidden="true"></i>
+          </RouterLink>
+          <RouterLink to="/order-tracking" class="home-track-action">{{ t('header.buttons.track') }}</RouterLink>
+        </div>
+      </div>
+      <HeroSlider :animate="animateCarousels" />
+    </section>
+
+    <section class="home-section" aria-labelledby="home-categories">
+      <div class="home-section-heading">
+        <h2 id="home-categories">{{ t('home.product_categories') }}</h2>
+        <RouterLink to="/categories" class="home-section-link">
+          {{ t('home.view_all') }} <i class="pi pi-arrow-right" aria-hidden="true"></i>
+        </RouterLink>
+      </div>
+
+      <Swiper
+        v-if="categories.length"
+        class="home-category-carousel"
+        :modules="[A11y, Autoplay, Navigation]"
+        :slides-per-view="2"
+        :space-between="10"
+        :breakpoints="categoryBreakpoints"
+        :loop="categories.length > 6"
+        :navigation="true"
+        :autoplay="animateCarousels && categories.length > 6
+          ? { delay: 4200, disableOnInteraction: true, pauseOnMouseEnter: true }
+          : false"
+        :a11y="{ prevSlideMessage: t('home.carousel.previous'), nextSlideMessage: t('home.carousel.next') }"
+      >
+        <SwiperSlide v-for="category in categories" :key="category.id">
+          <RouterLink :to="category.navigationPath" class="home-category-card">
+            <span class="home-category-media">
+              <CategoryImage :src="category.image" alt="" loading="lazy" decoding="async" />
+            </span>
+            <span class="home-category-name">{{ category.name }}</span>
+          </RouterLink>
+        </SwiperSlide>
+      </Swiper>
+      <p v-else-if="loading" class="home-category-status" role="status">{{ t('common.loading') }}</p>
+    </section>
+
+    <section class="home-services" :aria-label="t('home.support.title')">
+      <PrescriptionUpload />
+      <div class="home-support">
+        <div>
+          <h2>{{ t('home.support.title') }}</h2>
+          <p>{{ t('home.support.description') }}</p>
+        </div>
+        <div class="home-contact-links">
+          <a
+            v-for="contact in contacts"
+            :key="contact.href"
+            :href="contact.href"
+            :target="contact.external ? '_blank' : undefined"
+            :rel="contact.external ? 'noopener noreferrer' : undefined"
+          >
+            <i class="pi" :class="contact.icon" aria-hidden="true"></i>
+            <span>{{ contact.external ? contact.label : t(contact.label) }}</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <HomeProductRail
+      :title="t('home.best_selling')"
+      :products="bestSelling"
+      :autoplay-delay="3200"
+      :animate="animateCarousels"
+    />
+    <HomeProductRail
+      :title="t('home.featured_products')"
+      :products="featured"
+      :autoplay-delay="3600"
+      :animate="animateCarousels"
+    />
+    <HomeProductRail
+      v-for="(category, index) in populatedCategories"
+      :key="category.slug"
+      :title="category.name"
+      :image="category.image"
+      :category-path="category.navigationPath"
+      :products="categoryProducts[category.slug]"
+      :autoplay-delay="3800 + (index % 5) * 300"
+      :animate="animateCarousels"
+    />
+  </div>
+</template>
+
 <style scoped>
-@keyframes shineX {
-  0% {
-    transform: translateX(-100%);
-  }
-
-  100% {
-    transform: translateX(100%);
-  }
+.store-home {
+  --home-ink: #17382b;
+  --home-muted: #526459;
+  --home-line: #dce8e0;
+  --home-green: #137346;
+  width: 100%;
+  max-width: 100rem;
+  margin-inline: auto;
+  padding: clamp(.75rem, 2vw, 1.5rem) clamp(.875rem, 3vw, 3rem) 1rem;
 }
 
-.animate-shine {
-  animation: shineX 8s linear infinite;
+.home-hero {
+  display: grid;
+  gap: .75rem;
 }
 
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
+.home-intro {
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: .8rem;
+  padding: clamp(1.15rem, 2.75vw, 2.5rem);
+  border-radius: 1.125rem;
+  background: linear-gradient(145deg, #102e23, #1b4d36);
+  color: #f2fff8;
 }
 
-/* Shimmer effect */
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-
-  100% {
-    transform: translateX(100%);
-  }
+.home-intro h1 {
+  max-width: 11ch;
+  margin: 0;
+  font-size: clamp(1.85rem, 3.4vw, 3.2rem);
+  font-weight: 750;
+  line-height: 1.08;
+  letter-spacing: -.032em;
 }
 
-.animate-shimmer {
-  background: linear-gradient(
-    90deg,
-    rgba(229, 229, 229, 1) 0%,
-    rgba(209, 209, 209, 1) 50%,
-    rgba(229, 229, 229, 1) 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+.home-intro p {
+  max-width: 33ch;
+  color: #d6ece0;
+  font-size: clamp(.875rem, 1.2vw, 1rem);
+  line-height: 1.55;
 }
 
-.animate-spin-slow {
-  animation: spin-slow 10s linear infinite;
+.home-intro-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .65rem 1rem;
 }
 
-.shine-effect::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -80%;
-  width: 60%;
-  height: 100%;
-  background: linear-gradient(
-    120deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.05) 35%,
-    rgba(255, 255, 255, 0.25) 50%,
-    rgba(255, 255, 255, 0.05) 65%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  transform: skewX(-20deg);
-  animation: shine 6s infinite;
-  pointer-events: none;
+.home-primary-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  min-height: 2.75rem;
+  padding: .55rem .8rem;
+  border-radius: .625rem;
+  background: #d8f5e5;
+  color: #164831;
+  font-size: .875rem;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
-@keyframes shine {
-  0% {
-    left: -80%;
-  }
-
-  50% {
-    left: 130%;
-  }
-
-  100% {
-    left: 130%;
-  }
+.home-primary-action:hover {
+  background: #fff;
 }
 
-@keyframes fadeInDown {
-  0% {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.home-track-action {
+  color: #f2fff8;
+  font-size: .875rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: .22em;
 }
 
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.home-section,
+.home-services {
+  margin-block: clamp(1.35rem, 3vw, 2.65rem);
 }
 
-.animate-fade-in-down {
-  animation: fadeInDown 0.8s ease-out forwards;
+.home-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: .8rem;
 }
 
-.animate-fade-in-up {
-  animation: fadeInUp 0.8s ease-out forwards;
+.home-section-heading h2 {
+  color: var(--home-ink);
+  font-size: clamp(1.25rem, 2.2vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: -.022em;
+  line-height: 1.2;
 }
 
-.swiper-container {
-  aspect-ratio: 1400 / 480;
+.home-section-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  min-height: 2.5rem;
+  color: var(--home-green);
+  font-size: .875rem;
+  font-weight: 650;
+  white-space: nowrap;
 }
 
-/* Ripple effect */
-.ripple-btn::after {
-  content: "";
-  position: absolute;
+.home-section-link:hover,
+.home-contact-links a:hover {
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+
+.home-category-card {
+  display: grid;
+  justify-items: center;
+  gap: .45rem;
+  min-height: 100%;
+  padding: .55rem .5rem .7rem;
+  border: 1px solid var(--home-line);
+  border-radius: .8rem;
+  background: #fff;
+  color: var(--home-ink);
+  text-align: center;
+}
+
+.home-category-card:hover {
+  border-color: #91bfa6;
+  background: #f7fbf8;
+}
+
+.home-category-media {
+  display: grid;
+  width: 100%;
+  aspect-ratio: 1.6;
+  overflow: hidden;
+  place-items: center;
+  border-radius: .52rem;
+  background: #f3f7f4;
+}
+
+.home-category-media img {
   width: 100%;
   height: 100%;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  opacity: 0;
-  transform: scale(0);
-  animation: ripple 1s infinite;
-  top: 0;
-  left: 0;
+  object-fit: contain;
 }
 
-@keyframes ripple {
-  0% {
-    transform: scale(0);
-    opacity: 0.6;
-  }
+.home-category-name {
+  align-self: center;
+  font-size: .875rem;
+  font-weight: 650;
+  line-height: 1.3;
+}
 
-  70% {
-    transform: scale(2.5);
-    opacity: 0;
-  }
+.home-category-carousel :deep(.swiper-wrapper) {
+  align-items: stretch;
+}
 
-  100% {
-    transform: scale(2.5);
-    opacity: 0;
+.home-category-carousel :deep(.swiper-slide) {
+  height: auto;
+}
+
+.home-category-carousel :deep(.swiper-button-next),
+.home-category-carousel :deep(.swiper-button-prev) {
+  width: 2rem;
+  height: 2rem;
+  padding: .4rem;
+  border: 1px solid #ccdfd3;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--home-green);
+}
+
+.home-category-carousel :deep(.swiper-button-next::after),
+.home-category-carousel :deep(.swiper-button-prev::after) {
+  font-size: .8rem;
+}
+
+.home-category-status {
+  padding-block: .85rem;
+  color: var(--home-muted);
+}
+
+.home-services {
+  display: grid;
+  gap: .875rem;
+}
+
+.home-support {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: clamp(.95rem, 2vw, 1.4rem);
+  border: 1px solid var(--home-line);
+  border-radius: 1rem;
+  background: #fff;
+}
+
+.home-support h2 {
+  color: var(--home-ink);
+  font-size: 1.08rem;
+  font-weight: 700;
+}
+
+.home-support p {
+  margin-top: .2rem;
+  color: var(--home-muted);
+  font-size: .875rem;
+}
+
+.home-contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.home-contact-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  min-height: 2.55rem;
+  padding: .4rem .65rem;
+  border: 1px solid var(--home-line);
+  border-radius: .55rem;
+  background: #f6faf7;
+  color: #20583b;
+  font-size: .8125rem;
+  font-weight: 650;
+}
+
+.store-home :deep(a:focus-visible),
+.store-home :deep(button:focus-visible) {
+  outline: 2px solid #22834f;
+  outline-offset: 2px;
+}
+
+.home-intro a:focus-visible {
+  outline-color: #c7f4d8;
+}
+
+@media (width >= 760px) {
+  .home-services {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (width >= 1180px) {
+  .home-hero {
+    grid-template-columns: minmax(16rem, 1fr) minmax(0, 2.65fr);
   }
 }
 </style>
