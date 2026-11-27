@@ -56,7 +56,7 @@
                                     <!-- Product -->
                                     <td class="px-4 py-3 flex items-center space-x-3">
                                         <template v-if="getImageUrl(item)">
-                                            <img :src="getImageUrl(item).url" :class="[
+                                            <img :src="getImageUrl(item).url" @error="retryProductImage($event, getImageUrl(item).fallbackUrl)" :class="[
                                                 'object-contain rounded border border-gray-200',
                                                 getImageUrl(item).type === 'category' ? 'w-8 h-8' : 'w-12 h-12'
                                             ]" />
@@ -156,7 +156,7 @@
                             class="border border-gray-200 rounded-lg p-4 shadow-sm mb-3">
                             <div class="flex items-center space-x-4">
                                 <template v-if="getImageUrl(item)">
-                                    <img :src="getImageUrl(item).url" :class="[
+                                    <img :src="getImageUrl(item).url" @error="retryProductImage($event, getImageUrl(item).fallbackUrl)" :class="[
                                         'object-contain rounded border border-gray-200',
                                         getImageUrl(item).type === 'category' ? 'w-8 h-8' : 'w-12 h-12'
                                     ]" />
@@ -350,6 +350,7 @@
 </template>
 
 <script setup>
+import { getProductImage as getImageUrl, retryProductImage } from "@/utils/productImage";
 import { computed, reactive, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
@@ -409,21 +410,6 @@ function onDivisionChange() {
 }
 
 const cartItems = computed(() => cartStore.items);
-
-const getImageUrl = (product) => {
-    const prodImage = product.image?.trim();
-    const catImage = product.category?.image?.trim();
-
-    if (prodImage && !prodImage.includes("https://placehold.co") && !prodImage.includes("no-image.png")) {
-        return { url: prodImage, type: 'product' };
-    }
-    else if (catImage && !catImage.includes("https://placehold.co") && !catImage.includes("no-image.png")) {
-        return { url: catImage, type: 'category' };
-    }
-    else {
-        return { url: "https://placehold.co/1920x1080", type: 'placeholder' };
-    }
-};
 
 // ─── Quantity controls with stock-cap enforcement ───────────────────────────
 

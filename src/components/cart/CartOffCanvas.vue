@@ -29,7 +29,7 @@
                 <div
                     class="flex flex-col sm:flex-row justify-between bg-white border border-gray-200 rounded-xl p-3 sm:p-4 shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 gap-3 sm:gap-4">
                     <div class="sm:w-15 flex-shrink-0">
-                        <img v-if="getImageUrl(item)" :src="getImageUrl(item).url" alt="product"
+                        <img v-if="getImageUrl(item)" :src="getImageUrl(item).url" @error="retryProductImage($event, getImageUrl(item).fallbackUrl)" alt="product"
                             class="hidden sm:block w-20 h-20 object-cover rounded-xl border border-gray-300 shadow-sm" />
                     </div>
 
@@ -98,6 +98,7 @@
 </template>
 
 <script setup>
+import { getProductImage as getImageUrl, retryProductImage } from "@/utils/productImage"
 import { useCartStore } from '@/stores/cart'
 import { useRouter } from 'vue-router'
 import { computed } from 'vue'
@@ -125,21 +126,6 @@ const goToCart = () => {
     cartStore.toggleCart(false)
     router.push('/cart')
 }
-
-const getImageUrl = (product) => {
-    const prodImage = product.image?.trim();
-    const catImage = product.category?.image?.trim();
-
-    if (prodImage && !prodImage.includes("https://placehold.co") && !prodImage.includes("no-image.png")) {
-        return { url: prodImage, type: 'product' };
-    }
-    else if (catImage && !catImage.includes("https://placehold.co") && !catImage.includes("no-image.png")) {
-        return { url: catImage, type: 'category' };
-    }
-    else {
-        return { url: "https://placehold.co/1920x1080", type: 'placeholder' };
-    }
-};
 </script>
 
 <style scoped>

@@ -46,12 +46,12 @@
                         <div class="product-thumbnail">
                             <img
                                 v-if="hasUsableImage(product)"
-                                :src="product.image"
+                                :src="getProductImage(product).url"
                                 :alt="product.name"
                                 loading="lazy"
                                 decoding="async"
                                 class="h-full w-full object-contain"
-                                @error="markImageFailed(product.id)"
+                                @error="retryProductImage($event, getProductImage(product)?.fallbackUrl) || markImageFailed(product.id)"
                             />
                             <i v-else class="pi pi-plus-circle text-lg text-green-500"></i>
                         </div>
@@ -107,6 +107,7 @@
 </template>
 
 <script setup>
+import { getProductImage, retryProductImage } from "@/utils/productImage";
 import { nextTick, reactive, watch } from "vue";
 
 const props = defineProps({
@@ -140,16 +141,8 @@ const markImageFailed = (productId) => {
     failedImages.add(productId);
 };
 
-const hasUsableImage = (product) => {
-    const image = product?.image?.trim();
-
-    return Boolean(
-        image
-        && !failedImages.has(product.id)
-        && !image.includes("placehold.co")
-        && !image.includes("no-image.png"),
-    );
-};
+const hasUsableImage = (product) =>
+    !failedImages.has(product.id);
 
 const highlightParts = (name) => {
     const text = String(name || "");

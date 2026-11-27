@@ -15,7 +15,7 @@
         <router-link :to="`/products/${product.slug}`" class="block relative bg-[#f9f9f9] rounded-t-lg overflow-hidden">
             <div class="h-40 sm:h-44 md:h-48 flex items-center justify-center relative">
                 <div v-if="loading" class="absolute inset-0 bg-gray-200 animate-pulse"></div>
-                <img :src="defaultImagePlaceHolder.url" :alt="product.name" loading="lazy" @load="onLoad"
+                <img :src="defaultImagePlaceHolder.url" :alt="product.name" loading="lazy" @load="onLoad" @error="retryProductImage($event, defaultImagePlaceHolder.fallbackUrl) || onLoad()"
                     class="max-h-full max-w-full object-contain transition-transform duration-300 hover:scale-105" />
             </div>
         </router-link>
@@ -88,6 +88,7 @@
 </template>
 
 <script setup>
+import { getProductImage, retryProductImage } from "@/utils/productImage";
 import { ref, computed, watch } from "vue";
 import { useCartStore } from "@/stores/cart";
 import { usePush } from "notivue";
@@ -116,18 +117,7 @@ watch(
     }
 )
 
-const defaultImagePlaceHolder = computed(() => {
-    const prodImage = props.product.image?.trim()
-    const catImage = props.product.category?.image?.trim()
-
-    if (prodImage && !prodImage.includes("https://placehold.co") && !prodImage.includes("no-image.png")) {
-        return { url: prodImage, type: "product" }
-    } else if (catImage && !catImage.includes("https://placehold.co") && !catImage.includes("no-image.png")) {
-        return { url: catImage, type: "category" }
-    } else {
-        return { url: "https://placehold.co/1920x1080", type: "placeholder" }
-    }
-})
+const defaultImagePlaceHolder = computed(() => getProductImage(props.product))
 
 function onLoad() {
     loading.value = false

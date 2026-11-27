@@ -1,16 +1,17 @@
 <template>
   <ProductDetailSkeleton v-if="isProductLoading || isProductNavigationPending" />
 
-  <section v-else-if="productDetail" class="text-gray-800 space-y-6 md:space-y-12">
+  <section v-else-if="productDetail" class="detail-page text-gray-800 space-y-6 md:space-y-12">
     <!-- Product Information Card -->
     <div
-      class="grid grid-cols-1 md:grid-cols-5 gap-6 md:gap-8 bg-white p-4 sm:p-6 lg:p-8 rounded-xl shadow border border-gray-200"
+      class="detail-summary grid grid-cols-1 md:grid-cols-5 gap-6 md:gap-8 bg-white p-4 sm:p-6 lg:p-8 rounded-xl shadow border border-gray-200"
     >
       <div
-        class="md:col-span-2 relative w-full h-full min-h-[250px] md:min-h-[350px] rounded-lg overflow-hidden flex items-center justify-center bg-gray-50 border border-gray-100"
+        class="detail-gallery md:col-span-2 relative w-full h-full min-h-[250px] md:min-h-[350px] rounded-lg overflow-hidden flex items-center justify-center bg-gray-50 border border-gray-100"
       >
         <img
           :src="defaultImagePlaceHolder.url"
+          @error="retryProductImage($event, defaultImagePlaceHolder.fallbackUrl)"
           :alt="productDetail.name"
           loading="lazy"
           :class="[
@@ -22,9 +23,9 @@
         />
       </div>
 
-      <div class="md:col-span-3 flex flex-col justify-between space-y-6 py-2">
+      <div class="detail-overview md:col-span-3 flex flex-col justify-between space-y-6 py-2">
         <div>
-          <div class="border-b border-gray-100 pb-4 mb-4">
+          <div class="detail-heading border-b border-gray-100 pb-4 mb-4">
             <h1
               class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 tracking-tight"
             >
@@ -32,11 +33,11 @@
             </h1>
           </div>
 
-          <div class="flex flex-wrap items-center gap-3">
+          <div class="detail-meta flex flex-wrap items-center gap-3">
             <!-- Brand Badge -->
             <div
               v-if="productDetail.brand"
-              class="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 border border-indigo-100 rounded-md shadow-sm"
+              class="detail-tag inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 border border-indigo-100 rounded-md shadow-sm"
             >
               <i class="pi pi-shield text-indigo-500 text-xs"></i>
               <span class="text-sm text-indigo-800">
@@ -48,7 +49,7 @@
             <!-- Category Badge -->
             <div
               v-if="productDetail.category"
-              class="inline-flex items-center gap-2 px-3 py-1.5 bg-orange-50 border border-orange-100 rounded-md shadow-sm"
+              class="detail-tag inline-flex items-center gap-2 px-3 py-1.5 bg-orange-50 border border-orange-100 rounded-md shadow-sm"
             >
               <i class="pi pi-tags text-orange-500 text-xs"></i>
               <span class="text-sm text-orange-800">
@@ -73,7 +74,7 @@
           <!-- Unit Selection Dropdown -->
           <div
             v-if="showPriceInfo"
-            class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4"
+            class="detail-unit-options mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4"
           >
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2"
@@ -104,7 +105,7 @@
                 >Unit Price</label
               >
               <p
-                class="w-full flex items-center border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-50 text-lg font-bold text-gray-800"
+                class="detail-unit-price w-full flex items-center border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-50 text-lg font-bold text-gray-800"
                 style="min-height: 23px; line-height: 23.5px"
               >
                 {{ formatPrice(currentUnitPrice) }} Tk
@@ -147,10 +148,10 @@
           </div>
 
           <div
-            class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mt-6"
+            class="detail-purchase flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mt-6"
           >
             <div
-              class="flex sm:inline-flex justify-between sm:justify-center items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-sm"
+              class="detail-quantity flex sm:inline-flex justify-between sm:justify-center items-center bg-gray-100 rounded-full border border-gray-300 overflow-hidden shadow-sm"
             >
               <!-- Decrease -->
               <button
@@ -199,7 +200,7 @@
     <!-- Price Information Card -->
     <div
       v-if="showPriceInfo"
-      class="bg-white p-4 rounded-lg shadow border border-gray-200"
+      class="detail-price-panel bg-white p-4 rounded-lg shadow border border-gray-200"
     >
       <div class="flex items-center gap-3 mb-6">
         <div
@@ -212,7 +213,7 @@
         </h2>
       </div>
 
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="detail-price-grid grid grid-cols-2 md:grid-cols-4 gap-4">
         <!-- Per Piece -->
         <div
           class="bg-[#eefcf2] border border-[#d1f4df] rounded-xl p-5 flex flex-col items-center justify-center text-center"
@@ -317,7 +318,7 @@
 
     <!-- Related Medicines -->
     <div>
-      <h2 v-if="alternativeProducts.length" class="text-xl font-semibold mb-4">
+      <h2 v-if="alternativeProducts.length" class="detail-related-title text-xl font-semibold mb-4">
         Related Medicines ({{ alternativeProducts.length }})
       </h2>
 
@@ -373,13 +374,13 @@ import { ref, onBeforeUnmount, watch, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useCartStore } from "@/stores/cart";
 import { usePush } from "notivue";
+import { getProductImage, retryProductImage } from "@/utils/productImage";
 import { useProducts } from "@/composables/useProducts";
 import { useProductNavigation } from "@/composables/useProductNavigation";
 import ProductGridItem from "../../components/products/ProductGridItem.vue";
 import ProductDetailSkeleton from "@/components/products/ProductDetailSkeleton.vue";
 import bdtIcon from "@/assets/images/bdt-icon.png";
 
-const BASE_URL = new URL(import.meta.env.VITE_API_BASE_URL || "https://pos.redpharmabd.com/api").origin;
 const route = useRoute();
 const { product, error: productError, fetchProductDetails } = useProducts();
 const { isProductNavigationPending } = useProductNavigation();
@@ -460,31 +461,7 @@ const currentUnitPrice = computed(() => {
   return piecePrice.value;
 });
 
-const defaultImagePlaceHolder = computed(() => {
-  const prodImage = product.value.image?.trim();
-  const catImage = product.value.category?.image?.trim();
-
-  const normalizeUrl = (url) => {
-    if (url.startsWith("http")) return url;
-    return BASE_URL + url;
-  };
-
-  if (
-    prodImage &&
-    !prodImage.includes("https://placehold.co") &&
-    !prodImage.includes("no-image.png")
-  ) {
-    return { url: prodImage, type: "product" };
-  } else if (
-    catImage &&
-    !catImage.includes("https://placehold.co") &&
-    !catImage.includes("no-image.png")
-  ) {
-    return { url: catImage, type: "category" };
-  } else {
-    return { url: "https://placehold.co/1920x1080", type: "placeholder" };
-  }
-});
+const defaultImagePlaceHolder = computed(() => getProductImage(product.value));
 
 const isStockOut = computed(() => {
   if (!productDetail.value) return false;
@@ -649,3 +626,154 @@ onBeforeUnmount(() => {
   detailRequestController?.abort();
 });
 </script>
+
+<style scoped>
+.detail-summary,
+.detail-price-panel {
+  border-color: #dce8e0;
+  border-radius: 1rem;
+  box-shadow: 0 3px 12px rgb(25 65 44 / 6%);
+}
+
+.detail-summary {
+  gap: clamp(1rem, 2.5vw, 2.25rem);
+}
+
+.detail-gallery {
+  border-color: #e4ede7;
+  border-radius: 0.875rem;
+  background: #f4f8f5;
+}
+
+.detail-overview {
+  min-width: 0;
+}
+
+.detail-heading {
+  margin-bottom: 0.875rem;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.detail-heading h1 {
+  color: #17382a;
+  line-height: 1.18;
+  overflow-wrap: anywhere;
+}
+
+.detail-meta {
+  gap: 0.5rem;
+}
+
+.detail-meta > div {
+  min-width: 0;
+}
+
+.detail-meta > div:last-child {
+  padding-bottom: 0;
+}
+
+.detail-tag {
+  border-color: #e0eae4;
+  border-radius: 0.5rem;
+  background: #f7faf8;
+  box-shadow: none;
+}
+
+.detail-tag > i,
+.detail-tag > span {
+  color: #3c574a;
+}
+
+.detail-unit-options {
+  gap: 0.75rem 1rem;
+}
+
+.detail-unit-options select,
+.detail-unit-price {
+  min-height: 2.625rem;
+  border-color: #d8e4dc;
+  border-radius: 0.5rem;
+  box-shadow: none;
+}
+
+.detail-unit-price {
+  background: #f5f8f6;
+  color: #274737;
+}
+
+.price-qty-stat {
+  display: block;
+  margin-top: 1.25rem;
+  padding-top: 0.875rem;
+  border-top: 1px solid #e7efe9;
+}
+
+.price-qty-stat > div > p {
+  margin-top: 0;
+}
+
+.price-field > p:not(.line-through) {
+  color: #137346;
+}
+
+.detail-purchase {
+  gap: 0.75rem;
+  margin-top: 0.875rem;
+}
+
+.detail-purchase > button {
+  min-height: 2.75rem;
+  border-radius: 0.625rem;
+  box-shadow: 0 2px 5px rgb(19 115 70 / 16%);
+}
+
+.detail-quantity {
+  border-color: #d8e4dc;
+  border-radius: 0.625rem;
+  background: #f3f7f4;
+  box-shadow: none;
+}
+
+.detail-quantity input {
+  border-color: #e0eae4;
+}
+
+.detail-page :is(button, select, input):focus-visible {
+  outline: 2px solid #137346;
+  outline-offset: 2px;
+}
+
+.detail-price-panel {
+  padding: clamp(1rem, 2vw, 1.5rem);
+}
+
+.detail-price-grid {
+  gap: clamp(0.625rem, 1.2vw, 1rem);
+}
+
+.detail-price-grid > div {
+  min-width: 0;
+  padding: clamp(0.75rem, 1.65vw, 1.125rem);
+  border-color: #e1ebe4;
+  background: #f7faf8;
+}
+
+.detail-price-grid > div > div:first-child {
+  margin-bottom: 0.625rem;
+}
+
+.detail-related-title {
+  color: #244135;
+}
+
+@media (width < 768px) {
+  .detail-gallery {
+    min-height: 215px;
+  }
+
+  .detail-gallery :deep(img) {
+    max-height: 20rem;
+  }
+}
+</style>
