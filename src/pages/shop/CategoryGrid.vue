@@ -115,14 +115,17 @@ const productCount = category => Number(category.total_products ?? category.prod
 }
 
 .catalog-image {
+    position: relative;
+    flex-shrink: 0;
     overflow: hidden;
-    aspect-ratio: 1.25;
+    aspect-ratio: 4 / 3;
     border-radius: .55rem;
     background: #f1f6f2;
 }
 
 .catalog-image :deep(img) {
-    display: block;
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: contain;

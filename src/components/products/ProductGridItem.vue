@@ -12,11 +12,11 @@
             {{ t("product.stockOut") }}
         </div>
 
-        <router-link :to="`/products/${product.slug}`" class="block relative bg-[#f9f9f9] rounded-t-lg overflow-hidden">
-            <div class="h-40 sm:h-44 md:h-48 flex items-center justify-center relative">
+        <router-link :to="`/products/${product.slug}`" class="block shrink-0 bg-[#f9f9f9] rounded-t-lg overflow-hidden">
+            <div class="relative aspect-[4/3]">
                 <div v-if="loading" class="absolute inset-0 bg-gray-200 animate-pulse"></div>
                 <img :src="defaultImagePlaceHolder.url" :alt="product.name" loading="lazy" @load="onLoad" @error="retryProductImage($event, defaultImagePlaceHolder.fallbackUrl) || onLoad()"
-                    class="max-h-full max-w-full object-contain transition-transform duration-300 hover:scale-105" />
+                    class="absolute inset-0 h-full w-full object-contain" />
             </div>
         </router-link>
 

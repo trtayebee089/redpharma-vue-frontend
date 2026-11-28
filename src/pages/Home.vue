@@ -296,7 +296,7 @@ onMounted(() => Promise.all([fetchBestSellingProducts(), fetchFeaturedProducts()
   position: relative;
   display: grid;
   width: 100%;
-  aspect-ratio: 1.45;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   place-items: center;
   border-radius: .52rem;
