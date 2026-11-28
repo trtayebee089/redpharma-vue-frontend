@@ -53,6 +53,9 @@ onMounted(() => Promise.all([fetchBestSellingProducts(), fetchFeaturedProducts()
   <div class="store-home">
     <section class="home-hero" aria-labelledby="home-title">
       <div class="home-intro">
+        <span class="home-intro-symbol" aria-hidden="true">
+          <i class="pi pi-plus"></i>
+        </span>
         <h1 id="home-title">{{ t('home.welcome.title') }}</h1>
         <p>{{ t('home.welcome.description') }}</p>
         <div class="home-intro-actions">
@@ -165,18 +168,62 @@ onMounted(() => Promise.all([fetchBestSellingProducts(), fetchFeaturedProducts()
 }
 
 .home-intro {
+  position: relative;
+  isolation: isolate;
   display: grid;
   align-content: center;
   justify-items: start;
   gap: .8rem;
   padding: clamp(1.15rem, 2.75vw, 2.5rem);
+  overflow: hidden;
+  border: 1px solid #cfe6d8;
   border-radius: 1.125rem;
-  background: linear-gradient(145deg, #102e23, #1b4d36);
-  color: #f2fff8;
+  background: linear-gradient(145deg, #f8fcf8 10%, #eaf7ee 65%, #e6f4eb);
+  color: var(--home-ink);
+}
+
+.home-intro::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset-inline-end: -5rem;
+  inset-block-end: -8.5rem;
+  width: clamp(14rem, 25vw, 23rem);
+  aspect-ratio: 1;
+  border: 1px solid rgb(36 118 73 / 13%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 68% 72%, #fff4ef 0%, #e2f4e7 56%, transparent 75%);
+  box-shadow: 0 0 0 1.15rem rgb(192 229 205 / 25%), 0 0 0 2.3rem rgb(192 229 205 / 13%);
+  pointer-events: none;
+}
+
+.home-intro-symbol {
+  position: relative;
+  display: grid;
+  width: clamp(2rem, 4vw, 2.65rem);
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid #c8e4d3;
+  border-radius: .7rem;
+  background: #fff;
+  color: #146840;
+  box-shadow: 0 3px 10px rgb(28 102 62 / 8%);
+  font-size: clamp(.9rem, 2vw, 1.15rem);
+}
+
+.home-intro-symbol::after {
+  content: "";
+  position: absolute;
+  inset-inline-end: -.2rem;
+  inset-block-start: -.2rem;
+  width: .55rem;
+  aspect-ratio: 1;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  background: #d73648;
 }
 
 .home-intro h1 {
-  max-width: 11ch;
   margin: 0;
   font-size: clamp(1.85rem, 3.4vw, 3.2rem);
   font-weight: 750;
@@ -185,7 +232,6 @@ onMounted(() => Promise.all([fetchBestSellingProducts(), fetchFeaturedProducts()
 }
 
 .home-intro h1:lang(bn) {
-  max-width: none;
   letter-spacing: normal;
   line-height: 1.2;
 }
@@ -197,7 +243,7 @@ onMounted(() => Promise.all([fetchBestSellingProducts(), fetchFeaturedProducts()
 
 .home-intro p {
   max-width: 33ch;
-  color: #d6ece0;
+  color: #36594a;
   font-size: clamp(.875rem, 1.2vw, 1rem);
   line-height: 1.55;
 }
@@ -217,19 +263,19 @@ onMounted(() => Promise.all([fetchBestSellingProducts(), fetchFeaturedProducts()
   min-height: 2.75rem;
   padding: .55rem .8rem;
   border-radius: .625rem;
-  background: #d8f5e5;
-  color: #164831;
+  background: #166741;
+  color: #fff;
   font-size: .875rem;
   font-weight: 700;
   white-space: nowrap;
 }
 
 .home-primary-action:hover {
-  background: #fff;
+  background: #105433;
 }
 
 .home-track-action {
-  color: #f2fff8;
+  color: #1c5b3c;
   font-size: .875rem;
   font-weight: 600;
   text-decoration: underline;
@@ -443,8 +489,22 @@ onMounted(() => Promise.all([fetchBestSellingProducts(), fetchFeaturedProducts()
   outline-offset: 2px;
 }
 
-.home-intro a:focus-visible {
-  outline-color: #c7f4d8;
+@media (prefers-reduced-motion: no-preference) {
+  .home-intro::before {
+    animation: home-intro-drift 2s ease-in-out 2;
+  }
+
+  .home-intro-symbol {
+    animation: home-intro-lift 2s ease-in-out 2;
+  }
+}
+
+@keyframes home-intro-drift {
+  50% { transform: translate(-.7rem, -.6rem) scale(1.06); }
+}
+
+@keyframes home-intro-lift {
+  50% { transform: translateY(-.22rem); }
 }
 
 @media (width >= 760px) {
@@ -456,6 +516,10 @@ onMounted(() => Promise.all([fetchBestSellingProducts(), fetchFeaturedProducts()
 @media (width >= 1180px) {
   .home-hero {
     grid-template-columns: minmax(16rem, 1fr) minmax(0, 2.65fr);
+  }
+
+  .home-intro h1:lang(en) {
+    max-width: 11ch;
   }
 }
 </style>
