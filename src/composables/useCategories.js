@@ -5,6 +5,48 @@ import { visibleCategories } from "@/utils/categoryNavigation.js";
 
 const CACHE_KEY = "categories_cache";
 const CACHE_TTL = 1000 * 60 * 60; // 1 hour
+const REFRESH_INTERVAL = 60_000;
+let refreshedCategories;
+let categoryRequest;
+let refreshTime = 0;
+
+function requestCategories(force) {
+    if (categoryRequest) return categoryRequest;
+    if (!force && Date.now() - refreshTime < REFRESH_INTERVAL) return refreshedCategories;
+
+    categoryRequest = axios.get(CATEGORIES).then(({ data }) => {
+        if (!Array.isArray(data.data)) throw new Error("Invalid category list");
+
+        refreshedCategories = visibleCategories(data.data);
+        refreshTime = Date.now();
+        try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify({
+                data: refreshedCategories,
+                timestamp: refreshTime,
+            }));
+        } catch {
+            // Categories are still usable when browser storage is disabled.
+        }
+        return refreshedCategories;
+    }).finally(() => {
+        categoryRequest = null;
+    });
+
+    return categoryRequest;
+}
+
+function getCachedCategories() {
+    try {
+        const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
+        if (Array.isArray(cached?.data) && Number.isFinite(cached.timestamp)
+            && Date.now() - cached.timestamp <= CACHE_TTL) {
+            return visibleCategories(cached.data);
+        }
+    } catch {
+        // An unavailable or invalid cache is equivalent to a missing cache.
+    }
+    return [];
+}
 
 export function useCategories() {
     const categories = ref([]);
@@ -16,62 +58,16 @@ export function useCategories() {
     const sortOption = ref("default");
 
     const fetchCategories = async (force = false) => {
-        // 1️⃣ Try cache first
-        if (!force) {
-            const cached = getCachedCategories();
-            if (cached) {
-                categories.value = visibleCategories(cached);
-                return;
-            }
-        }
-
-        // 2️⃣ Fetch from API
         loading.value = true;
         error.value = null;
         try {
-            const res = await axios.get(CATEGORIES);
-            categories.value = visibleCategories(res.data.data);
-
-            // 3️⃣ Save to cache
-            setCachedCategories(categories.value);
-
+            categories.value = await requestCategories(force);
         } catch (err) {
             error.value = err;
+            categories.value = refreshedCategories ?? getCachedCategories();
         } finally {
             loading.value = false;
         }
-    };
-
-    const getCachedCategories = () => {
-        const cached = localStorage.getItem(CACHE_KEY);
-        if (!cached) return null;
-
-        let parsed;
-        try {
-            parsed = JSON.parse(cached);
-        } catch {
-            localStorage.removeItem(CACHE_KEY);
-            return null;
-        }
-
-        // Check expiry
-        if (!parsed || !Array.isArray(parsed.data) || !Number.isFinite(parsed.timestamp)
-            || Date.now() - parsed.timestamp > CACHE_TTL) {
-            localStorage.removeItem(CACHE_KEY);
-            return null;
-        }
-
-        return parsed.data;
-    };
-
-    const setCachedCategories = (data) => {
-        localStorage.setItem(
-            CACHE_KEY,
-            JSON.stringify({
-                data,
-                timestamp: Date.now(),
-            })
-        );
     };
 
     async function fetchCategoryDetails(slug, page = 1, params = []) {

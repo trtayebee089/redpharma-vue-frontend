@@ -1,4 +1,6 @@
 const assetOrigin = 'https://api.redpharmabd.com';
+// Category art can be replaced without renaming it, while the host caches files for a year.
+const categoryImageRevision = '20261128';
 const redPharmaHosts = new Set([
     'api.redpharmabd.com',
     'pos.redpharmabd.com',
@@ -27,7 +29,10 @@ export function categoryImageSources(image) {
     const path = assetPath.startsWith('/images/')
         ? assetPath
         : '/images/category/' + assetPath.replace(/^\/(?:category\/)?/, '');
-    const preferred = new URL(path + url.search + url.hash, assetOrigin).href;
+    const preferred = new URL(path + url.search + url.hash, assetOrigin);
+    if (path.startsWith('/images/category/') && !preferred.searchParams.has('v')) {
+        preferred.searchParams.set('v', categoryImageRevision);
+    }
 
-    return isAbsolute && preferred !== url.href ? [preferred, url.href] : [preferred];
+    return isAbsolute && preferred.href !== url.href ? [preferred.href, url.href] : [preferred.href];
 }
