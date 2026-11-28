@@ -23,6 +23,7 @@
                         <thead>
                             <tr>
                                 <th scope="col" class="cart-product-column">{{ $t('cart.table.thead.product') }}</th>
+                                <th scope="col" class="cart-unit-column">{{ $t('cart.table.thead.unit') }}</th>
                                 <th scope="col" class="cart-money-column">{{ $t('cart.table.thead.price') }}</th>
                                 <th scope="col" class="cart-quantity-column">{{ $t('cart.table.thead.qty') }}</th>
                                 <th scope="col" class="cart-money-column">{{ $t('cart.table.thead.total') }}</th>
@@ -41,9 +42,13 @@
                                         <div>
                                             <p class="cart-product-name">{{ item.name }}</p>
                                             <p v-if="item.brand?.title" class="cart-product-brand">{{ item.brand.title }}</p>
+                                            <p v-if="cartStock(item) != null" class="cart-product-stock">
+                                                {{ $t('cart.availablePieces', { count: n(cartStock(item)) }, cartStock(item)) }}
+                                            </p>
                                         </div>
                                     </div>
                                 </th>
+                                <td class="cart-unit-column"><CartLineUnit :item="item" /></td>
                                 <td class="cart-money-column">{{ itemUnitPrice(item).toFixed(2) }} Tk</td>
                                 <td class="cart-quantity-column">
                                     <CartLineQuantity :item="item" />
@@ -70,9 +75,8 @@
                                 <div>
                                     <h2 class="cart-product-name">{{ item.name }}</h2>
                                     <p v-if="item.brand?.title" class="cart-product-brand">{{ item.brand.title }}</p>
-                                    <p class="cart-unit-price">
-                                        <span>{{ $t('cart.table.thead.price') }}</span>
-                                        <strong>{{ itemUnitPrice(item).toFixed(2) }} Tk</strong>
+                                    <p v-if="cartStock(item) != null" class="cart-product-stock">
+                                        {{ $t('cart.availablePieces', { count: n(cartStock(item)) }, cartStock(item)) }}
                                     </p>
                                 </div>
                             </div>
@@ -84,6 +88,14 @@
                         </div>
 
                         <div class="cart-item-controls">
+                            <div>
+                                <p class="cart-card-label">{{ $t('cart.table.thead.unit') }}</p>
+                                <CartLineUnit :item="item" />
+                            </div>
+                            <div class="cart-item-total">
+                                <p class="cart-card-label">{{ $t('cart.table.thead.price') }}</p>
+                                <p class="cart-unit-price">{{ itemUnitPrice(item).toFixed(2) }} Tk</p>
+                            </div>
                             <div>
                                 <p class="cart-card-label">{{ $t('cart.table.thead.qty') }}</p>
                                 <CartLineQuantity :item="item" />
@@ -232,8 +244,9 @@
 
 <script setup>
 import { getProductImage as getImageUrl, retryProductImage } from "@/utils/productImage";
-import { cartLineKey, cartPiecePrice, cartPieceQuantity, piecesPerUnit } from "@/utils/cartUnits";
+import { cartLineKey, cartPiecePrice, cartPieceQuantity, cartStock, piecesPerUnit } from "@/utils/cartUnits";
 import CartLineQuantity from "@/components/cart/CartLineQuantity.vue";
+import CartLineUnit from "@/components/cart/CartLineUnit.vue";
 import { computed, reactive, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
@@ -506,6 +519,11 @@ onMounted(async () => {
     font-variant-numeric: tabular-nums;
 }
 
+.cart-unit-column {
+    min-width: 8.5rem;
+    text-align: start;
+}
+
 .cart-quantity-column,
 .cart-action-column {
     text-align: center;
@@ -530,15 +548,17 @@ onMounted(async () => {
     overflow-wrap: anywhere;
 }
 
-.cart-product-brand {
+.cart-product-brand,
+.cart-product-stock {
     color: #4e6658;
     font-size: .75rem;
     font-weight: 400;
-}
-
-.cart-product-brand {
     margin-top: 3px;
     overflow-wrap: anywhere;
+}
+
+.cart-product-stock {
+    color: #226446;
 }
 
 .cart-product-image {
@@ -607,23 +627,16 @@ onMounted(async () => {
 }
 
 .cart-unit-price {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 6px;
-    margin-top: 6px;
-    color: #4e6658;
-    font-size: .8125rem;
-}
-
-.cart-unit-price strong {
     color: #1a3a2b;
+    font-size: .875rem;
     font-weight: 650;
+    font-variant-numeric: tabular-nums;
     white-space: nowrap;
 }
 
 .cart-item-controls {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
     gap: 10px;
     padding: 10px 12px;
@@ -775,7 +788,22 @@ onMounted(async () => {
 
 @media (min-width: 1280px) {
     .cart-layout:has(.checkout-card) {
-        grid-template-columns: minmax(0, 1fr) minmax(320px, 36%);
+        grid-template-columns: minmax(0, 1fr) minmax(320px, 34%);
+    }
+}
+
+@media (min-width: 1280px) and (max-width: 1439px) {
+    .cart-table :is(thead th, tbody th, tbody td) {
+        padding-inline: 7px;
+    }
+
+    .cart-table .cart-product {
+        gap: 8px;
+    }
+
+    .cart-table .cart-product-image {
+        width: 44px;
+        height: 44px;
     }
 }
 </style>

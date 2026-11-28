@@ -214,7 +214,7 @@ const messages = {
             subtotal: "Subtotal",
             shipping: "Shipping Fee",
             grand: "Grand Total",
-            available: "Available: {count}",
+            availablePieces: "Available: {count} piece | Available: {count} pieces",
             removeProduct: "Remove {name}",
             decreaseQuantity: "Decrease quantity",
             increaseQuantity: "Increase quantity",
@@ -241,6 +241,7 @@ const messages = {
             table: {
                 thead: {
                     product: "Product",
+                    unit: "Unit",
                     price: "Unit Price",
                     qty: "Quantity",
                     total: "Total Amount",
@@ -531,7 +532,7 @@ const messages = {
             subtotal: "পণ্যের মোট মূল্য",
             shipping: "ডেলিভারি চার্জ",
             grand: "সর্বমোট",
-            available: "মজুত: {count}",
+            availablePieces: "মজুত: {count} পিস",
             removeProduct: "{name} সরান",
             decreaseQuantity: "পরিমাণ কমান",
             increaseQuantity: "পরিমাণ বাড়ান",
@@ -557,6 +558,7 @@ const messages = {
             table: {
                 thead: {
                     product: "পণ্য",
+                    unit: "একক",
                     price: "একক মূল্য",
                     qty: "পরিমাণ",
                     total: "মোট মূল্য",

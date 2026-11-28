@@ -128,7 +128,7 @@ const isStockOut = computed(() => {
 });
 
 const handleAddToCart = () => {
-    const result = cartStore.addToCart({ ...props.product, quantity: quantity.value });
+    const result = cartStore.addToCart({ ...props.product, quantity: quantity.value }, "piece");
     if (!result.addedQuantity) {
         push.warning(t("cart.maximumStock"));
         return;

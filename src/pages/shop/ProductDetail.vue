@@ -518,6 +518,7 @@ const handleBlur = () => {
 
 const addToCart = (prod) => {
   if (isStockOut.value || maxUnits.value === 0) return;
+  const unit = selectedUnit.value;
   handleBlur();
 
   const result = cartStore.addToCart({
@@ -525,8 +526,8 @@ const addToCart = (prod) => {
     quantity: quantity.value,
     offerPrice: basePrice.value,
     stock_qty: stockQty.value,
-  }, selectedUnit.value);
-  const totalPieces = result.addedQuantity * unitMultiplier.value;
+  }, unit);
+  const totalPieces = result.addedQuantity * piecesPerUnit(prod, unit);
 
   if (result?.capped) {
     push.warning(`Only ${stockQty.value} item(s) available — qty adjusted.`);

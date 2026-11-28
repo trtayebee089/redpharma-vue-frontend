@@ -33,3 +33,17 @@ test("mixed units stay distinct in the cart and combine by product for checkout"
 test("piece-only products have no additional unit options", () => {
     assert.deepEqual(getProductUnits({ piece_qty: "1", stripe_qty: "1" }), [{ type: "piece", pieces: 1 }]);
 });
+
+test("a strip-only Solas entry and older piece entries keep distinct units", () => {
+    const solas = { id: 7, piece_qty: "180.00", stripe_qty: "0.00", price: "1.15", stock_qty: 231 };
+    const strip = { ...solas, cartUnit: "strip", quantity: 1 };
+    const grid = { ...solas, cartUnit: "piece", quantity: 1 };
+    const legacy = { ...solas, quantity: 180 };
+    assert.deepEqual(getProductUnits(solas).map(unit => unit.type), ["piece", "strip"]);
+    assert.equal(cartLineKey(strip), "7:strip");
+    assert.equal(cartPieceQuantity(strip), 180);
+    assert.equal(cartLineKey(grid), "7:piece");
+    assert.equal(cartPieceQuantity(grid), 1);
+    assert.equal(cartLineKey(legacy), "7:piece");
+    assert.equal(cartPieceQuantity(legacy), 180);
+});
