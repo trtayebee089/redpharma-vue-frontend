@@ -20,6 +20,14 @@
 
                 <div v-else class="cart-table hidden md:block">
                     <table :aria-label="$t('cart.title')">
+                        <colgroup>
+                            <col />
+                            <col class="cart-unit-width" />
+                            <col class="cart-price-width" />
+                            <col class="cart-quantity-width" />
+                            <col class="cart-total-width" />
+                            <col class="cart-action-width" />
+                        </colgroup>
                         <thead>
                             <tr>
                                 <th scope="col" class="cart-product-column">{{ $t('cart.table.thead.product') }}</th>
@@ -477,8 +485,30 @@ onMounted(async () => {
 
 .cart-table table {
     width: 100%;
+    min-width: 42rem;
+    table-layout: fixed;
     border-collapse: collapse;
     font-size: .875rem;
+}
+
+.cart-unit-width {
+    width: 8.5rem;
+}
+
+.cart-price-width {
+    width: 6rem;
+}
+
+.cart-quantity-width {
+    width: 8.5rem;
+}
+
+.cart-total-width {
+    width: 7rem;
+}
+
+.cart-action-width {
+    width: 4rem;
 }
 
 .cart-table thead {
@@ -508,7 +538,6 @@ onMounted(async () => {
 }
 
 .cart-table .cart-product-column {
-    width: 100%;
     padding-inline-start: 16px;
     text-align: start;
 }
@@ -520,7 +549,6 @@ onMounted(async () => {
 }
 
 .cart-unit-column {
-    min-width: 8.5rem;
     text-align: start;
 }
 
@@ -786,7 +814,7 @@ onMounted(async () => {
     color: #ad2431;
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1400px) {
     .cart-layout:has(.checkout-card) {
         grid-template-columns: minmax(0, 1fr) minmax(320px, 34%);
     }
