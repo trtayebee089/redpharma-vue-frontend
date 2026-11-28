@@ -9,74 +9,119 @@ const whatsappLink = 'https://wa.me/' + phoneNumber + '?text=' + encodeURICompon
 
 <template>
     <div class="prescription-panel">
-        <div class="prescription-icon" aria-hidden="true"><i class="pi pi-whatsapp"></i></div>
         <div class="prescription-copy">
             <h2>{{ t('home.cta_section.upload.title') }}</h2>
             <p>{{ t('home.cta_section.upload.description') }}</p>
+            <a :href="whatsappLink" target="_blank" rel="noopener noreferrer" class="prescription-action">
+                <i class="pi pi-whatsapp" aria-hidden="true"></i>
+                {{ t('home.cta_section.upload.button') }}
+                <i class="pi pi-arrow-up-right prescription-arrow" aria-hidden="true"></i>
+            </a>
         </div>
-        <a :href="whatsappLink" target="_blank" rel="noopener noreferrer" class="prescription-action">
-            {{ t('home.cta_section.upload.button') }}
-        </a>
+        <div class="prescription-visual" aria-hidden="true">
+            <span class="prescription-file"><i class="pi pi-file"></i></span>
+            <span class="prescription-mark"><i class="pi pi-arrow-up"></i></span>
+        </div>
     </div>
 </template>
 
 <style scoped>
 .prescription-panel {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) clamp(3rem, 8vw, 5.5rem);
     align-items: center;
-    gap: .65rem .85rem;
-    padding: clamp(.95rem, 2vw, 1.4rem);
-    border: 1px solid #d3e7d8;
+    gap: clamp(.65rem, 2vw, 1.25rem);
+    padding: clamp(1rem, 2vw, 1.5rem);
+    border: 1px solid #225940;
     border-radius: 1rem;
-    background: #edf7f0;
+    background: linear-gradient(120deg, #143c2b, #235f45);
+    color: #fff;
 }
 
-.prescription-icon {
+.prescription-visual {
+    position: relative;
     display: grid;
-    width: 2.7rem;
-    height: 2.7rem;
+    aspect-ratio: 1;
     place-items: center;
-    border-radius: .65rem;
-    background: #d9efe1;
-    color: #147446;
-    font-size: 1.2rem;
+    border: 1px solid rgb(215 247 226 / 26%);
+    border-radius: 32%;
+    background: rgb(215 247 226 / 11%);
+}
+
+.prescription-file {
+    display: grid;
+    width: 64%;
+    height: 72%;
+    place-items: center;
+    border-radius: .55rem;
+    background: #ebfaf0;
+    color: #235f45;
+    font-size: clamp(1.15rem, 3vw, 1.8rem);
+    box-shadow: 0 7px 15px rgb(11 42 28 / 24%);
+}
+
+.prescription-mark {
+    position: absolute;
+    right: -3%;
+    bottom: -3%;
+    display: grid;
+    width: clamp(1.35rem, 3.5vw, 2rem);
+    aspect-ratio: 1;
+    place-items: center;
+    border: 2px solid #235f45;
+    border-radius: 50%;
+    background: #a9e7bd;
+    color: #205236;
+    font-size: .8rem;
 }
 
 .prescription-copy h2 {
-    color: #17382b;
-    font-size: 1.08rem;
-    font-weight: 700;
+    font-size: clamp(1.125rem, 2vw, 1.35rem);
+    font-weight: 750;
+    line-height: 1.3;
 }
 
 .prescription-copy p {
-    margin-top: .2rem;
-    color: #526459;
+    margin-top: .3rem;
+    color: #d4ecde;
     font-size: .875rem;
 }
 
 .prescription-action {
-    grid-column: 2;
-    justify-self: start;
-    padding: .5rem .8rem;
-    border-radius: .55rem;
-    background: #137346;
-    color: #fff;
-    font-size: .8125rem;
-    font-weight: 650;
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    min-height: 44px;
+    margin-top: .85rem;
+    padding: .4rem .75rem;
+    border-radius: .65rem;
+    background: #d7f7e2;
+    color: #15432f;
+    font-size: .875rem;
+    font-weight: 750;
 }
 
 .prescription-action:hover {
-    background: #0d5d37;
+    background: #effff4;
 }
 
-@media (width >= 1360px) {
-    .prescription-panel {
-        grid-template-columns: auto minmax(0, 1fr) auto;
-    }
+.prescription-panel .prescription-action:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+}
 
-    .prescription-action {
-        grid-column: auto;
+.prescription-arrow {
+    font-size: .7rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .prescription-file,
+    .prescription-mark i {
+        animation: prescription-lift 1.6s ease-in-out 2;
     }
+}
+
+@keyframes prescription-lift {
+    50% { transform: translateY(-4px); }
 }
 </style>

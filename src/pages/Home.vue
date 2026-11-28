@@ -30,9 +30,9 @@ const categoryBreakpoints = {
   1240: { slidesPerView: 6, spaceBetween: 16 },
 };
 const contacts = [
-  { label: 'home.support.call', icon: 'pi-phone', href: 'tel:+8801997202010' },
-  { label: 'WhatsApp', icon: 'pi-whatsapp', href: 'https://wa.me/8801997202010', external: true },
-  { label: 'Facebook', icon: 'pi-facebook', href: 'https://www.facebook.com/redpharmabd/', external: true },
+  { label: 'home.support.call', channel: 'phone', icon: 'pi-phone', href: 'tel:+8801997202010' },
+  { label: 'WhatsApp', channel: 'whatsapp', icon: 'pi-whatsapp', href: 'https://wa.me/8801997202010', external: true },
+  { label: 'Facebook', channel: 'facebook', icon: 'pi-facebook', href: 'https://www.facebook.com/redpharmabd/', external: true },
 ];
 
 watch(categories, (list) => {
@@ -110,11 +110,12 @@ onMounted(() => Promise.all([fetchBestSellingProducts(), fetchFeaturedProducts()
           <a
             v-for="contact in contacts"
             :key="contact.href"
+            :class="`home-contact-${contact.channel}`"
             :href="contact.href"
             :target="contact.external ? '_blank' : undefined"
             :rel="contact.external ? 'noopener noreferrer' : undefined"
           >
-            <i class="pi" :class="contact.icon" aria-hidden="true"></i>
+            <span class="home-contact-icon" aria-hidden="true"><i class="pi" :class="contact.icon"></i></span>
             <span>{{ contact.external ? contact.label : t(contact.label) }}</span>
           </a>
         </div>
@@ -355,16 +356,16 @@ onMounted(() => Promise.all([fetchBestSellingProducts(), fetchFeaturedProducts()
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: .75rem;
+  gap: 1rem;
   padding: clamp(.95rem, 2vw, 1.4rem);
   border: 1px solid var(--home-line);
   border-radius: 1rem;
-  background: #fff;
+  background: #fbfdfb;
 }
 
 .home-support h2 {
   color: var(--home-ink);
-  font-size: 1.08rem;
+  font-size: clamp(1.125rem, 2vw, 1.35rem);
   font-weight: 700;
 }
 
@@ -375,23 +376,65 @@ onMounted(() => Promise.all([fetchBestSellingProducts(), fetchFeaturedProducts()
 }
 
 .home-contact-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr));
+  gap: .65rem;
 }
 
 .home-contact-links a {
+  --contact-ink: #184a83;
+  --contact-tint: #eaf3ff;
+  --contact-line: #bacfee;
+  --contact-hover: #dbeaff;
   display: inline-flex;
   align-items: center;
-  gap: .4rem;
-  min-height: 2.55rem;
-  padding: .4rem .65rem;
-  border: 1px solid var(--home-line);
+  min-width: 0;
+  gap: .625rem;
+  min-height: 3.65rem;
+  padding: .56rem .7rem;
+  border: 1px solid var(--contact-line);
+  border-radius: .7rem;
+  background: var(--contact-tint);
+  color: var(--contact-ink);
+  font-size: .925rem;
+  font-weight: 700;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.home-contact-links .home-contact-whatsapp {
+  --contact-ink: #126440;
+  --contact-tint: #e4f8ea;
+  --contact-line: #aedbbb;
+  --contact-hover: #d6f2df;
+}
+
+.home-contact-links .home-contact-facebook {
+  --contact-ink: #403b8d;
+  --contact-tint: #eeedff;
+  --contact-line: #cecaf1;
+  --contact-hover: #e5e1ff;
+}
+
+.home-contact-links a:hover {
+  background: var(--contact-hover);
+  border-color: var(--contact-ink);
+}
+
+.home-contact-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
   border-radius: .55rem;
-  background: #f6faf7;
-  color: #20583b;
-  font-size: .8125rem;
-  font-weight: 650;
+  background: #fff;
+  font-size: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-contact-links a {
+    transition: none;
+  }
 }
 
 .store-home :deep(a:focus-visible),

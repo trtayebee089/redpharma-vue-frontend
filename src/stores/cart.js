@@ -1,5 +1,12 @@
 import { defineStore } from 'pinia'
 import { useAuthStore } from "@/stores/auth";
+import {
+  aggregateCartLines, cartLineKey, cartPiecePrice, cartPieceQuantity, cartStock,
+  cartUnit, getProductUnits, piecesPerUnit,
+} from "@/utils/cartUnits";
+
+const sameProduct = (a, b) => String(a.id) === String(b.id);
+const wholeQuantity = qty => Number.isFinite(Number(qty)) ? Math.max(1, Math.floor(Number(qty))) : 1;
 
 export const useCartStore = defineStore('cart', {
   state: () => ({
@@ -15,8 +22,12 @@ export const useCartStore = defineStore('cart', {
     },
 
     getQuantity(productId) {
-      const item = this.items.find(i => i.id === productId);
-      return item ? item.quantity : 0;
+      const item = this.items.find(i => sameProduct(i, { id: productId }) && cartUnit(i) === "piece");
+      return Number(item?.quantity) || 0;
+    },
+
+    getProductPieceQuantity(productId) {
+      return this.orderItems.find(item => sameProduct(item, { id: productId }))?.quantity ?? 0;
     },
 
     saveCart() {
@@ -28,26 +39,78 @@ export const useCartStore = defineStore('cart', {
      * Returns { capped: boolean, stock_qty: number|null } so the
      * caller (component) can show a toast when stock is the limit.
      */
-    addToCart(product) {
-      const existing = this.items.find(item => item.id === product.id)
-      if (existing) {
-        const stockQty = existing.stock_qty ?? product.stock_qty ?? null;
-        const newQty = existing.quantity + (product.quantity || 1);
-        existing.quantity = stockQty !== null ? Math.min(newQty, stockQty) : newQty;
-        this.saveCart()
-        return { capped: stockQty !== null && newQty > stockQty, stock_qty: stockQty };
-      } else {
-        const stockQty = product.stock_qty ?? null;
-        const qty = stockQty !== null ? Math.min(product.quantity || 1, stockQty) : (product.quantity || 1);
-        this.items.push({ ...product, quantity: qty })
-        this.saveCart()
-        return { capped: stockQty !== null && (product.quantity || 1) > stockQty, stock_qty: stockQty };
+    addToCart(product, type = "piece") {
+      const productLines = this.items.filter(item => sameProduct(item, product));
+      const [firstLine] = productLines;
+      const stockQty = cartStock(product) ?? (firstLine ? cartStock(firstLine) : null);
+      // Keep the price consistent across the units of the same product.
+      const details = {
+        ...product,
+        price: firstLine?.price ?? product.price,
+        offerPrice: firstLine ? firstLine.offerPrice : product.offerPrice,
+        piece_qty: product.piece_qty ?? firstLine?.piece_qty,
+        stripe_qty: product.stripe_qty ?? firstLine?.stripe_qty,
+        stock_qty: stockQty,
+      };
+      const unit = getProductUnits(details).find(entry => entry.type === type);
+      const requested = wholeQuantity(product.quantity);
+      const usedStock = productLines.reduce((sum, item) => sum + cartPieceQuantity(item), 0);
+      const available = stockQty === null ? requested : Math.max(0, Math.floor((stockQty - usedStock) / (unit?.pieces ?? 1)));
+      const addedQuantity = unit ? Math.min(requested, available) : 0;
+
+      if (addedQuantity > 0) {
+        for (const item of productLines) {
+          item.stock_qty = stockQty;
+          item.piece_qty ??= details.piece_qty;
+          item.stripe_qty ??= details.stripe_qty;
+        }
+        const existing = productLines.find(item => cartUnit(item) === type);
+        if (existing) {
+          existing.quantity = Number(existing.quantity) + addedQuantity;
+        } else {
+          this.items.push({ ...details, cartUnit: type, quantity: addedQuantity });
+        }
+        this.saveCart();
       }
+      return { capped: addedQuantity < requested, stock_qty: stockQty, addedQuantity };
+    },
+
+    maxLineQuantity(item, type = cartUnit(item)) {
+      const stockQty = cartStock(item);
+      if (stockQty === null) return null;
+      const key = cartLineKey(item);
+      const usedByOtherLines = this.items.reduce((sum, line) =>
+        sameProduct(line, item) && cartLineKey(line) !== key ? sum + cartPieceQuantity(line) : sum, 0);
+      return Math.max(0, Math.floor((stockQty - usedByOtherLines) / piecesPerUnit(item, type)));
+    },
+
+    updateLine(item, qty, type = cartUnit(item)) {
+      const max = this.maxLineQuantity(item, type);
+      if (max === 0 || !getProductUnits(item).some(unit => unit.type === type)) {
+        return { capped: true, actual_qty: Number(item.quantity) };
+      }
+      const requested = wholeQuantity(qty);
+      const quantity = max == null ? requested : Math.min(requested, max);
+      const target = this.items.find(line => line !== item && sameProduct(line, item) && cartUnit(line) === type);
+      if (target) {
+        target.quantity = Number(target.quantity) + quantity;
+        this.removeLine(item);
+      } else {
+        item.cartUnit = type;
+        item.quantity = quantity;
+        this.saveCart();
+      }
+      return { capped: quantity < requested, actual_qty: quantity };
+    },
+
+    removeLine(item) {
+      this.items = this.items.filter(line => cartLineKey(line) !== cartLineKey(item));
+      this.saveCart();
     },
 
     removeFromCart(id) {
-      this.items = this.items.filter(item => item.id !== id)
-      this.saveCart()
+      const item = this.items.find(line => sameProduct(line, { id }) && cartUnit(line) === "piece");
+      if (item) this.removeLine(item);
     },
 
     /**
@@ -55,15 +118,22 @@ export const useCartStore = defineStore('cart', {
      * Returns { capped: boolean, actual_qty: number }.
      */
     updateQuantity(id, qty) {
-      const item = this.items.find(item => item.id === id)
-      if (item) {
-        const stockQty = item.stock_qty ?? null;
-        const safeQty = stockQty !== null ? Math.min(Math.max(1, qty), stockQty) : Math.max(1, qty);
-        item.quantity = safeQty;
-        this.saveCart()
-        return { capped: stockQty !== null && qty > stockQty, actual_qty: safeQty };
-      }
-      return { capped: false, actual_qty: qty };
+      const item = this.items.find(line => sameProduct(line, { id }) && cartUnit(line) === "piece");
+      return item ? this.updateLine(item, qty) : { capped: false, actual_qty: qty };
+    },
+
+    applyStockLimit(id, availableStock) {
+      const stock = Math.max(0, Math.floor(Number(availableStock) || 0));
+      let remaining = stock;
+      this.items = this.items.filter(item => {
+        if (!sameProduct(item, { id })) return true;
+        const pieces = piecesPerUnit(item);
+        item.stock_qty = stock;
+        item.quantity = Math.min(Number(item.quantity), Math.floor(remaining / pieces));
+        remaining -= item.quantity * pieces;
+        return item.quantity > 0;
+      });
+      this.saveCart();
     },
 
     clearCart() {
@@ -76,13 +146,16 @@ export const useCartStore = defineStore('cart', {
     }
   },
   getters: {
-    totalQty: state => state.items.reduce((acc, i) => acc + i.quantity, 0),
-    uniqueItems: state => state.items.length,
+    orderItems: state => aggregateCartLines(state.items),
+    totalQty() {
+      return this.orderItems.reduce((sum, item) => sum + item.quantity, 0);
+    },
+    uniqueItems() {
+      return this.orderItems.length;
+    },
     cartSubtotal: (state) => {
       const subtotal = state.items.reduce((sum, item) => {
-        const price = Number(item.offerPrice ?? item.price) || 0;
-        const qty = Number(item.quantity) || 1;
-        return sum + price * qty;
+        return sum + cartPiecePrice(item) * cartPieceQuantity(item);
       }, 0);
       return Number(subtotal.toFixed(2)) || 0;
     },

@@ -32,7 +32,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in cartItems" :key="item.id">
+                            <tr v-for="item in cartItems" :key="cartLineKey(item)">
                                 <th scope="row" class="cart-product-column">
                                     <div class="cart-product">
                                         <img v-if="getImageUrl(item)" :src="getImageUrl(item).url"
@@ -46,23 +46,7 @@
                                 </th>
                                 <td class="cart-money-column">{{ itemUnitPrice(item).toFixed(2) }} Tk</td>
                                 <td class="cart-quantity-column">
-                                    <div class="cart-quantity">
-                                        <button type="button" @click="updateQty(item, item.quantity - 1)" :disabled="item.quantity <= 1"
-                                            :aria-label="$t('cart.decreaseQuantity')">
-                                            <i class="pi pi-minus" aria-hidden="true"></i>
-                                        </button>
-                                        <input type="number" v-model.number="item.quantity" @input="handleManualInput(item)"
-                                            :aria-label="$t('cart.table.thead.qty')" min="1" :max="item.stock_qty ?? undefined" />
-                                        <button type="button" @click="updateQty(item, item.quantity + 1)"
-                                            :aria-label="$t('cart.increaseQuantity')"
-                                            :disabled="item.stock_qty != null && item.quantity >= item.stock_qty"
-                                            :title="item.stock_qty != null && item.quantity >= item.stock_qty ? $t('cart.maximumStock') : ''">
-                                            <i class="pi pi-plus" aria-hidden="true"></i>
-                                        </button>
-                                    </div>
-                                    <p v-if="item.stock_qty != null" class="cart-stock">
-                                        {{ $t('cart.available', { count: n(Number(item.stock_qty)) }) }}
-                                    </p>
+                                    <CartLineQuantity :item="item" />
                                 </td>
                                 <td class="cart-money-column cart-line-total">{{ itemLineTotal(item).toFixed(2) }} Tk</td>
                                 <td class="cart-action-column">
@@ -77,7 +61,7 @@
                 </div>
 
                 <ul v-if="cartItems.length" class="cart-item-list md:hidden">
-                    <li v-for="item in cartItems" :key="item.id" class="cart-item-card">
+                    <li v-for="item in cartItems" :key="cartLineKey(item)" class="cart-item-card">
                         <div class="cart-item-header">
                             <div class="cart-product">
                                 <img v-if="getImageUrl(item)" :src="getImageUrl(item).url"
@@ -102,23 +86,7 @@
                         <div class="cart-item-controls">
                             <div>
                                 <p class="cart-card-label">{{ $t('cart.table.thead.qty') }}</p>
-                                <div class="cart-quantity">
-                                    <button type="button" @click="updateQty(item, item.quantity - 1)" :disabled="item.quantity <= 1"
-                                        :aria-label="$t('cart.decreaseQuantity')">
-                                        <i class="pi pi-minus" aria-hidden="true"></i>
-                                    </button>
-                                    <input type="number" v-model.number="item.quantity" @input="handleManualInput(item)"
-                                        :aria-label="$t('cart.table.thead.qty')" min="1" :max="item.stock_qty ?? undefined" />
-                                    <button type="button" @click="updateQty(item, item.quantity + 1)"
-                                        :aria-label="$t('cart.increaseQuantity')"
-                                        :disabled="item.stock_qty != null && item.quantity >= item.stock_qty"
-                                        :title="item.stock_qty != null && item.quantity >= item.stock_qty ? $t('cart.maximumStock') : ''">
-                                        <i class="pi pi-plus" aria-hidden="true"></i>
-                                    </button>
-                                </div>
-                                <p v-if="item.stock_qty != null" class="cart-stock">
-                                    {{ $t('cart.available', { count: n(Number(item.stock_qty)) }) }}
-                                </p>
+                                <CartLineQuantity :item="item" />
                             </div>
                             <div class="cart-item-total">
                                 <p class="cart-card-label">{{ $t('cart.table.thead.total') }}</p>
@@ -264,6 +232,8 @@
 
 <script setup>
 import { getProductImage as getImageUrl, retryProductImage } from "@/utils/productImage";
+import { cartLineKey, cartPiecePrice, cartPieceQuantity, piecesPerUnit } from "@/utils/cartUnits";
+import CartLineQuantity from "@/components/cart/CartLineQuantity.vue";
 import { computed, reactive, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
@@ -320,48 +290,10 @@ function onDivisionChange() {
 }
 
 const cartItems = computed(() => cartStore.items);
-const itemUnitPrice = (item) => Number(item.offerPrice ?? item.price) || 0;
-const itemLineTotal = (item) => itemUnitPrice(item) * (Number(item.quantity) || 1);
+const itemUnitPrice = item => cartPiecePrice(item) * piecesPerUnit(item);
+const itemLineTotal = item => cartPiecePrice(item) * cartPieceQuantity(item);
 
-// ─── Quantity controls with stock-cap enforcement ───────────────────────────
-
-/**
- * Central qty updater. Enforces stock cap, shows toast, auto-resets.
- * Used by + button, - button, and the manual input handler.
- */
-const updateQty = (item, newQty) => {
-    if (item.qty != null && newQty > item.qty) {
-        cartStore.updateQuantity(item.id, item.qty);
-        showToast(`Only ${item.qty} item(s) available in stock for ${item.name}`);
-        console.log(`Only ${item.qty} item(s) available in stock for ${item.name}.`);
-        return;
-    }
-    if (newQty < 1 || isNaN(newQty)) {
-        cartStore.updateQuantity(item.id, 1);
-        return;
-    }
-    cartStore.updateQuantity(item.id, newQty);
-};
-
-/**
- * Handles manual typing in the quantity input.
- * v-model.number keeps it numeric; @input fires on every keystroke.
- */
-const handleManualInput = (item) => {
-    const val = Number(item.quantity);
-    if (isNaN(val) || val < 1) {
-        cartStore.updateQuantity(item.id, 1);
-        return;
-    }
-    if (item.stock_qty != null && val > item.stock_qty) {
-        cartStore.updateQuantity(item.id, item.stock_qty);
-        showToast(`Only ${item.stock_qty} item(s) available in stock.`);
-    } else {
-        cartStore.updateQuantity(item.id, val);
-    }
-};
-
-const removeItem = (item) => cartStore.removeFromCart(item.id);
+const removeItem = item => cartStore.removeLine(item);
 
 const submitCheckout = async () => {
     if (!cartStore.items.length) {
@@ -370,7 +302,7 @@ const submitCheckout = async () => {
     }
 
     // ✅ Snapshot cart data BEFORE the API call so it survives clearCart()
-    const cartSnapshot = cartStore.items.map(item => ({
+    const cartSnapshot = cartStore.orderItems.map(item => ({
         id: String(item.id),
         quantity: item.quantity,
         item_price: Number(item.offerPrice ?? item.price) || 0
@@ -430,7 +362,7 @@ const submitCheckout = async () => {
 
             // Auto-correct the offending item quantity in the cart
             if (data.product_id && data.available_stock != null) {
-                cartStore.updateQuantity(data.product_id, data.available_stock);
+                cartStore.applyStockLimit(data.product_id, data.available_stock);
             }
             return;
         }
@@ -598,8 +530,7 @@ onMounted(async () => {
     overflow-wrap: anywhere;
 }
 
-.cart-product-brand,
-.cart-stock {
+.cart-product-brand {
     color: #4e6658;
     font-size: .75rem;
     font-weight: 400;
@@ -608,10 +539,6 @@ onMounted(async () => {
 .cart-product-brand {
     margin-top: 3px;
     overflow-wrap: anywhere;
-}
-
-.cart-stock {
-    margin-top: 5px;
 }
 
 .cart-product-image {
@@ -623,58 +550,6 @@ onMounted(async () => {
     border-radius: 10px;
     background: #fff;
     object-fit: contain;
-}
-
-.cart-quantity {
-    display: inline-grid;
-    grid-template-columns: 33px 40px 33px;
-    overflow: hidden;
-    border: 1px solid #c5d9cb;
-    border-radius: 8px;
-    background: #fff;
-    color: #183c2a;
-}
-
-.cart-quantity button {
-    display: grid;
-    height: 34px;
-    place-items: center;
-    background: #eaf5ed;
-    color: #28563d;
-    font-size: .75rem;
-    cursor: pointer;
-}
-
-.cart-quantity button:hover:enabled {
-    background: #d7eddf;
-}
-
-.cart-quantity button:disabled {
-    background: #f3f6f4;
-    color: #61786a;
-    cursor: default;
-}
-
-.cart-quantity input {
-    width: 100%;
-    min-width: 0;
-    border-inline: 1px solid #d9e7dd;
-    border-radius: 0;
-    appearance: textfield;
-    text-align: center;
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
-}
-
-.cart-quantity input::-webkit-inner-spin-button,
-.cart-quantity input::-webkit-outer-spin-button {
-    appearance: none;
-    margin: 0;
-}
-
-.cart-page .cart-quantity :is(button, input):focus-visible {
-    outline: 2px solid #218158;
-    outline-offset: -2px;
 }
 
 .cart-line-total {
@@ -756,14 +631,6 @@ onMounted(async () => {
     border: 1px solid #e0ece3;
     border-radius: 9px;
     background: #f0f7f2;
-}
-
-.cart-item-controls .cart-quantity {
-    grid-template-columns: 44px 38px 44px;
-}
-
-.cart-item-controls .cart-quantity button {
-    height: 44px;
 }
 
 .cart-card-label {

@@ -350,11 +350,15 @@ const shouldShowSearchPanel = computed(
 );
 
 const addToCart = (product) => {
-    cartStore.addToCart({
+    const result = cartStore.addToCart({
         ...product,
         quantity: 1
     });
 
+    if (!result.addedQuantity) {
+        push.warning(t("cart.maximumStock"));
+        return;
+    }
     clearSearch();
     push.success(t("product.addedToCart", { name: product.name }))
 };

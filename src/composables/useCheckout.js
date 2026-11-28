@@ -97,7 +97,7 @@ export function useCheckout() {
                 order_discount_value: cartStore.applyDiscount ? membershipDiscountRate : 0,
                 discount_amount: discountAmount,
                 discount_applied: cartStore.applyDiscount,
-                items: cartStore.items.map(item => ({
+                items: cartStore.orderItems.map(item => ({
                     product_id: item.id,
                     qty: item.quantity,
                     net_unit_price: item.offerPrice ?? item.price,
@@ -118,6 +118,7 @@ export function useCheckout() {
         } catch (err) {
             console.error(err);
             error.value = err.response?.data?.message || 'Failed to place order';
+            if (err.response?.status === 422 && err.response.data?.product_id != null) throw err;
         } finally {
             loading.value = false;
         }

@@ -21,7 +21,7 @@ const isSidebarOpen = ref(false);
 const showLoginModal = ref(false);
 const showRegister = ref(false);
 
-const cartQty = computed(() => cartStore.items.length);
+const cartQty = computed(() => cartStore.uniqueItems);
 const cartBadge = computed(() => new Intl.NumberFormat(locale.value).format(cartQty.value));
 const categoriesSelected = computed(() => isSidebarOpen.value || ['Category', 'CategoryList'].includes(route.name));
 

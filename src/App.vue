@@ -45,7 +45,7 @@ useTawk();
     <div class="min-h-screen flex flex-col bg-white" :class="langStore.langClass">
         <Header />
 
-        <div class="flex flex-1 relative">
+        <div class="storefront-layout flex flex-1 relative">
             <!-- Sidebar -->
             <CategorySidebar class="hidden lg:block" />
 
@@ -87,12 +87,17 @@ useTawk();
     }
 }
 
-.main-content {
-    min-height: calc(100vh - 70px);
-    width: calc(100% - 16rem);
+.storefront-layout {
+    --category-sidebar-width: 17rem;
 }
 
-@media (max-width: 1024px) {
+.main-content {
+    min-height: calc(100vh - 70px);
+    min-width: 0;
+    width: calc(100% - var(--category-sidebar-width));
+}
+
+@media (width < 1024px) {
     .main-content {
         width: 100%;
     }

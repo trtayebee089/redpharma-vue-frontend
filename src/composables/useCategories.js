@@ -27,6 +27,7 @@ export function useCategories() {
 
         // 2️⃣ Fetch from API
         loading.value = true;
+        error.value = null;
         try {
             const res = await axios.get(CATEGORIES);
             categories.value = visibleCategories(res.data.data);

@@ -74,36 +74,27 @@
           <div class="detail-buy-panel">
             <!-- Unit Selection Dropdown -->
             <div
-              v-if="showPriceInfo"
+              v-if="unitOptions.length > 1"
               class="detail-unit-options mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4"
             >
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Select Unit</label
+                <label for="product-purchase-unit" class="block text-sm font-medium text-gray-700 mb-2"
+                  >{{ t('cart.selectUnit') }}</label
                 >
                 <select
+                  id="product-purchase-unit"
                   v-model="selectedUnit"
                   class="form-select select-unit-field w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 py-2 px-3 focus:border-green-500 bg-white"
                 >
-                  <option value="piece">Piece</option>
-                  <option
-                    v-if="Number(productDetail.piece_qty) > 1"
-                    value="strip"
-                  >
-                    Strip ({{ productDetail.piece_qty }} Pieces)
-                  </option>
-                  <option v-if="Number(productDetail.stripe_qty) > 1" value="box">
-                    Box ({{
-                      Number(productDetail.stripe_qty) *
-                      (Number(productDetail.piece_qty) || 1)
-                    }}
-                    Pieces)
+                  <option v-for="unit in unitOptions" :key="unit.type" :value="unit.type">
+                    {{ unit.type === 'piece' ? t('cart.units.piece') :
+                      t('cart.packOption', { unit: t(`cart.units.${unit.type}`), count: n(unit.pieces) }) }}
                   </option>
                 </select>
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Unit Price</label
+                  >{{ t('cart.table.thead.price') }}</label
                 >
                 <p
                   class="detail-unit-price w-full flex items-center border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-50 text-lg font-bold text-gray-800"
@@ -187,10 +178,11 @@
 
               <button
                 @click="addToCart(productDetail)"
-                :disabled="isStockOut"
+                :disabled="isStockOut || maxUnits === 0"
                 class="w-full sm:flex-1 md:w-auto md:flex-none flex items-center justify-center whitespace-nowrap px-6 py-3 sm:py-2 font-bold text-lg sm:text-base text-white shadow-md transition-all duration-200 focus:ring-2 focus:ring-offset-1 rounded-full bg-green-600 hover:bg-green-700 focus:ring-green-400 disabled:bg-red-600 disabled:cursor-not-allowed disabled:hover:bg-red-700"
               >
-                <span v-if="!isStockOut">Add to Cart</span>
+                <span v-if="!isStockOut && maxUnits === 0">{{ t('cart.maximumStock') }}</span>
+                <span v-else-if="!isStockOut">Add to Cart</span>
                 <span v-else>❌ Unavailable</span>
               </button>
             </div>
@@ -374,7 +366,9 @@
 <script setup>
 import { ref, onBeforeUnmount, watch, computed } from "vue";
 import { useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
 import { useCartStore } from "@/stores/cart";
+import { cartStock, getProductUnits, piecesPerUnit } from "@/utils/cartUnits";
 import { usePush } from "notivue";
 import { getProductImage, retryProductImage } from "@/utils/productImage";
 import { useProducts } from "@/composables/useProducts";
@@ -384,6 +378,7 @@ import ProductDetailSkeleton from "@/components/products/ProductDetailSkeleton.v
 import bdtIcon from "@/assets/images/bdt-icon.png";
 
 const route = useRoute();
+const { t, n } = useI18n();
 const { product, error: productError, fetchProductDetails } = useProducts();
 const { isProductNavigationPending } = useProductNavigation();
 const productDetail = ref(null);
@@ -398,18 +393,8 @@ const alternativeProducts = ref([]);
 const quantity = ref(1);
 const selectedUnit = ref("piece");
 
-const unitMultiplier = computed(() => {
-  if (!productDetail.value) return 1;
-  if (selectedUnit.value === "piece") return 1;
-  if (selectedUnit.value === "strip")
-    return Number(productDetail.value.piece_qty) || 1;
-  if (selectedUnit.value === "box") {
-    const pQty = Number(productDetail.value.piece_qty) || 1;
-    const sQty = Number(productDetail.value.stripe_qty) || 1;
-    return pQty * sQty;
-  }
-  return 1;
-});
+const unitOptions = computed(() => getProductUnits(productDetail.value ?? {}));
+const unitMultiplier = computed(() => piecesPerUnit(productDetail.value ?? {}, selectedUnit.value));
 
 const displayRegularPrice = computed(() => {
   const price = Number(productDetail.value?.price || 0);
@@ -439,29 +424,20 @@ const formatPrice = (price) => {
 // The base price (product.price) is for a single Piece.
 const basePrice = computed(() => {
   if (!productDetail.value) return 0;
-  return (
-    Number(productDetail.value.promotion_price ?? productDetail.value.price) ||
-    0
-  );
+  return Number(hasPromotion.value ? productDetail.value.promotion_price : productDetail.value.price) || 0;
 });
 
 const piecePrice = computed(() => basePrice.value);
 
 const stripPrice = computed(() => {
-  const pQty = Number(productDetail.value?.piece_qty) || 1;
-  return piecePrice.value * pQty;
+  return piecePrice.value * piecesPerUnit(productDetail.value ?? {}, "strip");
 });
 
 const packPrice = computed(() => {
-  const sQty = Number(productDetail.value?.stripe_qty) || 1;
-  return stripPrice.value * sQty;
+  return piecePrice.value * piecesPerUnit(productDetail.value ?? {}, "box");
 });
 
-const currentUnitPrice = computed(() => {
-  if (selectedUnit.value === "strip") return stripPrice.value;
-  if (selectedUnit.value === "box") return packPrice.value;
-  return piecePrice.value;
-});
+const currentUnitPrice = computed(() => piecePrice.value * unitMultiplier.value);
 
 const defaultImagePlaceHolder = computed(() => getProductImage(product.value));
 
@@ -485,11 +461,18 @@ const showPriceInfo = computed(() => {
 
 // ─── Quantity controls with stock-cap enforcement (mirrors Cart.vue updateQty)
 
-const stockQty = computed(() => Number(productDetail.value?.qty) || null);
+const stockQty = computed(() => cartStock(productDetail.value ?? {}));
 
 const maxUnits = computed(() => {
   if (stockQty.value === null) return null;
-  return Math.max(1, Math.floor(stockQty.value / unitMultiplier.value));
+  const alreadyInCart = cartStore.getProductPieceQuantity(productDetail.value.id);
+  return Math.max(0, Math.floor((stockQty.value - alreadyInCart) / unitMultiplier.value));
+});
+
+watch(selectedUnit, () => {
+  if (maxUnits.value !== null && Number(quantity.value) > maxUnits.value) {
+    quantity.value = Math.max(1, maxUnits.value);
+  }
 });
 
 /**
@@ -497,7 +480,7 @@ const maxUnits = computed(() => {
  */
 const updateQty = (newQty) => {
   if (maxUnits.value !== null && newQty > maxUnits.value) {
-    quantity.value = maxUnits.value;
+    quantity.value = Math.max(1, maxUnits.value);
     push.warning(`Only ${maxUnits.value} ${selectedUnit.value}(s) available in stock.`);
     return;
   }
@@ -505,7 +488,7 @@ const updateQty = (newQty) => {
     quantity.value = 1;
     return;
   }
-  quantity.value = newQty;
+  quantity.value = Math.floor(newQty);
 };
 
 /**
@@ -520,7 +503,7 @@ const handleManualInput = (e) => {
   
   const val = Number(valRaw);
   if (maxUnits.value !== null && val > maxUnits.value) {
-    quantity.value = maxUnits.value;
+    quantity.value = Math.max(1, maxUnits.value);
     push.warning(`Only ${maxUnits.value} ${selectedUnit.value}(s) available in stock.`);
   } else {
     // Note: Do not snap to 1 here immediately to allow typing trailing 0s or finishing edits
@@ -530,25 +513,20 @@ const handleManualInput = (e) => {
 
 const handleBlur = () => {
   const val = Number(quantity.value);
-  if (isNaN(val) || val < 1) {
-    quantity.value = 1;
-  }
+  quantity.value = Number.isFinite(val) ? Math.max(1, Math.floor(val)) : 1;
 };
 
 const addToCart = (prod) => {
-  let finalQty = Number(quantity.value);
-  if (isNaN(finalQty) || finalQty < 1) {
-    finalQty = 1;
-    quantity.value = 1;
-  }
-
-  const totalPieces = finalQty * unitMultiplier.value;
+  if (isStockOut.value || maxUnits.value === 0) return;
+  handleBlur();
 
   const result = cartStore.addToCart({
     ...prod,
-    quantity: totalPieces,
-    stock_qty: stockQty.value,  // pass stock so Cart.vue can enforce limits too
-  });
+    quantity: quantity.value,
+    offerPrice: basePrice.value,
+    stock_qty: stockQty.value,
+  }, selectedUnit.value);
+  const totalPieces = result.addedQuantity * unitMultiplier.value;
 
   if (result?.capped) {
     push.warning(`Only ${stockQty.value} item(s) available — qty adjusted.`);
@@ -557,12 +535,12 @@ const addToCart = (prod) => {
   }
 
   // ✅ Meta Pixel AddToCart event
-  if (typeof window.fbq === "function") {
+  if (totalPieces > 0 && typeof window.fbq === "function") {
     window.fbq("track", "AddToCart", {
       content_name: prod.name,
       content_ids: [String(prod.id)],
       content_type: "product",
-      value: Number(prod.promotion_price ?? prod.price) * totalPieces,
+      value: basePrice.value * totalPieces,
     });
   }
 

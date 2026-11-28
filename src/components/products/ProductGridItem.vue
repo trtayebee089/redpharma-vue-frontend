@@ -128,7 +128,12 @@ const isStockOut = computed(() => {
 });
 
 const handleAddToCart = () => {
-    cartStore.addToCart({ ...props.product, quantity: quantity.value });
+    const result = cartStore.addToCart({ ...props.product, quantity: quantity.value });
+    if (!result.addedQuantity) {
+        push.warning(t("cart.maximumStock"));
+        return;
+    }
+    quantity.value = cartStore.getQuantity(props.product.id);
     showQuantityControls.value = true;
     push.success(t("product.addedToCart", { name: props.product.name }));
 
@@ -144,16 +149,18 @@ const handleAddToCart = () => {
 };
 
 const increaseQty = () => {
-    quantity.value++;
-    cartStore.updateQuantity(props.product.id, quantity.value);
+    const previous = cartStore.getQuantity(props.product.id);
+    if (!previous) return handleAddToCart();
+    quantity.value = cartStore.updateQuantity(props.product.id, previous + 1).actual_qty;
 };
 
 const decreaseQty = () => {
-    if (quantity.value > 1) {
-        quantity.value--;
-        cartStore.updateQuantity(props.product.id, quantity.value);
+    const previous = cartStore.getQuantity(props.product.id);
+    if (previous > 1) {
+        quantity.value = cartStore.updateQuantity(props.product.id, previous - 1).actual_qty;
     } else {
         showQuantityControls.value = false;
+        quantity.value = 1;
         cartStore.removeFromCart(props.product.id);
         push.info(`${props.product.name} removed from cart.`);
     }

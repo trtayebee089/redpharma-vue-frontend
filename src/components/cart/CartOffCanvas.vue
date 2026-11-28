@@ -25,7 +25,7 @@
                 Your cart is empty
             </div>
 
-            <template v-for="item in cartStore.items" :key="item.id">
+            <template v-for="item in cartStore.items" :key="cartLineKey(item)">
                 <div
                     class="flex flex-col sm:flex-row justify-between bg-white border border-gray-200 rounded-xl p-3 sm:p-4 shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 gap-3 sm:gap-4">
                     <div class="sm:w-15 flex-shrink-0">
@@ -39,14 +39,14 @@
                                 <p class="font-medium text-gray-800 text-sm truncate">{{ item.name }}</p>
                                 <p class="text-sm text-gray-500 truncate" v-if="item.brand">{{ item.brand.title }}</p>
                                 <p class="text-gray-600 text-sm mt-1">
-                                    <span class="font-semibold text-gray-800">{{ (item.offerPrice ??
-                                        item.price).toFixed(2) }} Tk</span>
+                                    <span class="font-semibold text-gray-800">{{ (cartPiecePrice(item) * piecesPerUnit(item)).toFixed(2) }} Tk</span>
+                                    <span class="ml-1">{{ $t(`cart.units.${cartUnit(item)}`) }}</span>
                                     <span v-if="item.offerPrice" class="text-gray-400 line-through ml-1 text-xs">{{
-                                        item.price.toFixed(2) }} Tk</span>
+                                        (Number(item.price) * piecesPerUnit(item)).toFixed(2) }} Tk</span>
                                 </p>
                             </div>
 
-                            <button @click="cartStore.removeFromCart(item.id)"
+                            <button @click="cartStore.removeLine(item)"
                                 class="absolute top-0 right-0 text-red-500 hover:text-red-700 transition font-medium">
                                 <i class="pi pi-times"></i>
                             </button>
@@ -60,7 +60,8 @@
                                     <i class="pi pi-minus text-xs"></i>
                                 </button>
 
-                                <input type="number" v-model.number="item.quantity" min="1"
+                                <input type="number" :value="item.quantity" min="1"
+                                    @change="$event.target.value = cartStore.updateLine(item, $event.target.value).actual_qty"
                                     class="w-12 text-center text-gray-800 font-medium bg-white border-l border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 transition-all rounded-none text-xs sm:text-sm" />
 
                                 <button @click="increaseQty(item)" :disabled="item.isStockOut"
@@ -70,8 +71,7 @@
                             </div>
 
                             <p class="text-green-700 font-semibold text-sm px-3">
-                                {{ ((Number(item.offerPrice ?? item.price) || 0) * (Number(item.quantity) ||
-                                    1)).toFixed(2) }} Tk
+                                {{ (cartPiecePrice(item) * cartPieceQuantity(item)).toFixed(2) }} Tk
                             </p>
                         </div>
                     </div>
@@ -83,7 +83,7 @@
             class="p-4 border-t border-gray-200 bg-white rounded-t-xl shadow-inner space-y-3 flex justify-between items-center">
             <div class="text-gray-600 font-semibold m-0">
                 <span class="block">Cart Total</span>
-                <span class="block font-bold text-xl text-green-600">{{ totalMRP.toFixed(2) }} Tk</span>
+                <span class="block font-bold text-xl text-green-600">{{ cartStore.cartSubtotal.toFixed(2) }} Tk</span>
             </div>
             <router-link to="/cart"
                 class="block w-50 bg-gradient-to-r from-green-500 to-green-600 text-white py-3 text-center font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all rounded-full"
@@ -101,25 +101,15 @@
 import { getProductImage as getImageUrl, retryProductImage } from "@/utils/productImage"
 import { useCartStore } from '@/stores/cart'
 import { useRouter } from 'vue-router'
-import { computed } from 'vue'
+import { cartLineKey, cartPiecePrice, cartPieceQuantity, cartUnit, piecesPerUnit } from "@/utils/cartUnits"
 
 const cartStore = useCartStore()
 const router = useRouter()
 
-const increaseQty = (item) => cartStore.updateQuantity(item.id, item.quantity + 1)
+const increaseQty = item => cartStore.updateLine(item, Number(item.quantity) + 1)
 const decreaseQty = (item) => {
-    if (item.quantity > 1) cartStore.updateQuantity(item.id, item.quantity - 1)
+    if (item.quantity > 1) cartStore.updateLine(item, Number(item.quantity) - 1)
 }
-
-const totalMRP = computed(() =>
-    cartStore.items.reduce((acc, i) => acc + i.price * i.quantity, 0)
-)
-
-const totalPayment = computed(() =>
-    cartStore.items.reduce((acc, i) => acc + (i.offerPrice || i.price) * i.quantity, 0)
-)
-
-const totalDiscount = computed(() => totalMRP.value - totalPayment.value)
 
 const goToCart = () => {
     if (!cartStore.items.length) return
