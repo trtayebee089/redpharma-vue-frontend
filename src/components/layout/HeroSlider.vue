@@ -8,6 +8,9 @@ import 'swiper/css/pagination';
 import slider1 from '@/assets/images/slide-1.jpg';
 import slider2 from '@/assets/images/slide-2.jpg';
 import slider3 from '@/assets/images/slide-3.jpg';
+import healthEssentials from '@/assets/images/redpharma_hero_banner_04.png';
+import dailyWellness from '@/assets/images/redpharma_hero_banner_05.png';
+import pharmacyOffers from '@/assets/images/redpharma_hero_banner_06.png';
 
 defineProps({ animate: Boolean });
 const { t } = useI18n();
@@ -15,6 +18,9 @@ const slides = [
     { image: slider1, alt: 'home.carousel.shop' },
     { image: slider2, alt: 'home.carousel.app' },
     { image: slider3, alt: 'home.carousel.platform' },
+    { image: healthEssentials, alt: 'home.carousel.healthEssentials' },
+    { image: dailyWellness, alt: 'home.carousel.dailyWellness' },
+    { image: pharmacyOffers, alt: 'home.carousel.pharmacyOffers' },
 ];
 </script>
 
